@@ -1,0 +1,65 @@
+{
+    "name": "AutoModerationEndpoints",
+    "methods": {
+        "list_auto_moderation_rules": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/auto-moderation/rules",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "get_auto_moderation_rule": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/auto-moderation/rules/{auto_moderation_rule_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "auto_moderation_rule_id": "Snowflake"
+            }
+        },
+        "create_auto_moderation_rule": {
+            "method": "POST",
+            "url": "/guilds/{guild_id}/auto-moderation/rules",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "name": "str",
+                "event_type": "int",
+                "trigger_type": "int",
+                "trigger_metadata": "dict[str, Any] | ellipsis",
+                "actions": "list[Actions] # TODO: Type correctly with discord_typings",
+                "enabled": "bool | ellipsis",
+                "exempt_roles": "list[Snowflake] | ellipsis",
+                "exempt_channels": "list[Snowflake] | ellipsis"
+            },
+            "reason-parameter": true
+        },
+        "modify_auto_moderation_rule": {
+            "method": "PATCH",
+            "url": "/guilds/{guild_id}/auto-moderation/rules",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "name": "str | ellipsis",
+                "event_type": "int | ellipsis",
+                "trigger_type": "int | ellipsis",
+                "trigger_metadata": "dict[str, Any] | ellipsis",
+                "actions": "list[Actions] | ellipsis # TODO: Type correctly with discord_typings",
+                "enabled": "bool | ellipsis",
+                "exempt_roles": "list[Snowflake] | ellipsis",
+                "exempt_channels": "list[Snowflake] | ellipsis"
+            },
+            "reason-parameter": true
+        },
+        "delete_auto_moderation_rule": {
+            "method": "DELETE",
+            "url": "/guilds/{guild_id}/auto-moderation/rules/{auto_moderation_rule_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "auto_moderation_rule_id": "Snowflake"
+            },
+            "reason-parameter": true
+        } 
+    }
+}

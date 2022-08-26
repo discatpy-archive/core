@@ -1,0 +1,18 @@
+{
+    "name": "AuditLogEndpoints",
+    "methods": {
+        "get_guild_audit_log": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/audit-logs",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "query-parameters": {
+                "user_id": "Snowflake | ellipsis",
+                "action_type": "int | ellipsis",
+                "before": "Snowflake | ellipsis",
+                "limit": "int | ellipsis" 
+            }
+        }
+    }
+}
