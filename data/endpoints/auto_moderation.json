@@ -26,11 +26,11 @@
                 "name": "str",
                 "event_type": "int",
                 "trigger_type": "int",
-                "trigger_metadata": "dict[str, Any] | ellipsis",
-                "actions": "list[Actions] # TODO: Type correctly with discord_typings",
-                "enabled": "bool | ellipsis",
-                "exempt_roles": "list[Snowflake] | ellipsis",
-                "exempt_channels": "list[Snowflake] | ellipsis"
+                "trigger_metadata": ["Union[dict[str, Any], ellipsis]", "..."],
+                "actions": "list[discord_typings.AutoModerationActionData]",
+                "enabled": ["Union[bool, ellipsis]", "..."],
+                "exempt_roles": ["Union[list[Snowflake], ellipsis]", "..."],
+                "exempt_channels": ["Union[list[Snowflake], ellipsis]", "..."]
             },
             "reason-parameter": true
         },
@@ -41,14 +41,14 @@
                 "guild_id": "Snowflake"
             },
             "json-parameters": {
-                "name": "str | ellipsis",
-                "event_type": "int | ellipsis",
-                "trigger_type": "int | ellipsis",
-                "trigger_metadata": "dict[str, Any] | ellipsis",
-                "actions": "list[Actions] | ellipsis # TODO: Type correctly with discord_typings",
-                "enabled": "bool | ellipsis",
-                "exempt_roles": "list[Snowflake] | ellipsis",
-                "exempt_channels": "list[Snowflake] | ellipsis"
+                "name": ["Union[str, ellipsis]", "..."],
+                "event_type": ["Union[int, ellipsis]", "..."],
+                "trigger_type": ["Union[int, ellipsis]", "..."],
+                "trigger_metadata": ["Union[dict[str, Any], ellipsis]", "..."],
+                "actions": ["Union[list[discord_typings.AutoModerationActionData], ellipsis]", "..."],
+                "enabled": ["Union[bool, ellipsis]", "..."],
+                "exempt_roles": ["Union[list[Snowflake], ellipsis]", "..."],
+                "exempt_channels": ["Union[list[Snowflake], ellipsis]", "..."]
             },
             "reason-parameter": true
         },
