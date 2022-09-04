@@ -30,7 +30,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Callable, Coroutine, List, Optional, TypeVar
 
 if TYPE_CHECKING:
-    from . import Dispatcher
+    from discatcore.dispatcher import Dispatcher
 
 _log = logging.getLogger(__name__)
 

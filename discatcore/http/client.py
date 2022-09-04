@@ -42,10 +42,11 @@ from discatcore.file import BasicFile
 from discatcore.types import EllipsisOr
 from discatcore.http.ratelimiter import Ratelimiter
 from discatcore.http.route import Route
+from discatcore.utils import dumps, loads
 
 BASE_API_URL = "https://discord.com/api/v{0}"
 VALID_API_VERSIONS = [9, 10]
-DEFAULT_API_VERSION = 9
+DEFAULT_API_VERSION = 10
 
 __all__ = ("HTTPClient",)
 
@@ -78,7 +79,7 @@ def _filter_dict_for_ellipsis(d: EllipsisOr[Dict[Any, Any]]):
     if isinstance(d, EllipsisType):
         return None
 
-    return dict(filter(lambda item: item[1], d.items()))
+    return dict(filter(lambda item: item[1] is not ..., d.items()))
 
 
 class HTTPClient():
@@ -118,7 +119,7 @@ class HTTPClient():
     @property
     def _session(self):
         if self.__session is None or self.__session.closed:  # type: ignore
-            self.__session = aiohttp.ClientSession(headers={"User-Agent": self.user_agent})
+            self.__session = aiohttp.ClientSession(headers={"User-Agent": self.user_agent}, json_serialize=dumps)
 
         return self.__session
 
@@ -172,7 +173,7 @@ class HTTPClient():
         text = await resp.text()
 
         if resp.content_type == "application/json":
-            return json.loads(text)
+            return loads(text)
 
         return text
 

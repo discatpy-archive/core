@@ -29,7 +29,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from .client import GatewayClient
+    from discatcore.gateway.client import GatewayClient
 
 __all__ = ("Ratelimiter",)
 

@@ -27,10 +27,10 @@ import asyncio
 import logging
 from typing import Optional
 
-from .dispatcher import Dispatcher
-from .flags import Intents
-from .gateway import GatewayClient, GatewayEventHandler, GatewayEventProtos
-from .http import HTTPClient
+from discatcore.dispatcher import Dispatcher
+from discatcore.flags import Intents
+from discatcore.gateway import GatewayClient, GatewayEventHandler, GatewayEventProtos
+from discatcore.http import HTTPClient
 
 __all__ = ("Client",)
 

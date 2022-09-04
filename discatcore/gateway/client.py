@@ -25,12 +25,11 @@ from __future__ import annotations
 
 import asyncio
 import datetime
-import json
 import logging
 import platform
 import random
 import zlib
-from typing import TYPE_CHECKING, Any, Dict, List, Mapping, Optional, Union, cast
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union, cast
 
 import aiohttp
 
@@ -38,6 +37,7 @@ from ..enums import GatewayOpcode
 from ..types import Snowflake
 from .ratelimiter import Ratelimiter
 from .types import GatewayPayload
+from discatcore.utils import dumps, loads
 
 if TYPE_CHECKING:
     from ..client import Client
@@ -45,20 +45,6 @@ if TYPE_CHECKING:
 __all__ = ("GatewayClient",)
 
 _log = logging.getLogger(__name__)
-
-
-def _decompress_msg(inflator: zlib._Decompress, msg: bytes):
-    ZLIB_SUFFIX = b"\x00\x00\xff\xff"
-
-    out_str: str = ""
-
-    # Message should be compressed
-    if len(msg) < 4 or msg[-4:] != ZLIB_SUFFIX:
-        return out_str
-
-    buff = inflator.decompress(msg)
-    out_str = buff.decode("utf-8")
-    return out_str
 
 
 class HeartbeatHandler:
@@ -160,13 +146,26 @@ class GatewayClient:
         self.ratelimiter.start()
         self.heartbeat_handler: Optional[HeartbeatHandler] = None
 
+    def _decompress_msg(self, msg: bytes):
+        ZLIB_SUFFIX = b"\x00\x00\xff\xff"
+
+        out_str: str = ""
+
+        # Message should be compressed
+        if len(msg) < 4 or msg[-4:] != ZLIB_SUFFIX:
+            return out_str
+
+        buff = self.inflator.decompress(msg)
+        out_str = buff.decode("utf-8")
+        return out_str
+
     async def send(self, data: Dict[str, Any]):
         if self.ratelimiter.is_ratelimited():
             if not self.ratelimiter.is_set():
                 await self.ratelimiter.set()
             await self.ratelimiter.wait()
 
-        await self.ws.send_json(data)
+        await self.ws.send_json(data, dumps=dumps)
         _log.debug("Sent JSON payload %s to the Gateway.", data)
 
     async def receive(self):
@@ -182,11 +181,11 @@ class GatewayClient:
         if msg.type in (aiohttp.WSMsgType.BINARY, aiohttp.WSMsgType.TEXT):
             received_msg = None
             if msg.type == aiohttp.WSMsgType.BINARY:
-                received_msg = _decompress_msg(self.inflator, msg.data)
+                received_msg = self._decompress_msg(msg.data)
             elif msg.type == aiohttp.WSMsgType.TEXT:
                 received_msg = msg.data
 
-            self.recent_gp = cast(GatewayPayload, json.loads(received_msg))  # type: ignore
+            self.recent_gp = cast(GatewayPayload, loads(received_msg))  # type: ignore
             _log.debug("Received payload from the Gateway: %s", self.recent_gp)
             self._sequence = self.recent_gp.get("s")
             return True

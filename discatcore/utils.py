@@ -25,14 +25,22 @@ DEALINGS IN THE SOFTWARE.
 import builtins
 import importlib
 import types
-from typing import Any, Callable, Coroutine, Dict, Generic, List, Optional, TypeVar, Union
+from typing import Any, Callable, Coroutine, Dict, List, Optional, Union
 
-from .types import Snowflake
+from discatcore.types import Snowflake
+
+HAS_ORJSON = False
+try:
+    import orjson
+    HAS_ORJSON = True
+except ImportError:
+    import json
 
 __all__ = (
     "DISCORD_EPOCH",
     "SnowflakeUtils",
-    "MultipleValuesDict",
+    "dumps",
+    "loads",
     "indent_text",
     "indent_all_text",
     "create_fn",
@@ -103,63 +111,16 @@ class SnowflakeUtils:
         return _ensure_snowflake_is_int(id) & 0xFFF
 
 
-_KT = TypeVar("_KT")
-_VT = TypeVar("_VT")
-_DT = TypeVar("_DT")
+def dumps(obj: Any):
+    if HAS_ORJSON:
+        return orjson.dumps(obj).decode("utf-8")
+    return json.dumps(obj)
 
 
-class MultipleValuesDict(dict, Generic[_KT, _VT]):
-    """A dictionary that supports having multiple values for one key.
-
-    It does this by having the actual value in the dictionary be a list with all
-    of those values.
-    """
-
-    def __setitem__(self, k: _KT, v: _VT) -> None:
-        val = v
-        if k in self:
-            old_val = self.pop(k)
-            if not isinstance(old_val, list):
-                val = [old_val, v]
-            else:
-                val = old_val
-                val.append(v)
-
-        return super().__setitem__(k, val)
-
-    def get_one(
-        self, k: _KT, index: int, *, value_type: Optional[type] = None, default: _DT = None
-    ) -> Union[_VT, _DT]:
-        """Gets one value from a key that matches index and optionally type.
-
-        If there is only one value assigned to that key then that will be returned.
-
-        If the key provided is not found or there is no value that meets the
-        conditions provided, the default value will be returned.
-
-        Parameters
-        ----------
-        k: :type:`_KT`
-            The key of the value to look for.
-        index: :type:`int`
-            The index where the value is contained, if there are multiple values assigned to the
-            key.
-        _type: :type:`Optional[type]` = `None`
-            The type of the value to grab. Defaults to `None`.
-        default: :type:`_DT` = `None`
-            The default value to return if getting a value failed.
-        """
-        values = self.get(k, default)
-
-        if values is not default and isinstance(values, list):
-            val = [v for i, v in enumerate(values) if i == index][0]
-
-            if value_type is not None:
-                val = val if isinstance(val, value_type) else default
-
-            return val
-
-        return values
+def loads(obj: str):
+    if HAS_ORJSON:
+        return orjson.loads(obj)
+    return json.loads(obj)
 
 
 Func = Callable[..., Any]

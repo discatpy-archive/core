@@ -28,7 +28,7 @@ import logging
 import traceback
 from typing import Any, Callable, Coroutine, Dict, Optional, TypeVar
 
-from .event import Event
+from discatcore.dispatcher.event import Event
 
 _log = logging.getLogger(__name__)
 
