@@ -34,9 +34,9 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union, cast
 import aiohttp
 
 from discatcore.enums import GatewayOpcode
-from discatcore.types import Snowflake
 from discatcore.gateway.ratelimiter import Ratelimiter
 from discatcore.gateway.types import GatewayPayload
+from discatcore.types import Snowflake
 from discatcore.utils import dumps, loads
 
 if TYPE_CHECKING:

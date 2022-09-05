@@ -60,6 +60,6 @@
                 "auto_moderation_rule_id": "Snowflake"
             },
             "reason-parameter": true
-        } 
+        }
     }
 }

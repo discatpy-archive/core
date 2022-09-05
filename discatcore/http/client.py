@@ -23,14 +23,13 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import asyncio
-import json
 import logging
 import sys
-from types import EllipsisType
 import warnings
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Mapping, Optional, cast
+from types import EllipsisType
+from typing import Any, Dict, List, Optional, cast
 from urllib.parse import quote as _urlquote
 
 import aiohttp
@@ -39,9 +38,9 @@ from discord_typings import GetGatewayBotData
 from discatcore import __version__
 from discatcore.errors import HTTPException, UnsupportedAPIVersionWarning
 from discatcore.file import BasicFile
-from discatcore.types import EllipsisOr
 from discatcore.http.ratelimiter import Ratelimiter
 from discatcore.http.route import Route
+from discatcore.types import EllipsisOr
 from discatcore.utils import dumps, loads
 
 BASE_API_URL = "https://discord.com/api/v{0}"
@@ -79,7 +78,7 @@ def _filter_dict_for_ellipsis(d: EllipsisOr[Dict[Any, Any]]):
     return dict(filter(lambda item: item[1] is not ..., d.items()))
 
 
-class HTTPClient():
+class HTTPClient:
     __slots__ = (
         "token",
         "_ratelimiter",
@@ -116,7 +115,9 @@ class HTTPClient():
     @property
     def _session(self):
         if self.__session is None or self.__session.closed:  # type: ignore
-            self.__session = aiohttp.ClientSession(headers={"User-Agent": self.user_agent}, json_serialize=dumps)
+            self.__session = aiohttp.ClientSession(
+                headers={"User-Agent": self.user_agent}, json_serialize=dumps
+            )
 
         return self.__session
 
@@ -152,7 +153,9 @@ class HTTPClient():
 
         if json is not ... and files is not ...:
             form_dat = aiohttp.FormData()
-            form_dat.add_field("payload_json", _filter_dict_for_ellipsis(json), content_type="application/json")
+            form_dat.add_field(
+                "payload_json", _filter_dict_for_ellipsis(json), content_type="application/json"
+            )
 
             # this has to be done because otherwise Pyright will complain about files not being an iterable type
             if isinstance(files, list):

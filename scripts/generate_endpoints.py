@@ -5,7 +5,7 @@ import dataclasses
 import json
 import pathlib
 import types
-from typing import Any, Optional, overload, Union, TypeVar
+from typing import Any, Optional, TypeVar, Union, overload
 
 import discord_typings
 
@@ -166,13 +166,13 @@ class FunctionCreator:
 
         return func_str
 
-    def generate(self, *, globals: dict[str, Any] = {}, locals: dict[str, Any] = {}) -> types.FunctionType:
+    def generate(
+        self, *, globals: dict[str, Any] = {}, locals: dict[str, Any] = {}
+    ) -> types.FunctionType:
         if "BUILTINS" not in locals:
             locals["BUILTINS"] = builtins
 
-        func_str = "\n".join(
-            [indent(line) for line in self.generate_raw().splitlines()]
-        )
+        func_str = "\n".join([indent(line) for line in self.generate_raw().splitlines()])
         local_vars = ", ".join(locals.keys())
         func_creator_str = (
             f"def __create_fn__({local_vars}):\n{func_str}\n    return {self.func_name}"
@@ -183,7 +183,9 @@ class FunctionCreator:
 
         func = ns["__create_fn__"](**locals)
         if not isinstance(func, types.FunctionType):
-            raise TypeError(f"the generated object was of type {type(func)!r}, not types.FunctionType!")
+            raise TypeError(
+                f"the generated object was of type {type(func)!r}, not types.FunctionType!"
+            )
         return func
 
 
@@ -236,9 +238,7 @@ def _generate_func_args_json_query(
         elif isinstance(param, list) and len(param) == 2:
             anno, default = param
         else:
-            raise TypeError(
-                f"Invalid type {_type_repr(param)} for JSON/Query parameter values"
-            )
+            raise TypeError(f"Invalid type {_type_repr(param)} for JSON/Query parameter values")
 
         func_gen.append_arg(FunctionArg(param_name, annotation=anno, default=default))
 
@@ -261,11 +261,13 @@ def _generate_func_args(
     if not isinstance(json_params, _UnsetDefine) or not isinstance(query_params, _UnsetDefine):
         func_gen.append_arg(FunctionArg(kw_modifier=True))
 
-        if not isinstance(json_params, _UnsetDefine) and not isinstance(query_params, _UnsetDefine): # rare case
+        if not isinstance(json_params, _UnsetDefine) and not isinstance(
+            query_params, _UnsetDefine
+        ):  # rare case
             _generate_func_args_json_query(func_gen, json_params)
             _generate_func_args_json_query(func_gen, query_params)
         else:
-            # Pyright cannot infer that because of the protection of the first if statement 
+            # Pyright cannot infer that because of the protection of the first if statement
             # (not the one this else is the opposite of but the other one) query_params cannot be
             # an instance of _UnsetDefine.
             _generate_func_args_json_query(func_gen, json_params if not isinstance(json_params, _UnsetDefine) else query_params)  # type: ignore
