@@ -33,14 +33,14 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union, cast
 
 import aiohttp
 
-from ..enums import GatewayOpcode
-from ..types import Snowflake
-from .ratelimiter import Ratelimiter
-from .types import GatewayPayload
+from discatcore.enums import GatewayOpcode
+from discatcore.types import Snowflake
+from discatcore.gateway.ratelimiter import Ratelimiter
+from discatcore.gateway.types import GatewayPayload
 from discatcore.utils import dumps, loads
 
 if TYPE_CHECKING:
-    from ..client import Client
+    from discatcore.client import Client
 
 __all__ = ("GatewayClient",)
 

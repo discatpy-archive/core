@@ -25,11 +25,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .core import generate_handlers_from
-from .event_protos import GatewayEventProtos
+from discatcore.gateway.events.core import generate_handlers_from
+from discatcore.gateway.events.event_protos import GatewayEventProtos
 
 if TYPE_CHECKING:
-    from ..client import Client
+    from discatcore.client import Client
 
 __all__ = ("GatewayEventHandler",)
 

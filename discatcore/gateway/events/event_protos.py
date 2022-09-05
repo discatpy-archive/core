@@ -62,10 +62,10 @@ from discord_typings import (
     VoiceStateUpdateData,
 )
 
-from ...types import EllipsisOr, Snowflake
+from discatcore.types import EllipsisOr, Snowflake
 
 if TYPE_CHECKING:
-    from ..client import Client
+    from discatcore.client import Client
 
 __all__ = ("GatewayEventProtos",)
 

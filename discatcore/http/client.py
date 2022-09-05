@@ -59,16 +59,13 @@ class _PreparedData:
     multipart_content: EllipsisOr[aiohttp.FormData] = ...
 
 
-def _calculate_reset_after(headers: Mapping[str, Any]) -> float:
-    reset_after: float
+def _calculate_reset_after(resp: aiohttp.ClientResponse) -> float:
+    headers = resp.headers
+
     if "X-RateLimit-Reset" in headers:
         now = datetime.now()
-        reset = datetime.fromtimestamp(float(headers.get("X-RateLimit-Reset")))  # type: ignore
+        reset = datetime.fromtimestamp(float(headers.get("X-RateLimit-Reset", 0.0)))
         reset_after = (reset - now).total_seconds()
-    elif (
-        "Reset-After" in headers
-    ):  # for some reason Discord includes retry after in this header and the other one?
-        reset_after = float(headers.get("Reset-After", 0.0))
     else:
         reset_after = float(headers.get("X-RateLimit-Reset-After", 0.0))
 
@@ -223,12 +220,12 @@ class HTTPClient():
                 method,
             )
 
-            reset_after = _calculate_reset_after(response.headers)
+            reset_after = _calculate_reset_after(response)
             remaining = int(response.headers.get("X-RateLimit-Remaining", 1))
 
             # Everything is ok
             if 200 <= response.status < 300:
-                if remaining == 0:
+                if remaining == 0 and reset_after > 0.0:
                     _log.debug(
                         "REQUEST:%d Ratelimit bucket %s has expired. Waiting to refresh it.",
                         rid,
@@ -245,27 +242,29 @@ class HTTPClient():
                     # it means we're Cloudflare banned
                     raise HTTPException(response, await self._text_or_json(response))
 
-                is_global = response.headers["X-RateLimit-Scope"] == "global"
+                if reset_after > 0.0:
+                    is_global = response.headers["X-RateLimit-Scope"] == "global"
 
-                if is_global:
-                    _log.info(
-                        "REQUEST:%d All requests have hit a global ratelimit! Retrying in %f.",
-                        rid,
-                        reset_after,
-                    )
-                    if not self._ratelimiter.global_bucket.is_locked():
-                        self._ratelimiter.global_bucket.lock_for(reset_after)
-                    await self._ratelimiter.global_bucket.wait()
-                else:
-                    _log.info(
-                        "REQUEST:%d Requests with bucket %s have hit a ratelimit! Retrying in %f.",
-                        rid,
-                        route.bucket,
-                        reset_after,
-                    )
-                    await self._ratelimiter.create_temp_bucket(route, reset_after)
+                    if is_global:
+                        _log.info(
+                            "REQUEST:%d All requests have hit a global ratelimit! Retrying in %f.",
+                            rid,
+                            reset_after,
+                        )
+                        if not self._ratelimiter.global_bucket.is_locked():
+                            self._ratelimiter.global_bucket.lock_for(reset_after)
+                        await self._ratelimiter.global_bucket.wait()
+                    else:
+                        _log.info(
+                            "REQUEST:%d Requests with bucket %s have hit a ratelimit! Retrying in %f.",
+                            rid,
+                            route.bucket,
+                            reset_after,
+                        )
+                        await self._ratelimiter.create_temp_bucket(route, reset_after)
 
-                _log.info("REQUEST:%d Ratelimit is over. Continuing with the request.", rid)
+                    _log.info("REQUEST:%d Ratelimit is over. Continuing with the request.", rid)
+
                 continue
 
             # Specific Server Errors, retry after some time
