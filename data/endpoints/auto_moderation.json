@@ -32,13 +32,14 @@
                 "exempt_roles": ["Union[list[Snowflake], ellipsis]", "..."],
                 "exempt_channels": ["Union[list[Snowflake], ellipsis]", "..."]
             },
-            "reason-parameter": true
+            "supports-reason": true
         },
         "modify_auto_moderation_rule": {
             "method": "PATCH",
-            "url": "/guilds/{guild_id}/auto-moderation/rules",
+            "url": "/guilds/{guild_id}/auto-moderation/rules/{auto_moderation_rule_id}",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "Snowflake",
+                "auto_moderation_rule_id": "Snowflake"
             },
             "json-parameters": {
                 "name": ["Union[str, ellipsis]", "..."],
@@ -50,7 +51,7 @@
                 "exempt_roles": ["Union[list[Snowflake], ellipsis]", "..."],
                 "exempt_channels": ["Union[list[Snowflake], ellipsis]", "..."]
             },
-            "reason-parameter": true
+            "supports-reason": true
         },
         "delete_auto_moderation_rule": {
             "method": "DELETE",
@@ -59,7 +60,7 @@
                 "guild_id": "Snowflake",
                 "auto_moderation_rule_id": "Snowflake"
             },
-            "reason-parameter": true
+            "supports-reason": true
         }
     }
 }
