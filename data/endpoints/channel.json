@@ -1,4 +1,398 @@
 {
     "name": "ChannelEndpoints",
-    "methods": {}
+    "methods": {
+        "get_channel": {
+            "method": "GET",
+            "url": "/channels/{channel_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            }
+        },
+        "modify_channel": {
+            "method": "PATCH",
+            "url": "/channels/{channel_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "json-parameters": {
+                "name": ["Union[str, ellipsis]", "..."],
+                "type": ["Union[int, ellipsis]", "..."],
+                "position": ["Union[Optional[int], ellipsis]", "..."],
+                "topic": ["Union[Optional[str], ellipsis]", "..."],
+                "nsfw": ["Union[Optional[bool], ellipsis]", "..."],
+                "rate_limit_per_user": ["Union[Optional[int], ellipsis]", "..."],
+                "bitrate": ["Union[Optional[int], ellipsis]", "..."],
+                "user_limit": ["Union[Optional[int], ellipsis]", "..."],
+                "permission_overwrites": ["Union[Optional[list[discord_typings.PermissionOverwriteData]], ellipsis]", "..."],
+                "parent_id": ["Union[Optional[Snowflake], ellipsis]", "..."],
+                "rtc_region": ["Union[Optional[str], ellipsis]", "..."],
+                "video_quality_mode": ["Union[Optional[int], ellipsis]", "..."],
+                "default_auto_archive_duration": ["Union[Optional[int], ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "modify_thread": {
+            "method": "PATCH",
+            "url": "/channels/{channel_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "json-parameters": {
+                "name": ["Union[str, ellipsis]", "..."],
+                "archived": ["Union[bool, ellipsis]", "..."],
+                "auto_archive_duration": ["Union[int, ellipsis]", "..."],
+                "locked": ["Union[bool, ellipsis]", "..."],
+                "invitable": ["Union[bool, ellipsis]", "..."],
+                "rate_limit_per_user": ["Union[Optional[int], ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "delete_channel": {
+            "method": "DELETE",
+            "url": "/channels/{channel_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "supports-reason": true
+        },
+        "get_channel_messages": {
+            "method": "GET",
+            "url": "/channels/{channel_id}/messages",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "query-parameters": {
+                "around": ["Union[Snowflake, ellipsis]", "..."],
+                "before": ["Union[Snowflake, ellipsis]", "..."],
+                "after": ["Union[Snowflake, ellipsis]", "..."],
+                "limit": ["int", "50"]
+            }
+        },
+        "get_channel_message": {
+            "method": "GET",
+            "url": "/channels/{channel_id}/messages/{message_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "message_id": "Snowflake"
+            }
+        },
+        "create_message": {
+            "method": "POST",
+            "url": "/channels/{channel_id}/messages",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "json-parameters": {
+                "content": ["Union[str, ellipsis]", "..."],
+                "tts": ["Union[bool, ellipsis]", "..."],
+                "embeds": ["Union[list[discord_typings.EmbedData], ellipsis]", "..."],
+                "allowed_mentions": ["Union[discord_typings.AllowedMentionsData, ellipsis]", "..."],
+                "message_reference": ["Union[discord_typings.MessageReferenceData, ellipsis]", "..."],
+                "components": ["Union[list[discord_typings.ComponentData], ellipsis]", "..."],
+                "sticker_ids": ["Union[list[Snowflake], ellipsis]", "..."],
+                "attachments": ["Union[list[discord_typings.PartialAttachmentData], ellipsis]", "..."],
+                "flags": ["Union[int, ellipsis]", "..."]
+            },
+            "supports-files": true
+        },
+        "crosspost_message": {
+            "method": "POST",
+            "url": "/channels/{channel_id}/messages/{message_id}/crosspost",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "message_id": "Snowflake"
+            }
+        },
+        "create_reaction": {
+            "method": "PUT",
+            "url": "/channels/{channel_id}/messages/{message_id}/reactions/{emoji}/@me",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "message_id": "Snowflake",
+                "emoji": "str"
+            }
+        },
+        "delete_own_reaction": {
+            "method": "DELETE",
+            "url": "/channels/{channel_id}/messages/{message_id}/reactions/{emoji}/@me",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "message_id": "Snowflake",
+                "emoji": "str"
+            }
+        },
+        "delete_user_reaction": {
+            "method": "DELETE",
+            "url": "/channels/{channel_id}/messages/{message_id}/reactions/{emoji}/{user_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "message_id": "Snowflake",
+                "emoji": "str",
+                "user_id": "Snowflake"
+            }
+        },
+        "get_reactions": {
+            "method": "GET",
+            "url": "/channels/{channel_id}/messages/{message_id}/reactions/{emoji}",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "message_id": "Snowflake",
+                "emoji": "str"
+            },
+            "query-parameters": {
+                "after": ["Union[Snowflake, ellipsis]", "..."],
+                "limit": ["int", "25"]
+            }
+        },
+        "delete_all_reactions": {
+            "method": "DELETE",
+            "url": "/channels/{channel_id}/messages/{message_id}/reactions",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "message_id": "Snowflake"
+            }
+        },
+        "delete_all_reactions_for_emoji": {
+            "method": "DELETE",
+            "url": "/channels/{channel_id}/messages/{message_id}/reactions/{emoji}",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "message_id": "Snowflake",
+                "emoji": "str"
+            }
+        },
+        "edit_message": {
+            "method": "PATCH",
+            "url": "/channels/{channel_id}/messages/{message_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "message_id": "Snowflake"
+            },
+            "json-parameters": {
+                "content": ["Union[Optional[str], ellipsis]", "..."],
+                "embeds": ["Union[Optional[list[discord_typings.EmbedData]], ellipsis]", "..."],
+                "allowed_mentions": ["Union[Optional[discord_typings.AllowedMentionsData], ellipsis]", "..."],
+                "components": ["Union[Optional[list[discord_typings.ComponentData]], ellipsis]", "..."],
+                "attachments": ["Union[Optional[list[discord_typings.PartialAttachmentData]], ellipsis]", "..."],
+                "flags": ["Union[Optional[int], ellipsis]", "..."]
+            },
+            "supports-files": true
+        },
+        "delete_message": {
+            "method": "DELETE",
+            "url": "/channels/{channel_id}/messages/{message_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "message_id": "Snowflake"
+            },
+            "supports-reason": true
+        },
+        "bulk_delete_messages": {
+            "method": "POST",
+            "url": "/channels/{channel_id}/messages/bulk-delete",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "json-parameters": {
+                "messages": "list[discord_typings.MessageData]"
+            },
+            "supports-reason": true
+        },
+        "edit_channel_permissions": {
+            "method": "PUT",
+            "url": "/channels/{channel_id}/permissions/{overwrite_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "overwrite_id": "Snowflake"
+            },
+            "json-parameters": {
+                "allow": ["Union[Optional[str], ellipsis]", "..."],
+                "deny": ["Union[Optional[str], ellipsis]", "..."],
+                "type": "int"
+            },
+            "supports-reason": true
+        },
+        "get_channel_invites": {
+            "method": "GET",
+            "url": "/channels/{channel_id}/invites",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            }
+        },
+        "create_channel_invite": {
+            "method": "POST",
+            "url": "/channels/{channel_id}/invites",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "json-parameters": {
+                "max_age": ["int", "86400"],
+                "max_uses": ["int", "0"],
+                "temporary": ["bool", "False"],
+                "unique": ["bool", "False"],
+                "target_type": "int",
+                "target_user_id": ["Union[Snowflake, ellipsis]", "..."],
+                "target_application_id": ["Union[Snowflake, ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "delete_channel_permission": {
+            "method": "DELETE",
+            "url": "/channels/{channel_id}/permissions/{overwrite_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "overwrite_id": "Snowflake"
+            },
+            "supports-reason": true
+        },
+        "follow_announcement_channel": {
+            "method": "POST",
+            "url": "/channels/{channel_id}/followers",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "json-parameters": {
+                "webhook_channel_id": "Snowflake"
+            }
+        },
+        "trigger_typing_indicator": {
+            "method": "POST",
+            "url": "/channels/{channel_id}/typing",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            }
+        },
+        "get_pinned_messages": {
+            "method": "GET",
+            "url": "/channels/{channel_id}/pins",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            }
+        },
+        "pin_message": {
+            "method": "PUT",
+            "url": "/channels/{channel_id}/pins/{message_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "message_id": "Snowflake"
+            },
+            "supports-reason": true
+        },
+        "unpin_message": {
+            "method": "DELETE",
+            "url": "/channels/{channel_id}/pins/{message_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "message_id": "Snowflake"
+            },
+            "supports-reason": true
+        },
+        "start_thread_from_message": {
+            "method": "POST",
+            "url": "/channels/{channel_id}/messages/{message_id}/threads",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "message_id": "Snowflake"
+            },
+            "json-parameters": {
+                "name": "str",
+                "auto_archive_duration": ["Union[int, ellipsis]", "..."],
+                "rate_limit_per_user": ["Union[Optional[int], ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "start_thread_without_message": {
+            "method": "POST",
+            "url": "/channels/{channel_id}/threads",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "json-parameters": {
+                "name": "str",
+                "auto_archive_duration": ["Union[int, ellipsis]", "..."],
+                "type": ["Union[int, ellipsis]", "..."],
+                "invitable": ["Union[bool, ellipsis]", "..."],
+                "rate_limit_per_user": ["Union[Optional[int], ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "join_thread": {
+            "method": "PUT",
+            "url": "/channels/{channel_id}/thread-members/@me",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            }
+        },
+        "add_thread_member": {
+            "method": "PUT",
+            "url": "/channels/{channel_id}/thread-members/{user_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "user_id": "Snowflake"
+            }
+        },
+        "leave_thread": {
+            "method": "DELETE",
+            "url": "/channels/{channel_id}/thread-members/@me",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            }
+        },
+        "remove_thread_member": {
+            "method": "DELETE",
+            "url": "/channels/{channel_id}/thread-members/{user_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "user_id": "Snowflake"
+            }
+        },
+        "get_thread_member": {
+            "method": "GET",
+            "url": "/channels/{channel_id}/thread-members/{user_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake",
+                "user_id": "Snowflake"
+            }
+        },
+        "list_thread_members": {
+            "method": "GET",
+            "url": "/channels/{channel_id}/thread-members",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            }
+        },
+        "list_public_archived_threads": {
+            "method": "GET",
+            "url": "/channels/{channel_id}/threads/archived/public",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "query-parameters": {
+                "before": ["Union[str, ellipsis]", "..."],
+                "limit": ["Union[int, ellipsis]", "..."]
+            }
+        },
+        "list_private_archived_threads": {
+            "method": "GET",
+            "url": "/channels/{channel_id}/threads/archived/private",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "query-parameters": {
+                "before": ["Union[str, ellipsis]", "..."],
+                "limit": ["Union[int, ellipsis]", "..."]
+            }
+        },
+        "list_joined_private_archived_threads": {
+            "method": "GET",
+            "url": "/channels/{channel_id}/users/@me/threads/archived/private",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "query-parameters": {
+                "before": ["Union[str, ellipsis]", "..."],
+                "limit": ["Union[int, ellipsis]", "..."]
+            }
+        }
+    }
 }
