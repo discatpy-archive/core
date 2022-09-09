@@ -1,1 +1,88 @@
-{}
+{
+    "name": "GuildScheduledEventEndpoints",
+    "methods": {
+        "list_scheduled_events_for_guild": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/scheduled-events",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "query-parameters": {
+                "with_user_count": ["Union[bool, ellipsis]", "..."]
+            }
+        },
+        "create_guild_scheduled_event": {
+            "method": "POST",
+            "url": "/guilds/{guild_id}/scheduled-events",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "channel_id": ["Union[Snowflake, ellipsis]", "..."],
+                "entity_metadata": ["Union[discord_typings.GuildScheduledEventEntityMetadata, ellipsis]", "..."],
+                "name": "str",
+                "privacy_level": "int",
+                "scheduled_start_time": "str",
+                "scheduled_end_time": ["Union[str, ellipsis]", "..."],
+                "description": ["Union[str, ellipsis]", "..."],
+                "entity_type": "int",
+                "image": ["Union[str, ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "get_guild_scheduled_event": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/scheduled-events/{guild_scheduled_event_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "guild_scheduled_event_id": "Snowflake"
+            },
+            "query-parameters": {
+                "with_user_count": ["Union[bool, ellipsis]", "..."]
+            }
+        },
+        "modify_guild_scheduled_event": {
+            "method": "PATCH",
+            "url": "/guilds/{guild_id}/scheduled-events/{guild_scheduled_event_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "guild_scheduled_event_id": "Snowflake"
+            },
+            "json-parameters": {
+                "channel_id": ["Union[Snowflake, ellipsis]", "..."],
+                "entity_metadata": ["Union[Optional[discord_typings.GuildScheduledEventEntityMetadata], ellipsis]", "..."],
+                "name": ["Union[str, ellipsis]", "..."],
+                "privacy_level": ["Union[int, ellipsis]", "..."],
+                "scheduled_start_time": ["Union[str, ellipsis]", "..."],
+                "scheduled_end_time": ["Union[str, ellipsis]", "..."],
+                "description": ["Union[Optional[str], ellipsis]", "..."],
+                "entity_type": ["Union[int, ellipsis]", "..."],
+                "image": ["Union[str, ellipsis]", "..."],
+                "status": ["Union[int, ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "delete_guild_scheduled_event": {
+            "method": "DELETE",
+            "url": "/guilds/{guild_id}/scheduled-events/{guild_scheduled_event_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "guild_scheduled_event_id": "Snowflake"
+            }
+        },
+        "get_guild_scheduled_event_users": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/scheduled-events/{guild_scheduled_event_id}/users",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "guild_scheduled_event_id": "Snowflake"
+            },
+            "query-parameters": {
+                "limit": ["int", "100"],
+                "with_member": ["bool", "False"],
+                "before": ["Union[Snowflake, ellipsis]", "..."],
+                "after": ["Union[Snowflake, ellipsis]", "..."]
+            }
+        }
+    }
+}
