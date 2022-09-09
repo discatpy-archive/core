@@ -1,1 +1,470 @@
-{}
+{
+    "name": "GuildEndpoints",
+    "methods": {
+        "create_guild": {
+            "method": "POST",
+            "url": "/guilds",
+            "json-parameters": {
+                "name": "str",
+                "region": ["Union[Optional[str], ellipsis]", "..."],
+                "icon": ["Union[str, ellipsis]", "..."],
+                "verification_level": ["Union[int, ellipsis]", "..."],
+                "default_message_notifications": ["Union[int, ellipsis]", "..."],
+                "explicit_content_filter": ["Union[int, ellipsis]", "..."],
+                "roles": ["Union[list[discord_typings.RoleData], ellipsis]", "..."],
+                "channels": ["Union[list[discord_typings.PartialChannelData], ellipsis]", "..."],
+                "afk_channel_id": ["Union[Snowflake, ellipsis]", "..."],
+                "afk_timeout": ["Union[int, ellipsis]", "..."],
+                "system_channel_id": ["Union[Snowflake, ellipsis]", "..."],
+                "system_channel_flags": ["Union[int, ellipsis]", "..."]
+            }
+        },
+        "get_guild": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "query-parameters": {
+                "with_counts": ["bool", "False"]
+            }
+        },
+        "get_guild_preview": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/preview",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "modify_guild": {
+            "method": "PATCH",
+            "url": "/guilds/{guild_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "name": ["Union[str, ellipsis]", "..."],
+                "region": ["Union[Optional[str], ellipsis]", "..."],
+                "icon": ["Union[Optional[str], ellipsis]", "..."],
+                "verification_level": ["Union[Optional[int], ellipsis]", "..."],
+                "default_message_notifications": ["Union[Optional[int], ellipsis]", "..."],
+                "explicit_content_filter": ["Union[Optional[int], ellipsis]", "..."],
+                "afk_channel_id": ["Union[Optional[Snowflake], ellipsis]", "..."],
+                "afk_timeout": ["Union[int, ellipsis]", "..."],
+                "system_channel_id": ["Union[Optional[Snowflake], ellipsis]", "..."],
+                "system_channel_flags": ["Union[int, ellipsis]", "..."],
+                "owner_id": ["Union[Snowflake, ellipsis]", "..."],
+                "splash": ["Union[Optional[str], ellipsis]", "..."],
+                "discovery_splash": ["Union[Optional[str], ellipsis]", "..."],
+                "banner": ["Union[Optional[str], ellipsis]", "..."],
+                "rules_channel_id": ["Union[Optional[Snowflake], ellipsis]", "..."],
+                "public_updates_channel_id": ["Union[Optional[Snowflake], ellipsis]", "..."],
+                "preferred_locale": ["Union[Optional[str], ellipsis]", "..."],
+                "features": ["Union[list[str], ellipsis]", "..."],
+                "description": ["Union[Optional[str], ellipsis]", "..."],
+                "premium_progress_bar_enabled": ["Union[bool, ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "delete_guild": {
+            "method": "DELETE",
+            "url": "/guilds/{guild_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "get_guild_channels": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/channels",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "create_guild_channel": {
+            "method": "POST",
+            "url": "/guilds/{guild_id}/channels",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "name": "str",
+                "type": ["Union[Optional[int], ellipsis]", "..."],
+                "topic": ["Union[Optional[str], ellipsis]", "..."],
+                "bitrate": ["Union[Optional[int], ellipsis]", "..."],
+                "user_limit": ["Union[Optional[int], ellipsis]", "..."],
+                "rate_limit_per_user": ["Union[Optional[int], ellipsis]", "..."],
+                "position": ["Union[Optional[int], ellipsis]", "..."],
+                "permission_overwrites": ["Union[Optional[list[discord_typings.PermissionOverwriteData]], ellipsis]", "..."],
+                "parent_id": ["Union[Optional[Snowflake], ellipsis]", "..."],
+                "nsfw": ["Union[Optional[bool], ellipsis]", "..."],
+                "rtc_region": ["Union[Optional[str], ellipsis]", "..."],
+                "video_quality_mode": ["Union[Optional[int], ellipsis]", "..."],
+                "default_auto_archive_duration": ["Union[Optional[int], ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "modify_guild_channel_positions": {
+            "method": "PATCH",
+            "url": "/guilds/{guild_id}/channels",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "id": "Snowflake",
+                "position": ["Union[Optional[int], ellipsis]", "..."],
+                "lock_permissions": ["Union[Optional[bool], ellipsis]", "..."],
+                "parent_id": ["Union[Optional[Snowflake], ellipsis]", "..."]
+            }
+        },
+        "list_active_guild_threads": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/threads/active",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "get_guild_member": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/members/{user_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "user_id": "Snowflake"
+            }
+        },
+        "list_guild_members": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/members",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "query-parameters": {
+                "limit": ["int", "1"],
+                "after": ["Union[Snowflake, ellipsis]", "..."]
+            }
+        },
+        "search_guild_members": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/members/search",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "query-parameters": {
+                "query": "str",
+                "limit": ["int", "1"]
+            }
+        },
+        "modify_guild_member": {
+            "method": "PATCH",
+            "url": "/guilds/{guild_id}/members/{user_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "user_id": "Snowflake"
+            },
+            "json-parameters": {
+                "nick": ["Union[Optional[str], ellipsis]", "..."],
+                "roles": ["Union[Optional[list[Snowflake]], ellipsis]", "..."],
+                "mute": ["Union[Optional[bool], ellipsis]", "..."],
+                "deaf": ["Union[Optional[bool], ellipsis]", "..."],
+                "channel_id": ["Union[Optional[Snowflake], ellipsis]", "..."],
+                "communication_disabled_until": ["Union[Optional[str], ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "modify_current_member": {
+            "method": "PATCH",
+            "url": "/guilds/{guild_id}/members/@me",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "nick": ["Union[Optional[str], ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "add_guild_member_role": {
+            "method": "PUT",
+            "url": "/guilds/{guild_id}/members/{user_id}/roles/{role_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "user_id": "Snowflake",
+                "role_id": "Snowflake"
+            },
+            "supports-reason": true
+        },
+        "remove_guild_member_role": {
+            "method": "DELETE",
+            "url": "/guilds/{guild_id}/members/{user_id}/roles/{role_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "user_id": "Snowflake",
+                "role_id": "Snowflake"
+            },
+            "supports-reason": true
+        },
+        "remove_guild_member": {
+            "method": "DELETE",
+            "url": "/guilds/{guild_id}/members/{user_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "user_id": "Snowflake"
+            },
+            "supports-reason": true
+        },
+        "get_guild_bans": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/bans",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "query-parameters": {
+                "limit": ["int", "1000"],
+                "before": ["Union[Snowflake, ellipsis]", "..."],
+                "after": ["Union[Snowflake, ellipsis]", "..."]
+            }
+        },
+        "get_guild_ban": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/bans/{user_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "user_id": "Snowflake"
+            }
+        },
+        "create_guild_ban": {
+            "method": "PUT",
+            "url": "/guilds/{guild_id}/bans/{user_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "user_id": "Snowflake"
+            },
+            "json-parameters": {
+                "delete_message_seconds": ["Union[int, ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "remove_guild_ban": {
+            "method": "DELETE",
+            "url": "/guilds/{guild_id}/bans/{user_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "user_id": "Snowflake"
+            },
+            "supports-reason": true
+        },
+        "get_guild_roles": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/roles",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "create_guild_role": {
+            "method": "POST",
+            "url": "/guilds/{guild_id}/roles",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "name": ["Union[str, ellipsis]", "..."],
+                "permissions": ["Union[str, ellipsis]", "..."],
+                "color": ["Union[int, ellipsis]", "..."],
+                "hoist": ["Union[bool, ellipsis]", "..."],
+                "icon": ["Union[Optional[str], ellipsis]", "..."],
+                "unicode_emoji": ["Union[Optional[str], ellipsis]", "..."],
+                "mentionable": ["Union[bool, ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "modify_guild_role_positions": {
+            "method": "PATCH",
+            "url": "/guilds/{guild_id}/roles",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "id": "Snowflake",
+                "position": ["Union[Optional[int], ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "modify_guild_role": {
+            "method": "PATCH",
+            "url": "/guilds/{guild_id}/roles/{role_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "role_id": "Snowflake"
+            },
+            "json-parameters": {
+                "name": ["Union[Optional[str], ellipsis]", "..."],
+                "permissions": ["Union[Optional[str], ellipsis]", "..."],
+                "color": ["Union[Optional[int], ellipsis]", "..."],
+                "hoist": ["Union[Optional[bool], ellipsis]", "..."],
+                "icon": ["Union[Optional[str], ellipsis]", "..."],
+                "unicode_emoji": ["Union[Optional[str], ellipsis]", "..."],
+                "mentionable": ["Union[Optional[bool], ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "modify_guild_mfa_level": {
+            "method": "POST",
+            "url": "/guilds/{guild_id}/mfa",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "level": "int"
+            },
+            "supports-reason": true
+        },
+        "delete_guild_role": {
+            "method": "DELETE",
+            "url": "/guilds/{guild_id}/roles/{role_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "role_id": "Snowflake"
+            },
+            "supports-reason": true
+        },
+        "get_guild_prune_count": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/prune",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "query-parameters": {
+                "days": ["int", "7"],
+                "include_roles": ["Union[str, ellipsis]", "..."]
+            }
+        },
+        "begin_guild_prune": {
+            "method": "POST",
+            "url": "/guilds/{guild_id}/prune",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "days": ["int", "7"],
+                "compute_prune_count": ["bool", "True"],
+                "include_roles": ["Union[list[Snowflake], ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "get_guild_voice_regions": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/regions",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "get_guild_invites": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/invites",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "get_guild_integrations": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/integrations",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "delete_guild_integration": {
+            "method": "DELETE",
+            "url": "/guilds/{guild_id}/integrations/{integration_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "integration_id": "Snowflake"
+            },
+            "supports-reason": true
+        },
+        "get_guild_widget_settings": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/widget",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "modify_guild_widget": {
+            "method": "PATCH",
+            "url": "/guilds/{guild_id}/widget",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "enabled": ["Union[bool, ellipsis]", "..."],
+                "channel_id": ["Union[Optional[Snowflake], ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "get_guild_widget": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/widget.json",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "get_guild_vanity_url": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/vanity-url",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "get_guild_widget_image": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/widget.png",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "query-parameters": {
+                "style": ["Union[str, ellipsis]", "..."]
+            }
+        },
+        "get_guild_welcome_screen": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/welcome-screen",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "modify_guild_welcome_screen": {
+            "method": "PATCH",
+            "url": "/guilds/{guild_id}/welcome-screen",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "enabled": ["Union[Optional[bool], ellipsis]", "..."],
+                "welcome_channels": ["Union[Optional[list[discord_typings.WelcomeChannelData]], ellipsis]", "..."],
+                "description": ["Union[Optional[str], ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "modify_current_user_voice_state": {
+            "method": "PATCH",
+            "url": "/guilds/{guild_id}/voice-states/@me",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "json-parameters": {
+                "channel_id": ["Union[Snowflake, ellipsis]", "..."],
+                "suppress": ["Union[bool, ellipsis]", "..."],
+                "request_to_speak_timestamp": ["Union[Optional[str], ellipsis]", "..."]
+            }
+        },
+        "modify_user_voice_state": {
+            "method": "PATCH",
+            "url": "/guilds/{guild_id}/voice-states/{user_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "user_id": "Snowflake"
+            },
+            "json-parameters": {
+                "channel_id": "Snowflake",
+                "suppress": ["Union[bool, ellipsis]", "..."]
+            }
+        }
+    }
+}
