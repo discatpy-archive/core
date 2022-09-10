@@ -1,1 +1,58 @@
-{}
+{
+    "name": "UserEndpoints",
+    "methods": {
+        "get_current_user": {
+            "method": "GET",
+            "url": "/users/@me"
+        },
+        "get_user": {
+            "method": "GET",
+            "url": "/users/{user_id}",
+            "url-parameters": {
+                "user_id": "Snowflake"
+            }
+        },
+        "modify_current_user": {
+            "method": "PATCH",
+            "url": "/users/@me",
+            "json-parameters": {
+                "username": ["Union[str, ellipsis]", "..."],
+                "avatar": ["Union[Optional[str], ellipsis]", "..."]
+            }
+        },
+        "get_current_user_guilds": {
+            "method": "GET",
+            "url": "/users/@me/guilds",
+            "query-parameters": {
+                "before": ["Union[Snowflake, ellipsis]", "..."],
+                "after": ["Union[Snowflake, ellipsis]", "..."],
+                "limit": ["int", "200"]
+            }
+        },
+        "get_current_user_guild_member": {
+            "method": "GET",
+            "url": "/users/@me/guilds/{guild_id}/member",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "leave_guild": {
+            "method": "DELETE",
+            "url": "/users/@me/guilds/{guild_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "create_dm": {
+            "method": "POST",
+            "url": "/users/@me/channels",
+            "json-parameters": {
+                "recipient_id": "Snowflake"
+            }
+        },
+        "get_user_connections": {
+            "method": "GET",
+            "url": "/users/@me/connections"
+        }
+    }
+}

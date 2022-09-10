@@ -1,1 +1,43 @@
-{}
+{
+    "name": "StageInstanceEndpoints",
+    "methods": {
+        "create_stage_instance": {
+            "method": "POST",
+            "url": "/stage-instances",
+            "json-parameters": {
+                "channel_id": "Snowflake",
+                "topic": "str",
+                "privacy_level": ["Union[int, ellipsis]", "..."],
+                "send_start_notification": ["Union[bool, ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "get_stage_instance": {
+            "method": "GET",
+            "url": "/stage-instances/{channel_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            }
+        },
+        "modify_stage_instance": {
+            "method": "PATCH",
+            "url": "/stage-instances/{channel_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "json-parameters": {
+                "topic": ["Union[str, ellipsis]", "..."],
+                "privacy_level": ["Union[int, ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "delete_stage_instance": {
+            "method": "DELETE",
+            "url": "/stage-instances/{channel_id}",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "supports-reason": true
+        }
+    }
+}

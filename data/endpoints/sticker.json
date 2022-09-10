@@ -1,1 +1,54 @@
-{}
+{
+    "name": "StickerEndpoints",
+    "methods": {
+        "get_sticker": {
+            "method": "GET",
+            "url": "/stickers/{sticker_id}",
+            "url-parameters": {
+                "sticker_id": "Snowflake"
+            }
+        },
+        "list_nitro_sticker_packs": {
+            "method": "GET",
+            "url": "/sticker-packs"
+        },
+        "list_guild_stickers": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/stickers",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            }
+        },
+        "get_guild_sticker": {
+            "method": "GET",
+            "url": "/guilds/{guild_id}/stickers/{sticker_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "sticker_id": "Snowflake"
+            }
+        },
+        "modify_guild_sticker": {
+            "method": "PATCH",
+            "url": "/guilds/{guild_id}/stickers/{sticker_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "sticker_id": "Snowflake"
+            },
+            "json-parameters": {
+                "name": ["Union[str, ellipsis]", "..."],
+                "description": ["Union[Optional[str], ellipsis]", "..."],
+                "tags": ["Union[str, ellipsis]", "..."]
+            },
+            "supports-reason": true
+        },
+        "delete_guild_sticker": {
+            "method": "DELETE",
+            "url": "/guilds/{guild_id}/stickers/{sticker_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "sticker_id": "Snowflake"
+            },
+            "supports-reason": true
+        }
+    }
+}
