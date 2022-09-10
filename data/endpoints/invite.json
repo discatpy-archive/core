@@ -1,1 +1,25 @@
-{}
+{
+    "name": "InviteEndpoints",
+    "methods": {
+        "get_invite": {
+            "method": "GET",
+            "url": "/invites/{invite_code}",
+            "url-parameters": {
+                "invite_code": "Snowflake"
+            },
+            "query-parameters": {
+                "with_counts": ["Union[bool, ellipsis]", "..."],
+                "with_expiration": ["Union[bool, ellipsis]", "..."],
+                "guild_scheduled_event_id": ["Union[Snowflake, ellipsis]", "..."]
+            }
+        },
+        "delete_invite": {
+            "method": "DELETE",
+            "url": "/invites/{invite_code}",
+            "url-parameters": {
+                "invite_code": "Snowflake"
+            },
+            "supports-reason": true
+        }
+    }
+}
