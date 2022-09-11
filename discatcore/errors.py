@@ -22,7 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 from aiohttp import ClientResponse
 
@@ -41,15 +41,15 @@ class DisCatCoreException(Exception):
     pass
 
 
-def _shorten_error_dict(d: Dict[str, Any], key: str = "") -> Dict[str, str]:
-    ret_items: List[Tuple[str, str]] = []
+def _shorten_error_dict(d: dict[str, Any], key: str = "") -> dict[str, str]:
+    ret_items: list[tuple[str, str]] = []
 
     for k, val in d.items():
         new_k = key + "." + k if key else k
 
         if isinstance(val, dict):
             try:
-                _errors: List[Dict[str, Any]] = val["_errors"]
+                _errors: list[dict[str, Any]] = val["_errors"]
             except KeyError:
                 # recursively go through the dict to find the _errors list
                 ret_items.extend(_shorten_error_dict(val, new_k).items())
@@ -78,7 +78,7 @@ class HTTPException(DisCatCoreException):
 
     __all__ = ()
 
-    def __init__(self, response: ClientResponse, data: Optional[Union[Dict[str, Any], str]]):
+    def __init__(self, response: ClientResponse, data: Optional[Union[dict[str, Any], str]]):
         self.response = response
         self.status = response.status
 

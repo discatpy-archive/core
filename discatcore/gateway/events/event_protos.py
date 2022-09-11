@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from discord_typings import (
     ApplicationCommandPermissionsUpdateData,
@@ -130,9 +130,9 @@ class GatewayEventProtos:
     async def thread_list_sync(
         self,
         guild_id: Snowflake,
-        channel_ids: List[Snowflake],
-        threads: List[ThreadChannelData],
-        members: List[ThreadMemberData],
+        channel_ids: list[Snowflake],
+        threads: list[ThreadChannelData],
+        members: list[ThreadMemberData],
     ):
         pass
 
@@ -141,8 +141,8 @@ class GatewayEventProtos:
         id: Snowflake,
         guild_id: Snowflake,
         member_count: int,
-        added_members: EllipsisOr[List[ThreadMemberData]],
-        removed_member_ids: EllipsisOr[List[Snowflake]],
+        added_members: EllipsisOr[list[ThreadMemberData]],
+        removed_member_ids: EllipsisOr[list[Snowflake]],
     ):
         pass
 
@@ -171,10 +171,10 @@ class GatewayEventProtos:
     async def guild_ban_remove(self, guild_id: Snowflake, user: UserData):
         pass
 
-    async def guild_emojis_update(self, guild_id: Snowflake, emojis: List[EmojiData]):
+    async def guild_emojis_update(self, guild_id: Snowflake, emojis: list[EmojiData]):
         pass
 
-    async def guild_stickers_update(self, guild_id: Snowflake, stickers: List[StickerData]):
+    async def guild_stickers_update(self, guild_id: Snowflake, stickers: list[StickerData]):
         pass
 
     async def guild_integrations_update(self, guild_id: Snowflake):
@@ -192,11 +192,11 @@ class GatewayEventProtos:
     async def guild_members_chunk(
         self,
         guild_id: Snowflake,
-        members: List[GuildMemberData],
+        members: list[GuildMemberData],
         chunk_index: int,
         chunk_count: int,
-        not_found: EllipsisOr[List[Snowflake]],
-        presences: EllipsisOr[List[UpdatePresenceData]],
+        not_found: EllipsisOr[list[Snowflake]],
+        presences: EllipsisOr[list[UpdatePresenceData]],
         nonce: str,
     ):
         pass
@@ -265,7 +265,7 @@ class GatewayEventProtos:
         pass
 
     async def message_delete_bulk(
-        self, ids: List[Snowflake], channel_id: Snowflake, guild_id: EllipsisOr[Snowflake]
+        self, ids: list[Snowflake], channel_id: Snowflake, guild_id: EllipsisOr[Snowflake]
     ):
         pass
 

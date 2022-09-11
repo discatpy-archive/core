@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 import builtins
 import importlib
 import types
-from typing import Any, Callable, Coroutine, Dict, List, Optional, Union
+from collections.abc import Callable, Coroutine
+from typing import Any, Optional, Union
 
 from discatcore.types import Snowflake
 
@@ -132,8 +133,8 @@ def indent_text(txt: str, *, num_spaces: int = 4) -> str:
     return " " * num_spaces + txt
 
 
-def indent_all_text(strs: List[str]) -> List[str]:
-    output: List[str] = []
+def indent_all_text(strs: list[str]) -> list[str]:
+    output: list[str] = []
 
     for txt in strs:
         output.append(indent_text(txt))
@@ -144,11 +145,11 @@ def indent_all_text(strs: List[str]) -> List[str]:
 # Code taken from the dataclasses module in the Python stdlib
 def create_fn(
     name: str,
-    args: List[str],
-    body: List[str],
+    args: list[str],
+    body: list[str],
     *,
-    globals: Optional[Dict[str, Any]] = None,
-    locals: Optional[Dict[str, Any]] = None,
+    globals: Optional[dict[str, Any]] = None,
+    locals: Optional[dict[str, Any]] = None,
     return_type: type = ...,
     asynchronous: bool = False,
 ) -> Union[CoroFunc, Func]:
@@ -191,7 +192,7 @@ def _get_everything_from_module(mod):
     return everything
 
 
-def from_import(module: str, locals: Dict[str, Any], objs_to_grab: Optional[List[str]] = None):
+def from_import(module: str, locals: dict[str, Any], objs_to_grab: Optional[list[str]] = None):
     actual_module = importlib.import_module(module)
 
     if objs_to_grab:

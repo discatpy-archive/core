@@ -29,7 +29,7 @@ import warnings
 from dataclasses import dataclass
 from datetime import datetime
 from types import EllipsisType
-from typing import Any, Dict, List, Optional, cast
+from typing import Any, Optional, cast
 from urllib.parse import quote as _urlquote
 
 import aiohttp
@@ -71,7 +71,7 @@ def _calculate_reset_after(resp: aiohttp.ClientResponse) -> float:
     return reset_after if reset_after >= 0.0 else 0.0
 
 
-def _filter_dict_for_ellipsis(d: EllipsisOr[Dict[Any, Any]]):
+def _filter_dict_for_ellipsis(d: EllipsisOr[dict[Any, Any]]):
     if isinstance(d, EllipsisType):
         return None
 
@@ -145,7 +145,7 @@ class HTTPClient:
             await self._session.close()
 
     @staticmethod
-    def _prepare_data(json: EllipsisOr[Dict[str, Any]], files: EllipsisOr[List[BasicFile]]):
+    def _prepare_data(json: EllipsisOr[dict[str, Any]], files: EllipsisOr[list[BasicFile]]):
         pd = _PreparedData()
 
         if json is not ... and files is ...:
@@ -181,10 +181,10 @@ class HTTPClient:
         self,
         route: Route,
         *,
-        query_params: Optional[Dict[str, Any]] = None,
-        json_params: EllipsisOr[Dict[str, Any]] = ...,
+        query_params: Optional[dict[str, Any]] = None,
+        json_params: EllipsisOr[dict[str, Any]] = ...,
         reason: Optional[str] = None,
-        files: EllipsisOr[List[BasicFile]] = ...,
+        files: EllipsisOr[list[BasicFile]] = ...,
     ):
         self.request_id += 1
         rid = self.request_id
@@ -193,13 +193,13 @@ class HTTPClient:
 
         query_params = _filter_dict_for_ellipsis(query_params or {})
         max_tries = 5
-        headers: Dict[str, str] = self.default_headers
+        headers: dict[str, str] = self.default_headers
 
         if reason:
             headers["X-Audit-Log-Reason"] = _urlquote(reason, safe="/ ")
 
         data = self._prepare_data(json_params, files)
-        kwargs: Dict[str, Any] = {}
+        kwargs: dict[str, Any] = {}
 
         if data.json is not ...:
             kwargs["json"] = data.json

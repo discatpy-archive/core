@@ -23,7 +23,6 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from enum import Enum
-from typing import Any, Dict, Tuple
 
 __all__ = (
     "ActivityTypes",

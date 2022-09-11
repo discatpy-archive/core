@@ -26,8 +26,9 @@ from __future__ import annotations
 import asyncio
 import inspect
 import logging
+from collections.abc import Callable, Coroutine
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, List, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Optional, TypeVar
 
 if TYPE_CHECKING:
     from discatcore.dispatcher import Dispatcher
@@ -51,7 +52,7 @@ class Event:
     def __init__(self, name: str, parent: Dispatcher):
         self.name = name
         self.parent = parent
-        self.callbacks: List[CoroFunc] = []
+        self.callbacks: list[CoroFunc] = []
         self._proto: Optional[inspect.Signature] = None
         self._error_handler: CoroFunc = self.parent.error_handler
 

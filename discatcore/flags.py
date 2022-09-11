@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from functools import reduce
-from typing import Any, ClassVar, Dict, Tuple, Type, Union
+from typing import Any, ClassVar, Union
 
 from typing_extensions import Self
 
@@ -44,7 +44,7 @@ class flag_value:
     def __init__(self, value: int):
         self.value = value
 
-    def __get__(self, instance: BaseFlags, owner: Type[BaseFlags]):
+    def __get__(self, instance: BaseFlags, owner: type[BaseFlags]):
         if not isinstance(instance, BaseFlags):
             raise TypeError("Owner instance has to be of type BaseFlags!")
 
@@ -74,12 +74,12 @@ class FlagMeta(type):
     def __new__(
         cls,
         name: str,
-        bases: Tuple[type],
-        attrs: Dict[str, Any],
+        bases: tuple[type],
+        attrs: dict[str, Any],
         *,
         inverted: bool = False,
     ):
-        valid_flags: Dict[str, int] = {}
+        valid_flags: dict[str, int] = {}
         default_value = 0
 
         for k, v in attrs.items():
@@ -105,7 +105,7 @@ class BaseFlags(metaclass=FlagMeta):
 
     Parameters
     ----------
-    VALID_FLAGS: :type:`ClassVar[Dict[str, int]]`
+    VALID_FLAGS: :type:`ClassVar[dict[str, int]]`
         The valid flags for this flag class. Automatically generated via the metaclass.
     DEFAULT_VALUE: :type:`ClassVar[int]`
         The default value for this flag class. Automatically generated via the metaclass.
@@ -113,7 +113,7 @@ class BaseFlags(metaclass=FlagMeta):
         The current value of this flag class instance. Automatically set to the default value.
     """
 
-    VALID_FLAGS: ClassVar[Dict[str, int]]
+    VALID_FLAGS: ClassVar[dict[str, int]]
     DEFAULT_VALUE: ClassVar[int]
 
     __slots__ = ("value",)
@@ -175,7 +175,7 @@ class BaseFlags(metaclass=FlagMeta):
         return self.__class__._from_value(~self.value)
 
     @classmethod
-    def _from_value(cls: Type[Self], value: int) -> Self:
+    def _from_value(cls: type[Self], value: int) -> Self:
         self = cls.__new__(cls)
         self.value = value
         return self
@@ -211,18 +211,18 @@ class Intents(BaseFlags):
     # TODO: Automod
 
     @classmethod
-    def ALL(cls: Type[Intents]) -> Intents:
+    def ALL(cls: type[Intents]) -> Intents:
         """A classmethod that returns a :class:`Intents` instance with everything set."""
         value = reduce(lambda a, b: a | b, cls.VALID_FLAGS.values())
         return cls._from_value(value)
 
     @classmethod
-    def NONE(cls: Type[Intents]) -> Intents:
+    def NONE(cls: type[Intents]) -> Intents:
         """A classmethod that returns a :class:`Intents` instance with nothing set."""
         return cls._from_value(cls.DEFAULT_VALUE)
 
     @classmethod
-    def DEFAULT(cls: Type[Intents]) -> Intents:
+    def DEFAULT(cls: type[Intents]) -> Intents:
         """A classmethod that returns a :class:`Intents` instance with everything except privileged intents set."""
         self = cls.ALL()
         self.GUILD_PRESENCES = False

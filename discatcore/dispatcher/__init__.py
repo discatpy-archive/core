@@ -26,7 +26,8 @@ import asyncio
 import inspect
 import logging
 import traceback
-from typing import Any, Callable, Coroutine, Dict, Optional, TypeVar
+from collections.abc import Callable, Coroutine
+from typing import Any, Optional, TypeVar
 
 from discatcore.dispatcher.event import Event
 
@@ -60,7 +61,7 @@ class Dispatcher:
     )
 
     def __init__(self) -> None:
-        self.events: Dict[str, Event] = {}
+        self.events: dict[str, Event] = {}
 
     def get_event(self, name: str) -> Optional[Event]:
         """Returns an event with the name provided.

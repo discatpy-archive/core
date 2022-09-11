@@ -29,7 +29,7 @@ import logging
 import platform
 import random
 import zlib
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union, cast
+from typing import TYPE_CHECKING, Any, Optional, Union, cast
 
 import aiohttp
 
@@ -159,7 +159,7 @@ class GatewayClient:
         out_str = buff.decode("utf-8")
         return out_str
 
-    async def send(self, data: Dict[str, Any]):
+    async def send(self, data: dict[str, Any]):
         if self.ratelimiter.is_ratelimited():
             if not self.ratelimiter.is_set():
                 await self.ratelimiter.set()
@@ -323,7 +323,7 @@ class GatewayClient:
         self,
         guild_id: Snowflake,
         *,
-        user_ids: Optional[Union[Snowflake, List[Snowflake]]] = None,
+        user_ids: Optional[Union[Snowflake, list[Snowflake]]] = None,
         limit: int = 0,
         query: str = "",
         presences: bool = False,

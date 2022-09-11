@@ -24,8 +24,9 @@ DEALINGS IN THE SOFTWARE.
 
 import inspect
 from collections import OrderedDict
+from collections.abc import Callable
 from datetime import datetime
-from typing import Callable, List, TypeVar, get_args
+from typing import TypeVar, get_args
 
 from discatcore.types import EllipsisOr, EllipsisType, Snowflake
 from discatcore.utils import create_fn, from_import, indent_text
@@ -43,7 +44,7 @@ _custom_type_handlers = OrderedDict(
 )
 
 
-def _generate_body(args: List[inspect.Parameter]):
+def _generate_body(args: list[inspect.Parameter]):
     ret_tuple = indent_text("return (")
 
     if len(args) == 1:
@@ -101,7 +102,7 @@ from_import(
 
 def generate_handlers_from(src_cls: type) -> Callable[[T], T]:
     def wrapper(cls: T):
-        ignore_keys: List[str] = getattr(src_cls, "__ignore__", [])
+        ignore_keys: list[str] = getattr(src_cls, "__ignore__", [])
         proto_keys = [k for k in dir(src_cls) if k not in ignore_keys and not k.startswith("_")]
 
         for k in proto_keys:
