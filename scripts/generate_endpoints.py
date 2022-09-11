@@ -1,7 +1,6 @@
 import argparse
 import builtins
 import contextlib
-import dataclasses
 import json
 import pathlib
 import types
@@ -79,19 +78,37 @@ def _type_repr(obj):
     return repr(obj)
 
 
-@dataclasses.dataclass
 class FunctionArg:
-    name: Optional[str] = None
-    _: dataclasses.KW_ONLY
-    annotation: Union[str, _UnsetDefine] = _Unset
-    default: Union[str, _UnsetDefine] = _Unset
-    pos_and_kw: bool = True
-    pos_modifier: bool = False
-    kw_modifier: bool = False
-    variable_pos: bool = False
-    variable_kw: bool = False
+    name: Optional[str]
+    annotation: Union[str, _UnsetDefine]
+    default: Union[str, _UnsetDefine]
+    pos_and_kw: bool
+    pos_modifier: bool
+    kw_modifier: bool
+    variable_pos: bool
+    variable_kw: bool
 
-    def __post_init__(self):
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        *,
+        annotation: Union[str, _UnsetDefine] = _Unset,
+        default: Union[str, _UnsetDefine] = _Unset,
+        pos_and_kw: bool = True,
+        pos_modifier: bool = False,
+        kw_modifier: bool = False,
+        variable_pos: bool = False,
+        variable_kw: bool = False,
+    ):
+        self.name = name
+        self.annotation = annotation
+        self.default = default
+        self.pos_and_kw = pos_and_kw
+        self.pos_modifier = pos_modifier
+        self.kw_modifier = kw_modifier
+        self.variable_pos = variable_pos
+        self.variable_kw = variable_kw
+
         if self.pos_modifier and self.kw_modifier:
             raise ValueError(
                 f"arg {self.name} cannot be both a positional modifier and a keyword modifier!"
