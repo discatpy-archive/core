@@ -24,7 +24,6 @@ DEALINGS IN THE SOFTWARE.
 
 import asyncio
 import logging
-from typing import List
 
 from discatcore.http.route import Route
 
@@ -53,12 +52,15 @@ class Bucket:
     async def _unlock(self, delay: float):
         await asyncio.sleep(delay)
         self._lock.set()
-        _log.debug("Ratelimit bucket with parameters %s has been unlocked.", self.route.bucket)
+        _log.debug("Ratelimit bucket %s has been unlocked.", self.route.bucket)
 
     def lock_for(self, delay: float):
+        if self.is_locked():
+            return
+
         self._lock.clear()
         _log.debug(
-            "Ratelimit bucket with parameters %s has been locked. This will be unlocked after %f seconds.",
+            "Ratelimit bucket %s has been locked. This will be unlocked after %f seconds.",
             self.route.bucket,
             delay,
         )
@@ -74,30 +76,12 @@ class Ratelimiter:
     __slots__ = ("_buckets", "global_bucket")
 
     def __init__(self):
-        self._buckets: List[Bucket] = []
-        self.global_bucket = Bucket(Route("/"))
+        self._buckets: dict[str, Bucket] = {}
+        self.global_bucket = Bucket(Route("", "/"))
 
-    async def acquire_buckets(self, route: Route):
-        """Acquires (a) bucket(s) with the given route.
-        This will automatically wait for each bucket that matches the provided route.
+    def get_bucket(self, route: Route):
+        if not route.bucket in self._buckets:
+            new_bucket = Bucket(route)
+            self._buckets[route.bucket] = new_bucket
 
-        Parameters
-        ----------
-        route: :class:`Route`
-            The route representing the bucket(s).
-        """
-        for bucket in self._buckets:
-            if bucket.route == route:
-                await bucket.wait()
-                break
-
-    async def create_temp_bucket(self, route: Route, delay: float):
-        new_bucket = Bucket(route)
-        self._buckets.append(new_bucket)
-
-        new_bucket.lock_for(delay)
-        await new_bucket.wait()
-
-        for i, bucket in enumerate(self._buckets):
-            if bucket == new_bucket:
-                del self._buckets[i]
+        return self._buckets[route.bucket]

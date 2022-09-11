@@ -179,7 +179,6 @@ class HTTPClient:
 
     async def request(
         self,
-        method: str,
         route: Route,
         *,
         query_params: Optional[Dict[str, Any]] = None,
@@ -208,34 +207,53 @@ class HTTPClient:
         if data.multipart_content is not ...:
             kwargs["data"] = data.multipart_content
 
+        bucket = self._ratelimiter.get_bucket(route)
+        supports_ratelimits = False  # there are some special routes that have 0 ratelimiting
+
         for tries in range(max_tries):
-            await self._ratelimiter.acquire_buckets(route)
             await self._ratelimiter.global_bucket.wait()
             _log.debug("REQUEST:%d All ratelimit buckets have been acquired!", rid)
 
             response = await self._session.request(
-                method, f"{self._api_url}{url}", params=query_params, headers=headers, **kwargs
+                route.method,
+                f"{self._api_url}{url}",
+                params=query_params,
+                headers=headers,
+                **kwargs,
             )
             _log.debug(
                 "REQUEST:%d Made request to %s with method %s.",
                 rid,
                 f"{self._api_url}{url}",
-                method,
+                route.method,
             )
 
-            reset_after = _calculate_reset_after(response)
-            remaining = int(response.headers.get("X-RateLimit-Remaining", 1))
+            supports_ratelimits = response.headers.get("X-RateLimit-Bucket") is not None
+
+            reset_after = 0.0
+            remaining = 0
+            if supports_ratelimits:
+                reset_after = _calculate_reset_after(response)
+                remaining = int(response.headers.get("X-RateLimit-Remaining", 1))
+            else:
+                _log.debug(
+                    "REQUEST:%d Bucket %s does not have any ratelimiting.", rid, route.bucket
+                )
 
             # Everything is ok
             if 200 <= response.status < 300:
-                if remaining == 0 and reset_after > 0.0:
-                    _log.debug(
-                        "REQUEST:%d Ratelimit bucket %s has expired. Waiting to refresh it.",
-                        rid,
-                        route.bucket,
-                    )
-                    await self._ratelimiter.create_temp_bucket(route, reset_after)
-                    _log.debug("REQUEST:%d Ratelimit bucket %s is good to go!", rid, route.bucket)
+                if supports_ratelimits:
+                    if remaining == 0 and reset_after > 0.0:
+                        _log.debug(
+                            "REQUEST:%d Ratelimit bucket %s has expired. Waiting to refresh it.",
+                            rid,
+                            route.bucket,
+                        )
+                        bucket.lock_for(reset_after)
+                        await bucket.wait()
+                        _log.debug(
+                            "REQUEST:%d Ratelimit bucket %s is good to go!", rid, route.bucket
+                        )
                 return await self._text_or_json(response)
 
             # Ratelimited
@@ -245,17 +263,17 @@ class HTTPClient:
                     # it means we're Cloudflare banned
                     raise HTTPException(response, await self._text_or_json(response))
 
-                if reset_after > 0.0:
+                if supports_ratelimits:
+                    retry_after = float(response.headers["Retry-After"])
                     is_global = response.headers["X-RateLimit-Scope"] == "global"
 
                     if is_global:
                         _log.info(
                             "REQUEST:%d All requests have hit a global ratelimit! Retrying in %f.",
                             rid,
-                            reset_after,
+                            retry_after,
                         )
-                        if not self._ratelimiter.global_bucket.is_locked():
-                            self._ratelimiter.global_bucket.lock_for(reset_after)
+                        self._ratelimiter.global_bucket.lock_for(retry_after)
                         await self._ratelimiter.global_bucket.wait()
                     else:
                         _log.info(
@@ -264,9 +282,14 @@ class HTTPClient:
                             route.bucket,
                             reset_after,
                         )
-                        await self._ratelimiter.create_temp_bucket(route, reset_after)
+                        bucket.lock_for(retry_after)
+                        await bucket.wait()
 
                     _log.info("REQUEST:%d Ratelimit is over. Continuing with the request.", rid)
+                else:
+                    raise RuntimeError(
+                        f"Route {route.bucket} that doesn't support ratelimiting hit a 429?"
+                    )
 
                 continue
 
@@ -282,11 +305,11 @@ class HTTPClient:
                 raise HTTPException(response, await self._text_or_json(response))
 
         raise RuntimeError(
-            f'REQUEST:{rid} Tried sending request to "{url}" with method {method} {max_tries} times.'
+            f'REQUEST:{rid} Tried sending request to "{url}" with method {route.method} {max_tries} times.'
         )
 
     async def get_gateway_bot(self) -> GetGatewayBotData:
-        gb_info = await self.request("GET", Route("/gateway/bot"))
+        gb_info = await self.request(Route("GET", "/gateway/bot"))
         return cast(GetGatewayBotData, gb_info)
 
     async def get_from_cdn(self, url: str) -> bytes:

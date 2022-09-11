@@ -22,30 +22,18 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from dataclasses import KW_ONLY, dataclass
 from typing import Optional
 from urllib.parse import quote as _urlquote
 
 from discatcore.types import Snowflake
 
-__all__ = (
-    "BucketParams",
-    "Route",
-)
-
-
-@dataclass
-class BucketParams:
-    _: KW_ONLY
-    guild_id: Optional[Snowflake]
-    channel_id: Optional[Snowflake]
-    webhook_id: Optional[Snowflake]
-    webhook_token: Optional[str]
+__all__ = ("Route",)
 
 
 class Route:
-    def __init__(self, url: str, **params):
+    def __init__(self, method: str, url: str, **params):
         self.params = params
+        self.method = method
         self.url = url
 
         # top-level resource parameters
@@ -69,9 +57,7 @@ class Route:
 
     @property
     def bucket(self):
-        return BucketParams(
-            guild_id=self.guild_id,
-            channel_id=self.channel_id,
-            webhook_id=self.webhook_id,
-            webhook_token=self.webhook_token,
-        )
+        top_level_params = {
+            k: getattr(self, k) for k in ("guild_id", "channel_id", "webhook_id", "webhook_token")
+        }
+        return f"{self.method}:{self.url.format_map(top_level_params)}"

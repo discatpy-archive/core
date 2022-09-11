@@ -339,7 +339,7 @@ def parse_endpoint_func(name: str, func: dict[str, Any]):
         extra_params += ", files=files"
 
     func_generator.print(
-        f'return await self.request("{method}", Route("{url}"{fmted_url_params}){extra_params})'
+        f'return await self.request(Route("{method}", "{url}"{fmted_url_params}){extra_params})'
     )
 
     return func_generator.generate_raw()
