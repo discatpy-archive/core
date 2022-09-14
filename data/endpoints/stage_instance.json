@@ -7,8 +7,14 @@
             "json-parameters": {
                 "channel_id": "Snowflake",
                 "topic": "str",
-                "privacy_level": ["Union[int, ellipsis]", "..."],
-                "send_start_notification": ["Union[bool, ellipsis]", "..."]
+                "privacy_level": [
+                    "int",
+                    "Unset"
+                ],
+                "send_start_notification": [
+                    "bool",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },
@@ -26,8 +32,14 @@
                 "channel_id": "Snowflake"
             },
             "json-parameters": {
-                "topic": ["Union[str, ellipsis]", "..."],
-                "privacy_level": ["Union[int, ellipsis]", "..."]
+                "topic": [
+                    "str",
+                    "Unset"
+                ],
+                "privacy_level": [
+                    "int",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },

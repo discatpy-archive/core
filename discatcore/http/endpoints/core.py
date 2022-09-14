@@ -26,7 +26,7 @@ from typing import Any, Optional
 
 from discatcore.file import BasicFile
 from discatcore.http.route import Route
-from discatcore.types import EllipsisOr
+from discatcore.types import Unset
 
 __all__ = ("EndpointMixin",)
 
@@ -34,12 +34,12 @@ __all__ = ("EndpointMixin",)
 class EndpointMixin:
     async def request(
         self,
-        method: str,
         route: Route,
         *,
         query_params: Optional[dict[str, Any]] = None,
-        json_params: EllipsisOr[dict[str, Any]] = ...,
+        json_params: dict[str, Any] = Unset,
         reason: Optional[str] = None,
-        files: EllipsisOr[list[BasicFile]] = ...,
+        files: list[BasicFile] = Unset,
+        **extras: Any,
     ):
         pass

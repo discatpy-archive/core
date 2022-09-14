@@ -8,9 +8,18 @@
                 "invite_code": "Snowflake"
             },
             "query-parameters": {
-                "with_counts": ["Union[bool, ellipsis]", "..."],
-                "with_expiration": ["Union[bool, ellipsis]", "..."],
-                "guild_scheduled_event_id": ["Union[Snowflake, ellipsis]", "..."]
+                "with_counts": [
+                    "bool",
+                    "Unset"
+                ],
+                "with_expiration": [
+                    "bool",
+                    "Unset"
+                ],
+                "guild_scheduled_event_id": [
+                    "Snowflake",
+                    "Unset"
+                ]
             }
         },
         "delete_invite": {

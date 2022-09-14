@@ -8,10 +8,22 @@
                 "guild_id": "Snowflake"
             },
             "query-parameters": {
-                "user_id": ["Union[Snowflake, ellipsis]", "..."],
-                "action_type": ["Union[int, ellipsis]", "..."],
-                "before": ["Union[Snowflake, ellipsis]", "..."],
-                "limit": ["Union[int, ellipsis]", "..."]
+                "user_id": [
+                    "Snowflake",
+                    "Unset"
+                ],
+                "action_type": [
+                    "int",
+                    "Unset"
+                ],
+                "before": [
+                    "Snowflake",
+                    "Unset"
+                ],
+                "limit": [
+                    "int",
+                    "Unset"
+                ]
             }
         }
     }

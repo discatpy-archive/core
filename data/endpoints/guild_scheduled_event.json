@@ -8,7 +8,10 @@
                 "guild_id": "Snowflake"
             },
             "query-parameters": {
-                "with_user_count": ["Union[bool, ellipsis]", "..."]
+                "with_user_count": [
+                    "bool",
+                    "Unset"
+                ]
             }
         },
         "create_guild_scheduled_event": {
@@ -18,15 +21,30 @@
                 "guild_id": "Snowflake"
             },
             "json-parameters": {
-                "channel_id": ["Union[Snowflake, ellipsis]", "..."],
-                "entity_metadata": ["Union[discord_typings.GuildScheduledEventEntityMetadata, ellipsis]", "..."],
+                "channel_id": [
+                    "Snowflake",
+                    "Unset"
+                ],
+                "entity_metadata": [
+                    "discord_typings.GuildScheduledEventEntityMetadata",
+                    "Unset"
+                ],
                 "name": "str",
                 "privacy_level": "int",
                 "scheduled_start_time": "str",
-                "scheduled_end_time": ["Union[str, ellipsis]", "..."],
-                "description": ["Union[str, ellipsis]", "..."],
+                "scheduled_end_time": [
+                    "str",
+                    "Unset"
+                ],
+                "description": [
+                    "str",
+                    "Unset"
+                ],
                 "entity_type": "int",
-                "image": ["Union[str, ellipsis]", "..."]
+                "image": [
+                    "str",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },
@@ -38,7 +56,10 @@
                 "guild_scheduled_event_id": "Snowflake"
             },
             "query-parameters": {
-                "with_user_count": ["Union[bool, ellipsis]", "..."]
+                "with_user_count": [
+                    "bool",
+                    "Unset"
+                ]
             }
         },
         "modify_guild_scheduled_event": {
@@ -49,16 +70,46 @@
                 "guild_scheduled_event_id": "Snowflake"
             },
             "json-parameters": {
-                "channel_id": ["Union[Snowflake, ellipsis]", "..."],
-                "entity_metadata": ["Union[Optional[discord_typings.GuildScheduledEventEntityMetadata], ellipsis]", "..."],
-                "name": ["Union[str, ellipsis]", "..."],
-                "privacy_level": ["Union[int, ellipsis]", "..."],
-                "scheduled_start_time": ["Union[str, ellipsis]", "..."],
-                "scheduled_end_time": ["Union[str, ellipsis]", "..."],
-                "description": ["Union[Optional[str], ellipsis]", "..."],
-                "entity_type": ["Union[int, ellipsis]", "..."],
-                "image": ["Union[str, ellipsis]", "..."],
-                "status": ["Union[int, ellipsis]", "..."]
+                "channel_id": [
+                    "Snowflake",
+                    "Unset"
+                ],
+                "entity_metadata": [
+                    "Optional[discord_typings.GuildScheduledEventEntityMetadata]",
+                    "Unset"
+                ],
+                "name": [
+                    "str",
+                    "Unset"
+                ],
+                "privacy_level": [
+                    "int",
+                    "Unset"
+                ],
+                "scheduled_start_time": [
+                    "str",
+                    "Unset"
+                ],
+                "scheduled_end_time": [
+                    "str",
+                    "Unset"
+                ],
+                "description": [
+                    "Optional[str]",
+                    "Unset"
+                ],
+                "entity_type": [
+                    "int",
+                    "Unset"
+                ],
+                "image": [
+                    "str",
+                    "Unset"
+                ],
+                "status": [
+                    "int",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },
@@ -78,10 +129,22 @@
                 "guild_scheduled_event_id": "Snowflake"
             },
             "query-parameters": {
-                "limit": ["int", "100"],
-                "with_member": ["bool", "False"],
-                "before": ["Union[Snowflake, ellipsis]", "..."],
-                "after": ["Union[Snowflake, ellipsis]", "..."]
+                "limit": [
+                    "int",
+                    "100"
+                ],
+                "with_member": [
+                    "bool",
+                    "False"
+                ],
+                "before": [
+                    "Snowflake",
+                    "Unset"
+                ],
+                "after": [
+                    "Snowflake",
+                    "Unset"
+                ]
             }
         }
     }

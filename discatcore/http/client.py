@@ -40,7 +40,7 @@ from discatcore.errors import HTTPException, UnsupportedAPIVersionWarning
 from discatcore.file import BasicFile
 from discatcore.http.ratelimiter import Ratelimiter
 from discatcore.http.route import Route
-from discatcore.types import EllipsisOr
+from discatcore.types import Unset
 from discatcore.utils import dumps, loads
 
 BASE_API_URL = "https://discord.com/api/v{0}"
@@ -54,8 +54,8 @@ _log = logging.getLogger(__name__)
 
 @dataclass
 class _PreparedData:
-    json: EllipsisOr[Any] = ...
-    multipart_content: EllipsisOr[aiohttp.FormData] = ...
+    json: Any = Unset
+    multipart_content: aiohttp.FormData = Unset
 
 
 def _calculate_reset_after(resp: aiohttp.ClientResponse) -> float:
@@ -71,8 +71,8 @@ def _calculate_reset_after(resp: aiohttp.ClientResponse) -> float:
     return reset_after if reset_after >= 0.0 else 0.0
 
 
-def _filter_dict_for_ellipsis(d: dict[Any, Any]):
-    return dict(filter(lambda item: item[1] is not ..., d.items()))
+def _filter_dict_for_unset(d: dict[Any, Any]):
+    return dict(filter(lambda item: item[1] is not Unset, d.items()))
 
 
 class HTTPClient:
@@ -142,20 +142,16 @@ class HTTPClient:
             await self._session.close()
 
     @staticmethod
-    def _prepare_data(json: EllipsisOr[dict[str, Any]], files: EllipsisOr[list[BasicFile]]):
+    def _prepare_data(json: dict[str, Any], files: list[BasicFile]):
         pd = _PreparedData()
 
-        if json is not ... and files is ...:
-            # Pyright thinks that json could be any instance of the class ellipsis when it's only
-            # supported to be .../Ellipsis
-            # I cannot use type[...] or type[Ellipsis] without Pyright freaking out.
-            pd.json = _filter_dict_for_ellipsis(json)  # type: ignore
+        if json is not Unset and files is Unset:
+            pd.json = _filter_dict_for_unset(json)
 
-        if json is not ... and files is not ...:
+        if json is not Unset and files is not Unset:
             form_dat = aiohttp.FormData()
-            # same here
             form_dat.add_field(
-                "payload_json", _filter_dict_for_ellipsis(json), content_type="application/json"  # type: ignore
+                "payload_json", _filter_dict_for_unset(json), content_type="application/json"
             )
 
             # this has to be done because otherwise Pyright will complain about files not being an iterable type
@@ -183,9 +179,9 @@ class HTTPClient:
         route: Route,
         *,
         query_params: Optional[dict[str, Any]] = None,
-        json_params: EllipsisOr[dict[str, Any]] = ...,
+        json_params: dict[str, Any] = Unset,
         reason: Optional[str] = None,
-        files: EllipsisOr[list[BasicFile]] = ...,
+        files: list[BasicFile] = Unset,
         **extras: Any,
     ):
         self.request_id += 1
@@ -193,7 +189,7 @@ class HTTPClient:
         _log.debug("Request with id %d has started.", rid)
         url = route.endpoint
 
-        query_params = _filter_dict_for_ellipsis(query_params or {})
+        query_params = _filter_dict_for_unset(query_params or {})
         max_tries = 5
         headers: dict[str, str] = self.default_headers
 
@@ -203,10 +199,10 @@ class HTTPClient:
         data = self._prepare_data(json_params, files)
         kwargs: dict[str, Any] = extras or {}
 
-        if data.json is not ...:
+        if data.json is not Unset:
             kwargs["json"] = data.json
 
-        if data.multipart_content is not ...:
+        if data.multipart_content is not Unset:
             kwargs["data"] = data.multipart_content
 
         bucket = self._ratelimiter.get_bucket(route)

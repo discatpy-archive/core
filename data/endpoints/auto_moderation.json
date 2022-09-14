@@ -26,11 +26,23 @@
                 "name": "str",
                 "event_type": "int",
                 "trigger_type": "int",
-                "trigger_metadata": ["Union[dict[str, Any], ellipsis]", "..."],
+                "trigger_metadata": [
+                    "dict[str, Any]",
+                    "Unset"
+                ],
                 "actions": "list[discord_typings.AutoModerationActionData]",
-                "enabled": ["Union[bool, ellipsis]", "..."],
-                "exempt_roles": ["Union[list[Snowflake], ellipsis]", "..."],
-                "exempt_channels": ["Union[list[Snowflake], ellipsis]", "..."]
+                "enabled": [
+                    "bool",
+                    "Unset"
+                ],
+                "exempt_roles": [
+                    "list[Snowflake]",
+                    "Unset"
+                ],
+                "exempt_channels": [
+                    "list[Snowflake]",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },
@@ -42,14 +54,38 @@
                 "auto_moderation_rule_id": "Snowflake"
             },
             "json-parameters": {
-                "name": ["Union[str, ellipsis]", "..."],
-                "event_type": ["Union[int, ellipsis]", "..."],
-                "trigger_type": ["Union[int, ellipsis]", "..."],
-                "trigger_metadata": ["Union[dict[str, Any], ellipsis]", "..."],
-                "actions": ["Union[list[discord_typings.AutoModerationActionData], ellipsis]", "..."],
-                "enabled": ["Union[bool, ellipsis]", "..."],
-                "exempt_roles": ["Union[list[Snowflake], ellipsis]", "..."],
-                "exempt_channels": ["Union[list[Snowflake], ellipsis]", "..."]
+                "name": [
+                    "str",
+                    "Unset"
+                ],
+                "event_type": [
+                    "int",
+                    "Unset"
+                ],
+                "trigger_type": [
+                    "int",
+                    "Unset"
+                ],
+                "trigger_metadata": [
+                    "dict[str, Any]",
+                    "Unset"
+                ],
+                "actions": [
+                    "list[discord_typings.AutoModerationActionData]",
+                    "Unset"
+                ],
+                "enabled": [
+                    "bool",
+                    "Unset"
+                ],
+                "exempt_roles": [
+                    "list[Snowflake]",
+                    "Unset"
+                ],
+                "exempt_channels": [
+                    "list[Snowflake]",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },

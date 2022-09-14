@@ -62,7 +62,7 @@ from discord_typings import (
     VoiceStateUpdateData,
 )
 
-from discatcore.types import EllipsisOr, Snowflake
+from discatcore.types import Snowflake
 
 if TYPE_CHECKING:
     from discatcore.client import Client
@@ -141,16 +141,16 @@ class GatewayEventProtos:
         id: Snowflake,
         guild_id: Snowflake,
         member_count: int,
-        added_members: EllipsisOr[list[ThreadMemberData]],
-        removed_member_ids: EllipsisOr[list[Snowflake]],
+        added_members: list[ThreadMemberData],
+        removed_member_ids: list[Snowflake],
     ):
         pass
 
     async def channel_pins_update(
         self,
-        guild_id: EllipsisOr[Snowflake],
+        guild_id: Snowflake,
         channel_id: Snowflake,
-        last_pin_timestamp: EllipsisOr[Optional[datetime]],
+        last_pin_timestamp: Optional[datetime],
     ):
         pass
 
@@ -195,8 +195,8 @@ class GatewayEventProtos:
         members: list[GuildMemberData],
         chunk_index: int,
         chunk_count: int,
-        not_found: EllipsisOr[list[Snowflake]],
-        presences: EllipsisOr[list[UpdatePresenceData]],
+        not_found: list[Snowflake],
+        presences: list[UpdatePresenceData],
         nonce: str,
     ):
         pass
@@ -246,9 +246,7 @@ class GatewayEventProtos:
     async def invite_create(self, invite: InviteCreateData):
         pass
 
-    async def invite_delete(
-        self, channel_id: Snowflake, guild_id: EllipsisOr[Snowflake], code: str
-    ):
+    async def invite_delete(self, channel_id: Snowflake, guild_id: Snowflake, code: str):
         pass
 
     # Message events
@@ -259,13 +257,11 @@ class GatewayEventProtos:
     async def message_update(self, message: MessageUpdateData):
         pass
 
-    async def message_delete(
-        self, id: Snowflake, channel_id: Snowflake, guild_id: EllipsisOr[Snowflake]
-    ):
+    async def message_delete(self, id: Snowflake, channel_id: Snowflake, guild_id: Snowflake):
         pass
 
     async def message_delete_bulk(
-        self, ids: list[Snowflake], channel_id: Snowflake, guild_id: EllipsisOr[Snowflake]
+        self, ids: list[Snowflake], channel_id: Snowflake, guild_id: Snowflake
     ):
         pass
 
@@ -274,8 +270,8 @@ class GatewayEventProtos:
         user_id: Snowflake,
         channel_id: Snowflake,
         message_id: Snowflake,
-        guild_id: EllipsisOr[Snowflake],
-        member: EllipsisOr[GuildMemberData],
+        guild_id: Snowflake,
+        member: GuildMemberData,
         emoji: EmojiData,
     ):
         pass
@@ -285,20 +281,20 @@ class GatewayEventProtos:
         user_id: Snowflake,
         channel_id: Snowflake,
         message_id: Snowflake,
-        guild_id: EllipsisOr[Snowflake],
+        guild_id: Snowflake,
         emoji: EmojiData,
     ):
         pass
 
     async def message_reaction_remove_all(
-        self, channel_id: Snowflake, message_id: Snowflake, guild_id: EllipsisOr[Snowflake]
+        self, channel_id: Snowflake, message_id: Snowflake, guild_id: Snowflake
     ):
         pass
 
     async def message_reaction_remove_emoji(
         self,
         channel_id: Snowflake,
-        guild_id: EllipsisOr[Snowflake],
+        guild_id: Snowflake,
         message_id: Snowflake,
         emoji: EmojiData,
     ):
@@ -312,10 +308,10 @@ class GatewayEventProtos:
     async def typing_start(
         self,
         channel_id: Snowflake,
-        guild_id: EllipsisOr[Snowflake],
+        guild_id: Snowflake,
         user_id: Snowflake,
         timestamp: int,
-        member: EllipsisOr[GuildMemberData],
+        member: GuildMemberData,
     ):
         pass
 

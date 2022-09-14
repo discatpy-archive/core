@@ -16,7 +16,10 @@
             },
             "json-parameters": {
                 "name": "str",
-                "icon": ["Union[str, ellipsis]", "..."]
+                "icon": [
+                    "str",
+                    "Unset"
+                ]
             }
         },
         "get_guild_templates": {
@@ -34,7 +37,10 @@
             },
             "json-parameters": {
                 "name": "str",
-                "description": ["Union[Optional[str], ellipsis]", "..."]
+                "description": [
+                    "Optional[str]",
+                    "Unset"
+                ]
             }
         },
         "sync_guild_template": {
@@ -53,8 +59,14 @@
                 "template_code": "Snowflake"
             },
             "json-parameters": {
-                "name": ["Union[str, ellipsis]", "..."],
-                "description": ["Union[Optional[str], ellipsis]", "..."]
+                "name": [
+                    "str",
+                    "Unset"
+                ],
+                "description": [
+                    "Optional[str]",
+                    "Unset"
+                ]
             }
         },
         "delete_guild_template": {

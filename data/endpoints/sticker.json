@@ -35,9 +35,18 @@
                 "sticker_id": "Snowflake"
             },
             "json-parameters": {
-                "name": ["Union[str, ellipsis]", "..."],
-                "description": ["Union[Optional[str], ellipsis]", "..."],
-                "tags": ["Union[str, ellipsis]", "..."]
+                "name": [
+                    "str",
+                    "Unset"
+                ],
+                "description": [
+                    "Optional[str]",
+                    "Unset"
+                ],
+                "tags": [
+                    "str",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },

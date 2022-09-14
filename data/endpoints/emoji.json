@@ -37,8 +37,14 @@
                 "emoji_id": "Snowflake"
             },
             "json-parameters": {
-                "name": ["Union[str, ellipsis]", "..."],
-                "roles": ["Union[list[Snowflake], ellipsis]", "..."]
+                "name": [
+                    "str",
+                    "Unset"
+                ],
+                "roles": [
+                    "list[Snowflake]",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },

@@ -28,7 +28,7 @@ from collections.abc import Callable
 from datetime import datetime
 from typing import TypeVar, get_args
 
-from discatcore.types import EllipsisOr, EllipsisType, Snowflake
+from discatcore.types import Snowflake, Unset
 from discatcore.utils import create_fn, from_import, indent_text
 
 __all__ = ("generate_handlers_from",)
@@ -66,8 +66,7 @@ def _generate_body(args: list[inspect.Parameter]):
 
 func_locals = {
     "Snowflake": Snowflake,
-    "ellipsis": EllipsisType,
-    "EllipsisOr": EllipsisOr,
+    "Unset": Unset,
 }
 from_import(
     "typing",

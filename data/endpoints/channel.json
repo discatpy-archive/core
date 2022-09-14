@@ -15,19 +15,58 @@
                 "channel_id": "Snowflake"
             },
             "json-parameters": {
-                "name": ["Union[str, ellipsis]", "..."],
-                "type": ["Union[int, ellipsis]", "..."],
-                "position": ["Union[Optional[int], ellipsis]", "..."],
-                "topic": ["Union[Optional[str], ellipsis]", "..."],
-                "nsfw": ["Union[Optional[bool], ellipsis]", "..."],
-                "rate_limit_per_user": ["Union[Optional[int], ellipsis]", "..."],
-                "bitrate": ["Union[Optional[int], ellipsis]", "..."],
-                "user_limit": ["Union[Optional[int], ellipsis]", "..."],
-                "permission_overwrites": ["Union[Optional[list[discord_typings.PermissionOverwriteData]], ellipsis]", "..."],
-                "parent_id": ["Union[Optional[Snowflake], ellipsis]", "..."],
-                "rtc_region": ["Union[Optional[str], ellipsis]", "..."],
-                "video_quality_mode": ["Union[Optional[int], ellipsis]", "..."],
-                "default_auto_archive_duration": ["Union[Optional[int], ellipsis]", "..."]
+                "name": [
+                    "str",
+                    "Unset"
+                ],
+                "type": [
+                    "int",
+                    "Unset"
+                ],
+                "position": [
+                    "Optional[int]",
+                    "Unset"
+                ],
+                "topic": [
+                    "Optional[str]",
+                    "Unset"
+                ],
+                "nsfw": [
+                    "Optional[bool]",
+                    "Unset"
+                ],
+                "rate_limit_per_user": [
+                    "Optional[int]",
+                    "Unset"
+                ],
+                "bitrate": [
+                    "Optional[int]",
+                    "Unset"
+                ],
+                "user_limit": [
+                    "Optional[int]",
+                    "Unset"
+                ],
+                "permission_overwrites": [
+                    "Optional[list[discord_typings.PermissionOverwriteData]]",
+                    "Unset"
+                ],
+                "parent_id": [
+                    "Optional[Snowflake]",
+                    "Unset"
+                ],
+                "rtc_region": [
+                    "Optional[str]",
+                    "Unset"
+                ],
+                "video_quality_mode": [
+                    "Optional[int]",
+                    "Unset"
+                ],
+                "default_auto_archive_duration": [
+                    "Optional[int]",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },
@@ -38,12 +77,30 @@
                 "channel_id": "Snowflake"
             },
             "json-parameters": {
-                "name": ["Union[str, ellipsis]", "..."],
-                "archived": ["Union[bool, ellipsis]", "..."],
-                "auto_archive_duration": ["Union[int, ellipsis]", "..."],
-                "locked": ["Union[bool, ellipsis]", "..."],
-                "invitable": ["Union[bool, ellipsis]", "..."],
-                "rate_limit_per_user": ["Union[Optional[int], ellipsis]", "..."]
+                "name": [
+                    "str",
+                    "Unset"
+                ],
+                "archived": [
+                    "bool",
+                    "Unset"
+                ],
+                "auto_archive_duration": [
+                    "int",
+                    "Unset"
+                ],
+                "locked": [
+                    "bool",
+                    "Unset"
+                ],
+                "invitable": [
+                    "bool",
+                    "Unset"
+                ],
+                "rate_limit_per_user": [
+                    "Optional[int]",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },
@@ -62,10 +119,22 @@
                 "channel_id": "Snowflake"
             },
             "query-parameters": {
-                "around": ["Union[Snowflake, ellipsis]", "..."],
-                "before": ["Union[Snowflake, ellipsis]", "..."],
-                "after": ["Union[Snowflake, ellipsis]", "..."],
-                "limit": ["int", "50"]
+                "around": [
+                    "Snowflake",
+                    "Unset"
+                ],
+                "before": [
+                    "Snowflake",
+                    "Unset"
+                ],
+                "after": [
+                    "Snowflake",
+                    "Unset"
+                ],
+                "limit": [
+                    "int",
+                    "50"
+                ]
             }
         },
         "get_channel_message": {
@@ -83,15 +152,42 @@
                 "channel_id": "Snowflake"
             },
             "json-parameters": {
-                "content": ["Union[str, ellipsis]", "..."],
-                "tts": ["Union[bool, ellipsis]", "..."],
-                "embeds": ["Union[list[discord_typings.EmbedData], ellipsis]", "..."],
-                "allowed_mentions": ["Union[discord_typings.AllowedMentionsData, ellipsis]", "..."],
-                "message_reference": ["Union[discord_typings.MessageReferenceData, ellipsis]", "..."],
-                "components": ["Union[list[discord_typings.ComponentData], ellipsis]", "..."],
-                "sticker_ids": ["Union[list[Snowflake], ellipsis]", "..."],
-                "attachments": ["Union[list[discord_typings.PartialAttachmentData], ellipsis]", "..."],
-                "flags": ["Union[int, ellipsis]", "..."]
+                "content": [
+                    "str",
+                    "Unset"
+                ],
+                "tts": [
+                    "bool",
+                    "Unset"
+                ],
+                "embeds": [
+                    "list[discord_typings.EmbedData]",
+                    "Unset"
+                ],
+                "allowed_mentions": [
+                    "discord_typings.AllowedMentionsData",
+                    "Unset"
+                ],
+                "message_reference": [
+                    "discord_typings.MessageReferenceData",
+                    "Unset"
+                ],
+                "components": [
+                    "list[discord_typings.ComponentData]",
+                    "Unset"
+                ],
+                "sticker_ids": [
+                    "list[Snowflake]",
+                    "Unset"
+                ],
+                "attachments": [
+                    "list[discord_typings.PartialAttachmentData]",
+                    "Unset"
+                ],
+                "flags": [
+                    "int",
+                    "Unset"
+                ]
             },
             "supports-files": true
         },
@@ -140,8 +236,14 @@
                 "emoji": "str"
             },
             "query-parameters": {
-                "after": ["Union[Snowflake, ellipsis]", "..."],
-                "limit": ["int", "25"]
+                "after": [
+                    "Snowflake",
+                    "Unset"
+                ],
+                "limit": [
+                    "int",
+                    "25"
+                ]
             }
         },
         "delete_all_reactions": {
@@ -169,12 +271,30 @@
                 "message_id": "Snowflake"
             },
             "json-parameters": {
-                "content": ["Union[Optional[str], ellipsis]", "..."],
-                "embeds": ["Union[Optional[list[discord_typings.EmbedData]], ellipsis]", "..."],
-                "allowed_mentions": ["Union[Optional[discord_typings.AllowedMentionsData], ellipsis]", "..."],
-                "components": ["Union[Optional[list[discord_typings.ComponentData]], ellipsis]", "..."],
-                "attachments": ["Union[Optional[list[discord_typings.PartialAttachmentData]], ellipsis]", "..."],
-                "flags": ["Union[Optional[int], ellipsis]", "..."]
+                "content": [
+                    "Optional[str]",
+                    "Unset"
+                ],
+                "embeds": [
+                    "Optional[list[discord_typings.EmbedData]]",
+                    "Unset"
+                ],
+                "allowed_mentions": [
+                    "Optional[discord_typings.AllowedMentionsData]",
+                    "Unset"
+                ],
+                "components": [
+                    "Optional[list[discord_typings.ComponentData]]",
+                    "Unset"
+                ],
+                "attachments": [
+                    "Optional[list[discord_typings.PartialAttachmentData]]",
+                    "Unset"
+                ],
+                "flags": [
+                    "Optional[int]",
+                    "Unset"
+                ]
             },
             "supports-files": true
         },
@@ -206,8 +326,14 @@
                 "overwrite_id": "Snowflake"
             },
             "json-parameters": {
-                "allow": ["Union[Optional[str], ellipsis]", "..."],
-                "deny": ["Union[Optional[str], ellipsis]", "..."],
+                "allow": [
+                    "Optional[str]",
+                    "Unset"
+                ],
+                "deny": [
+                    "Optional[str]",
+                    "Unset"
+                ],
                 "type": "int"
             },
             "supports-reason": true
@@ -226,13 +352,31 @@
                 "channel_id": "Snowflake"
             },
             "json-parameters": {
-                "max_age": ["int", "86400"],
-                "max_uses": ["int", "0"],
-                "temporary": ["bool", "False"],
-                "unique": ["bool", "False"],
+                "max_age": [
+                    "int",
+                    "86400"
+                ],
+                "max_uses": [
+                    "int",
+                    "0"
+                ],
+                "temporary": [
+                    "bool",
+                    "False"
+                ],
+                "unique": [
+                    "bool",
+                    "False"
+                ],
                 "target_type": "int",
-                "target_user_id": ["Union[Snowflake, ellipsis]", "..."],
-                "target_application_id": ["Union[Snowflake, ellipsis]", "..."]
+                "target_user_id": [
+                    "Snowflake",
+                    "Unset"
+                ],
+                "target_application_id": [
+                    "Snowflake",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },
@@ -296,8 +440,14 @@
             },
             "json-parameters": {
                 "name": "str",
-                "auto_archive_duration": ["Union[int, ellipsis]", "..."],
-                "rate_limit_per_user": ["Union[Optional[int], ellipsis]", "..."]
+                "auto_archive_duration": [
+                    "int",
+                    "Unset"
+                ],
+                "rate_limit_per_user": [
+                    "Optional[int]",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },
@@ -309,10 +459,22 @@
             },
             "json-parameters": {
                 "name": "str",
-                "auto_archive_duration": ["Union[int, ellipsis]", "..."],
-                "type": ["Union[int, ellipsis]", "..."],
-                "invitable": ["Union[bool, ellipsis]", "..."],
-                "rate_limit_per_user": ["Union[Optional[int], ellipsis]", "..."]
+                "auto_archive_duration": [
+                    "int",
+                    "Unset"
+                ],
+                "type": [
+                    "int",
+                    "Unset"
+                ],
+                "invitable": [
+                    "bool",
+                    "Unset"
+                ],
+                "rate_limit_per_user": [
+                    "Optional[int]",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },
@@ -368,8 +530,14 @@
                 "channel_id": "Snowflake"
             },
             "query-parameters": {
-                "before": ["Union[str, ellipsis]", "..."],
-                "limit": ["Union[int, ellipsis]", "..."]
+                "before": [
+                    "str",
+                    "Unset"
+                ],
+                "limit": [
+                    "int",
+                    "Unset"
+                ]
             }
         },
         "list_private_archived_threads": {
@@ -379,8 +547,14 @@
                 "channel_id": "Snowflake"
             },
             "query-parameters": {
-                "before": ["Union[str, ellipsis]", "..."],
-                "limit": ["Union[int, ellipsis]", "..."]
+                "before": [
+                    "str",
+                    "Unset"
+                ],
+                "limit": [
+                    "int",
+                    "Unset"
+                ]
             }
         },
         "list_joined_private_archived_threads": {
@@ -390,8 +564,14 @@
                 "channel_id": "Snowflake"
             },
             "query-parameters": {
-                "before": ["Union[str, ellipsis]", "..."],
-                "limit": ["Union[int, ellipsis]", "..."]
+                "before": [
+                    "str",
+                    "Unset"
+                ],
+                "limit": [
+                    "int",
+                    "Unset"
+                ]
             }
         }
     }
