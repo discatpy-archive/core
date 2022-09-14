@@ -71,10 +71,7 @@ def _calculate_reset_after(resp: aiohttp.ClientResponse) -> float:
     return reset_after if reset_after >= 0.0 else 0.0
 
 
-def _filter_dict_for_ellipsis(d: EllipsisOr[dict[Any, Any]]):
-    if isinstance(d, EllipsisType):
-        return None
-
+def _filter_dict_for_ellipsis(d: dict[Any, Any]):
     return dict(filter(lambda item: item[1] is not ..., d.items()))
 
 
@@ -149,12 +146,16 @@ class HTTPClient:
         pd = _PreparedData()
 
         if json is not ... and files is ...:
-            pd.json = _filter_dict_for_ellipsis(json)
+            # Pyright thinks that json could be any instance of the class ellipsis when it's only
+            # supported to be .../Ellipsis
+            # I cannot use type[...] or type[Ellipsis] without Pyright freaking out.
+            pd.json = _filter_dict_for_ellipsis(json)  # type: ignore
 
         if json is not ... and files is not ...:
             form_dat = aiohttp.FormData()
+            # same here
             form_dat.add_field(
-                "payload_json", _filter_dict_for_ellipsis(json), content_type="application/json"
+                "payload_json", _filter_dict_for_ellipsis(json), content_type="application/json"  # type: ignore
             )
 
             # this has to be done because otherwise Pyright will complain about files not being an iterable type
@@ -185,6 +186,7 @@ class HTTPClient:
         json_params: EllipsisOr[dict[str, Any]] = ...,
         reason: Optional[str] = None,
         files: EllipsisOr[list[BasicFile]] = ...,
+        **extras: Any,
     ):
         self.request_id += 1
         rid = self.request_id
@@ -199,7 +201,7 @@ class HTTPClient:
             headers["X-Audit-Log-Reason"] = _urlquote(reason, safe="/ ")
 
         data = self._prepare_data(json_params, files)
-        kwargs: dict[str, Any] = {}
+        kwargs: dict[str, Any] = extras or {}
 
         if data.json is not ...:
             kwargs["json"] = data.json
@@ -212,6 +214,7 @@ class HTTPClient:
 
         for tries in range(max_tries):
             await self._ratelimiter.global_bucket.wait()
+            await bucket.wait()
             _log.debug("REQUEST:%d All ratelimit buckets have been acquired!", rid)
 
             response = await self._session.request(
