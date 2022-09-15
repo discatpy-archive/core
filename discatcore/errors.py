@@ -105,6 +105,13 @@ class HTTPException(DisCatCoreException):
         super().__init__(format.format(response.status, response.reason, self.code, self.text))
 
 
+class BucketMigrated(DisCatCoreException):
+    """Represents an internal exception for when a bucket migrates."""
+
+    def __init__(self, discord_hash: str):
+        super().__init__(f"This bucket has been migrated to a bucket located at {discord_hash}")
+
+
 class UnsupportedAPIVersionWarning(Warning):
     """Represents a warning for unsupported API versions."""
 

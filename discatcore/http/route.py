@@ -42,22 +42,16 @@ class Route:
         self.webhook_id: Optional[Snowflake] = params.get("webhook_id")
         self.webhook_token: Optional[str] = params.get("webhook_token")
 
-    def __eq__(self, other: "Route") -> bool:
-        return (
-            self.channel_id == other.channel_id
-            or self.guild_id == other.guild_id
-            or self.webhook_id == other.webhook_id
-            or self.webhook_token == other.webhook_token
-            or self.endpoint == other.endpoint
-        )
-
     @property
     def endpoint(self):
         return self.url.format_map({k: _urlquote(str(v)) for k, v in self.params.items()})
 
     @property
     def bucket(self):
-        top_level_params = {
-            k: getattr(self, k) for k in ("guild_id", "channel_id", "webhook_id", "webhook_token")
-        }
+        available_top_level_params = [
+            k
+            for k in ("guild_id", "channel_id", "webhook_id", "webhook_token")
+            if getattr(self, k, ...) is not ...
+        ]
+        top_level_params = {k: getattr(self, k) for k in available_top_level_params}
         return f"{self.method}:{self.url.format_map(top_level_params)}"

@@ -28,7 +28,6 @@ import sys
 import warnings
 from dataclasses import dataclass
 from datetime import datetime
-from types import EllipsisType
 from typing import Any, Optional, cast
 from urllib.parse import quote as _urlquote
 
@@ -36,7 +35,7 @@ import aiohttp
 from discord_typings import GetGatewayBotData
 
 from discatcore import __version__
-from discatcore.errors import HTTPException, UnsupportedAPIVersionWarning
+from discatcore.errors import BucketMigrated, HTTPException, UnsupportedAPIVersionWarning
 from discatcore.file import BasicFile
 from discatcore.http.ratelimiter import Ratelimiter
 from discatcore.http.route import Route
@@ -205,103 +204,78 @@ class HTTPClient:
         if data.multipart_content is not Unset:
             kwargs["data"] = data.multipart_content
 
-        bucket = self._ratelimiter.get_bucket(route)
-        supports_ratelimits = False  # there are some special routes that have 0 ratelimiting
+        bucket = self._ratelimiter.get_bucket(route.bucket)
 
         for tries in range(max_tries):
-            await self._ratelimiter.global_bucket.wait()
-            await bucket.wait()
-            _log.debug("REQUEST:%d All ratelimit buckets have been acquired!", rid)
+            try:
+                async with self._ratelimiter.global_bucket:
+                    async with bucket:
+                        _log.debug("REQUEST:%d All ratelimit buckets have been acquired!", rid)
 
-            response = await self._session.request(
-                route.method,
-                f"{self._api_url}{url}",
-                params=query_params,
-                headers=headers,
-                **kwargs,
-            )
-            _log.debug(
-                "REQUEST:%d Made request to %s with method %s.",
-                rid,
-                f"{self._api_url}{url}",
-                route.method,
-            )
-
-            supports_ratelimits = response.headers.get("X-RateLimit-Bucket") is not None
-
-            reset_after = 0.0
-            remaining = 0
-            if supports_ratelimits:
-                reset_after = _calculate_reset_after(response)
-                remaining = int(response.headers.get("X-RateLimit-Remaining", 1))
-            else:
-                _log.debug(
-                    "REQUEST:%d Bucket %s does not have any ratelimiting.", rid, route.bucket
-                )
-
-            # Everything is ok
-            if 200 <= response.status < 300:
-                if supports_ratelimits:
-                    if remaining == 0 and reset_after > 0.0:
+                        response = await self._session.request(
+                            route.method,
+                            f"{self._api_url}{url}",
+                            params=query_params,
+                            headers=headers,
+                            **kwargs,
+                        )
                         _log.debug(
-                            "REQUEST:%d Ratelimit bucket %s has expired. Waiting to refresh it.",
+                            "REQUEST:%d Made request to %s with method %s.",
                             rid,
-                            route.bucket,
+                            f"{self._api_url}{url}",
+                            route.method,
                         )
-                        bucket.lock_for(reset_after)
-                        await bucket.wait()
-                        _log.debug(
-                            "REQUEST:%d Ratelimit bucket %s is good to go!", rid, route.bucket
-                        )
-                return await self._text_or_json(response)
 
-            # Ratelimited
-            if response.status == 429:
-                if "Via" not in response.headers:
-                    # something about Cloudflare and Google responding and adding something to the headers
-                    # it means we're Cloudflare banned
-                    raise HTTPException(response, await self._text_or_json(response))
+                        URL_BUCKET = bucket.bucket is None
+                        bucket.update_info(response)
+                        await bucket.acquire()
 
-                if supports_ratelimits:
-                    retry_after = float(response.headers["Retry-After"])
-                    is_global = response.headers["X-RateLimit-Scope"] == "global"
+                        if URL_BUCKET and bucket.bucket is not None:
+                            self._ratelimiter.migrate_bucket(route.bucket, bucket.bucket)
 
-                    if is_global:
-                        _log.info(
-                            "REQUEST:%d All requests have hit a global ratelimit! Retrying in %f.",
-                            rid,
-                            retry_after,
-                        )
-                        self._ratelimiter.global_bucket.lock_for(retry_after)
-                        await self._ratelimiter.global_bucket.wait()
-                    else:
-                        _log.info(
-                            "REQUEST:%d Requests with bucket %s have hit a ratelimit! Retrying in %f.",
-                            rid,
-                            route.bucket,
-                            reset_after,
-                        )
-                        bucket.lock_for(retry_after)
-                        await bucket.wait()
+                        # Everything is ok
+                        if 200 <= response.status < 300:
+                            return await self._text_or_json(response)
 
-                    _log.info("REQUEST:%d Ratelimit is over. Continuing with the request.", rid)
-                else:
-                    raise RuntimeError(
-                        f"Route {route.bucket} that doesn't support ratelimiting hit a 429?"
-                    )
+                        # Ratelimited
+                        if response.status == 429:
+                            if "Via" not in response.headers:
+                                # something about Cloudflare and Google responding and adding something to the headers
+                                # it means we're Cloudflare banned
+                                raise HTTPException(response, await self._text_or_json(response))
 
+                            retry_after = float(response.headers["Retry-After"])
+                            is_global = response.headers["X-RateLimit-Scope"] == "global"
+
+                            if is_global:
+                                _log.info(
+                                    "REQUEST:%d All requests have hit a global ratelimit! Retrying in %f.",
+                                    rid,
+                                    retry_after,
+                                )
+                                self._ratelimiter.global_bucket.lock_for(retry_after)
+                                await self._ratelimiter.global_bucket.acquire()
+
+                            _log.info(
+                                "REQUEST:%d Ratelimit is over. Continuing with the request.", rid
+                            )
+                            continue
+
+                        # Specific Server Errors, retry after some time
+                        if response.status in {500, 502, 504}:
+                            wait_time = 1 + tries * 2
+                            _log.info(
+                                "REQUEST:%d Got a server error! Retrying in %d.", rid, wait_time
+                            )
+                            await asyncio.sleep(wait_time)
+                            continue
+
+                        # Client/Server errors
+                        if response.status >= 400:
+                            raise HTTPException(response, await self._text_or_json(response))
+            except BucketMigrated:
+                bucket = self._ratelimiter.get_bucket(route.bucket)
                 continue
-
-            # Specific Server Errors, retry after some time
-            if response.status in {500, 502, 504}:
-                wait_time = 1 + tries * 2
-                _log.info("REQUEST:%d Got a server error! Retrying in %d.", rid, wait_time)
-                await asyncio.sleep(wait_time)
-                continue
-
-            # Client/Server errors
-            if response.status >= 400:
-                raise HTTPException(response, await self._text_or_json(response))
 
         raise RuntimeError(
             f'REQUEST:{rid} Tried sending request to "{url}" with method {route.method} {max_tries} times.'
