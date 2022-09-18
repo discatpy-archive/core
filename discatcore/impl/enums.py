@@ -72,13 +72,9 @@ class _EnumMember:
         self._value_ = value
 
 
-def _create_member_cls(value_type: type) -> object:
-    ns = {k: Enum.__dict__[k] for k in _get_public_keys(Enum.__dict__)}
+def _create_member_cls(value_type: type) -> type[_EnumMember]:
+    ns = {k: Enum.__dict__[k] for k in _get_public_keys(vars(Enum))}
     return type(f"{value_type.__name__}", (value_type, _EnumMember), ns)
-
-
-def _reverse_dict(d: dict[Any, Any]) -> dict[Any, Any]:
-    return {v: k for k, v in d.items()}
 
 
 IS_ENUM_CREATED: bool = False
@@ -86,7 +82,8 @@ IS_ENUM_CREATED: bool = False
 
 class EnumMeta(type):
     __base_types__: tuple[type]
-    __member_map__: dict[str, object]
+    __member_map__: dict[str, _EnumMember]
+    __value_member_map__: dict[Any, _EnumMember]
     __original_ns__: _EnumDict
     __member_classes__: ClassVar[dict[type, object]] = {}
 
@@ -107,6 +104,7 @@ class EnumMeta(type):
         new_ns = {
             "__base_types__": ns.bases,
             "__member_map__": (member_map := {}),
+            "__value_member_map__": (value_map := {}),
             "__original_ns__": ns,
         }
         new_ns.update(ns)
@@ -128,10 +126,11 @@ class EnumMeta(type):
             else:
                 member_cls = cls.__member_classes__[type(m_value)]
 
-            member = type(m_value).__new__(member_cls, m_value)
+            member: _EnumMember = type(m_value).__new__(member_cls, m_value)
             member.__init__(new_cls, m_name, m_value)
 
             member_map[m_name] = member
+            value_map[m_value] = member
             setattr(new_cls, m_name, member)
 
         return new_cls
@@ -141,17 +140,18 @@ class EnumMeta(type):
 
     def __call__(cls, value: Any) -> str:
         try:
-            return _reverse_dict(cls.__original_ns__.members)[value]
+            # _EnumMember doesn't have attributes fron Enum typed explicitly
+            return cls.__value_member_map__[value].name  # type: ignore
         except KeyError:
             raise ValueError(f"There is no enum member with the value {value!r}!") from None
 
-    def __getitem__(cls, name: str) -> object:
+    def __getitem__(cls, name: str) -> _EnumMember:
         return cls.__member_map__[name]
 
-    def __contains__(cls, value: Union[object, Any]) -> bool:
-        return value in cls.__member_map__.values() or value in cls.__original_ns__.members.values()
+    def __contains__(cls, value: Union[_EnumMember, Any]) -> bool:
+        return value in cls.__member_map__.values() or value in cls.__value_member_map__
 
-    def __iter__(cls) -> Iterator[object]:
+    def __iter__(cls) -> Iterator[_EnumMember]:
         yield from cls.__member_map__.values()
 
     def __len__(cls) -> int:
@@ -166,6 +166,8 @@ class Enum(metaclass=EnumMeta):
     __base_types__: ClassVar[tuple[type]]
     __member_map__: ClassVar[dict[str, object]]
     __original_ns__: ClassVar[_EnumDict]
+    __value_member_map__: ClassVar[dict[Any, object]]
+
     _name_: str
     _value_: Any
 
