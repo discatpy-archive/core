@@ -30,42 +30,33 @@ from typing import Optional
 from aiohttp import ClientResponse
 
 from discatcore.errors import BucketMigrated
+from discatcore.impl.ratelimit import BurstRatelimiter, ManualRatelimiter
 
 _log = logging.getLogger(__name__)
 
 __all__ = (
     "Bucket",
-    "GlobalBucket",
     "Ratelimiter",
 )
 
 
-# TODO: abstract out this ratelimiting logic
-class Bucket:
+class Bucket(BurstRatelimiter):
     """Represents a ratelimiting bucket."""
 
     __slots__ = (
-        "_lock",
-        "limit",
-        "remaining",
         "reset",
-        "reset_after",
         "bucket",
         "_first_update",
         "_migrated",
     )
 
     def __init__(self):
-        self.limit: Optional[int] = None
-        self.remaining: Optional[int] = None
-        self.reset: Optional[datetime] = None
-        self.reset_after: Optional[float] = None
-        self.bucket: Optional[str] = None
+        BurstRatelimiter.__init__(self)
 
+        self.reset: Optional[datetime] = None
+        self.bucket: Optional[str] = None
         self._first_update: bool = True
         self._migrated: bool = False
-        self._lock = asyncio.Event()
-        self._lock.set()
 
     def update_info(self, response: ClientResponse):
         """Updates the bucket's underlying information via the new headers.
@@ -114,33 +105,6 @@ class Bucket:
         if self.reset_after is not None and self.remaining == 0 and not self.is_locked():
             self.lock_for(self.reset_after)
 
-    async def acquire(self):
-        """Waits for bucket to be available. This will lock the bucket if needed."""
-        if self.reset_after is not None and self.remaining == 0 and not self.is_locked():
-            self.lock_for(self.reset_after)
-
-        await self._lock.wait()
-
-    async def _unlock(self, delay: float):
-        await asyncio.sleep(delay)
-        self._lock.set()
-
-    def lock_for(self, delay: float):
-        """Locks the bucket for a given amount of time.
-
-        Args:
-            delay (float): How long the bucket should be locked for.
-        """
-        if self.is_locked():
-            return
-
-        self._lock.clear()
-        asyncio.create_task(self._unlock(delay))
-
-    def is_locked(self):
-        """:bool: Returns whether the bucket is locked or not."""
-        return not self._lock.is_set()
-
     def migrate_to(self, discord_hash: str):
         self._migrated = True
         raise BucketMigrated(discord_hash)
@@ -148,22 +112,6 @@ class Bucket:
     @property
     def migrated(self):
         return self._migrated
-
-    async def __aenter__(self):
-        await self.acquire()
-        return None
-
-    async def __aexit__(self, *args):
-        pass
-
-
-class GlobalBucket(Bucket):
-    def update_info(self):
-        # ensure that nothing calls this function
-        pass
-
-    async def acquire(self):
-        await self._lock.wait()
 
 
 class Ratelimiter:
@@ -175,7 +123,7 @@ class Ratelimiter:
         self.discord_buckets: dict[str, Bucket] = {}
         self.url_buckets: dict[str, Bucket] = {}
         self.url_to_discord_hash: dict[str, str] = {}
-        self.global_bucket = GlobalBucket()
+        self.global_bucket = ManualRatelimiter()
 
     def get_bucket(self, url: str):
         if url not in self.url_to_discord_hash:
