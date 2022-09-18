@@ -49,6 +49,19 @@ class _EventCallbackMetadata:
 
 
 class Event:
+    """Represents an event for a dispatcher.
+
+    Attributes:
+        name (str): The name of this event.
+        parent (Dispatcher): The parent dispatcher of this event.
+        callbacks (list[Callable[..., Coroutine[Any, Any, Any]]]): The callbacks for this event.
+        _proto (Optional[inspect.Signature]): The prototype of this event.
+            This will define what signature all of the callbacks will have.
+        _error_handler (Callable[..., Coroutine[Any, Any, Any]]): The error handler of this event.
+            The error handler will be run whenever an event dispatched raises an error.
+            Defaults to the error handler from the parent dispatcher.
+    """
+
     def __init__(self, name: str, parent: Dispatcher):
         self.name = name
         self.parent = parent
@@ -59,6 +72,12 @@ class Event:
     # setters/decorators
 
     def set_proto(self, proto_func: Func[Any], *, parent: bool = False):
+        """Sets the prototype for this event.
+
+        Args:
+            proto_func (Callable[..., Any]): The prototype for this event.
+            parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
+        """
         is_static = isinstance(proto_func, staticmethod)
         if is_static:
             proto_func = proto_func.__func__
@@ -76,6 +95,17 @@ class Event:
             raise ValueError(f"Event prototype for event {self.name} has already been set!")
 
     def proto(self, func: Optional[Func[Any]] = None, *, parent: bool = False):
+        """A decorator to set the prototype of this event.
+
+        Args:
+            func (Optional[Callable[..., Any]]): The prototype to pass into this decorator. Defaults to None.
+            parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
+
+        Returns:
+            Either this event object or a wrapper function that acts as the actual decorator.
+            This depends on if the ``func`` arg was passed in.
+        """
+
         def wrapper(func: Func[Any]):
             self.set_proto(func, parent=parent)
             return self
@@ -85,6 +115,11 @@ class Event:
         return wrapper
 
     def set_error_handler(self, func: CoroFunc):
+        """Overrides the error handler of this event.
+
+        Args:
+            func (Callable[..., Coroutine[Any, Any, Any]]): The new error handler for this event.
+        """
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback provided is not a coroutine.")
 
@@ -100,6 +135,12 @@ class Event:
         _log.debug("Registered new error handler under event %s", self.name)
 
     def error_handler(self):
+        """A decorator to override the error handler of this event.
+
+        Returns:
+            A wrapper function that acts as the actual decorator.
+        """
+
         def wrapper(func: CoroFunc):
             self.set_error_handler(func)
             return self
@@ -107,6 +148,13 @@ class Event:
         return wrapper
 
     def add_callback(self, func: CoroFunc, *, one_shot: bool = False, parent: bool = False):
+        """Adds a new callback to this event.
+
+        Args:
+            func (Callable[..., Coroutine[Any, Any, Any]]): The callback to add to this event.
+            one_shot (bool): Whether or not the callback should be a one shot (which means the callback will be removed after running). Defaults to False.
+            parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
+        """
         if not self._proto:
             raise ValueError(f"Event prototype for event {self.name} has not been defined.")
 
@@ -131,6 +179,11 @@ class Event:
         _log.debug("Registered new event callback under event %s", self.name)
 
     def remove_callback(self, index: int):
+        """Removes a callback located at a certain index.
+
+        Args:
+            index (int): The index where the callback is located.
+        """
         if len(self.callbacks) - 1 < index:
             raise ValueError(f"Event {self.name} has less callbacks than the index provided!")
 
@@ -140,6 +193,18 @@ class Event:
     def callback(
         self, func: Optional[CoroFunc] = None, *, one_shot: bool = False, parent: bool = False
     ):
+        """A decorator to add a callback to this event.
+
+        Args:
+            func (Optional[Callable[..., Coroutine[Any, Any, Any]]]): The function to pass into this decorator. Defaults to None.
+            one_shot (bool): Whether or not the callback should be a one shot (which means the callback will be removed after running). Defaults to False.
+            parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
+
+        Returns:
+            Either this event object or a wrapper function that acts as the actual decorator.
+            This depends on if the ``func`` arg was passed in.
+        """
+
         def wrapper(func: CoroFunc):
             self.add_callback(func, one_shot=one_shot, parent=parent)
             return self
@@ -168,15 +233,21 @@ class Event:
         *args: Any,
         **kwargs: Any,
     ):
-        task_name = f"DisCatCore Event:{self.name} "
+        task_name = f"DisCatCore Event:{self.name}"
         if index:
-            task_name += f"Index:{index}"
+            task_name += f" Index:{index}"
         task_name = task_name.rstrip()
 
         wrapped = self._run(coro, *args, **kwargs)
         return asyncio.create_task(wrapped, name=task_name)
 
     def dispatch(self, *args: Any, **kwargs: Any):
+        """Runs all event callbacks with arguments.
+
+        Args:
+            *args (Any): Arguments to pass into the event callbacks.
+            **kwargs (Any): Keyword arguments to pass into the event callbacks.
+        """
         for i, callback in enumerate(self.callbacks):
             metadata = getattr(callback, "__callback_metadata__", _EventCallbackMetadata())
             _log.debug("Running event callback under event %s with index %s", self.name, i)

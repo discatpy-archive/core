@@ -43,22 +43,11 @@ CoroFunc = Func[Coroutine[Any, Any, Any]]
 class Dispatcher:
     """A class that helps manage events.
 
-    Attributes
-    ----------
-    events: :type:`Dict[str, Event]`
-        The callbacks for each event.
-    event_protos: :type:`Dict[str, inspect.Signature]`
-        The event callback prototypes for each event. This is checked alongside a new
-        event callback to see if the parameters match up.
-    valid_events: :type:`List[str]`
-        The list of the name of valid events.
+    Attributes:
+        events (dict[str, Event]): The callbacks for each event.
     """
 
-    __slots__ = (
-        "events",
-        "event_protos",
-        "valid_events",
-    )
+    __slots__ = ("events",)
 
     def __init__(self) -> None:
         self.events: dict[str, Event] = {}
@@ -66,42 +55,43 @@ class Dispatcher:
     def get_event(self, name: str) -> Optional[Event]:
         """Returns an event with the name provided.
 
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the event that will be grabbed.
+        Args:
+            name (str): The name of the event that will be returned.
 
-        Return
-        ------
-        Optional[:class:`Event`]
+        Returns:
             The event, none if not found.
         """
         return self.events.get(name)
 
-    def add_event(self, name: str) -> Event:
-        """Adds a new event. Returns this new event after creation.
+    def new_event(self, name: str) -> Event:
+        """Creates a new event. Returns this new event after creation.
 
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the new event.
+        Args:
+            name (str): The name of the new event.
 
-        Return
-        ------
-        :class:`Event`
+        Returns:
             The new event created.
         """
+        if name not in self.events:
+            return self.events[name]
+
         new_event = Event(name, self)
         self.events[name] = new_event
         return new_event
 
+    def add_event(self, event: Event) -> None:
+        """Adds a new pre-existing event.
+
+        Args:
+            event (Event): The event to add.
+        """
+        self.events[event.name] = event
+
     def remove_event(self, name: str) -> None:
         """Removes an event.
 
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the event to remove.
+        Args:
+            name (str): The name of the event to remove.
         """
         if name not in self.events:
             raise ValueError(f"There is no event with name {name}!")
@@ -112,62 +102,29 @@ class Dispatcher:
     def has_event(self, name: str) -> bool:
         """Check if this dispatcher already has a event.
 
-        Parameters
-        ----------
-        name: :type:`str`
-            The name of the event to find.
+        Args:
+            name (str): The name of the event to find.
 
-        Returns
-        -------
-        :type:`bool`
+        Returns:
             A bool correlating to if there is a event with that name or not.
         """
         return name in self.events
-
-    def event(
-        self,
-        *,
-        proto: bool = False,
-        callback: bool = False,
-        name: Optional[str] = None,
-        parent: bool = False,
-        one_shot: bool = False,
-    ) -> Func[Event]:
-        if not proto and not callback:
-            raise ValueError("Proto and callback parameters cannot both be None!")
-
-        def wrapper(func: CoroFunc):
-            event_name = func.__name__ if not name else name
-            new_event = self.add_event(event_name)
-
-            if proto:
-                new_event.set_proto(func, parent=parent)
-            if callback:
-                new_event.add_callback(func, one_shot=one_shot, parent=parent)
-
-            return new_event
-
-        return wrapper
 
     # global error handler
 
     async def error_handler(self, exception: Exception) -> None:
         """Basic error handler for dispatched events.
 
-        Parameters
-        ----------
-        exception: :type:`Exception`
-            The exception from the dispatched event.
+        Args:
+            exception (Exception): The exception from the dispatched event.
         """
         traceback.print_exception(type(exception), exception, exception.__traceback__)
 
     def override_error_handler(self, func: CoroFunc) -> None:
         """Overrides a new error handler for dispatched events.
 
-        Parameters
-        ----------
-        func: :type:`CoroFunc`
-            The new error handler.
+        Args:
+            func (CoroFunc): The new error handler.
         """
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback provided is not a coroutine.")
@@ -189,14 +146,10 @@ class Dispatcher:
         """Dispatches a event. This will trigger the all of the event's
         callbacks.
 
-        Parameters
-        ----------
-        name: :type:`str`
-            The name of the event to dispatch.
-        *args: :type:`Any`
-            Arguments to pass into the event callback.
-        **kwargs: :type:`Any`
-            Keyword arguments to pass into the event callback.
+        Args:
+            name (str): The name of the event to dispatch.
+            *args (Any): Arguments to pass into the event.
+            **kwargs (Any): Keyword arguments to pass into the event.
         """
         _log.debug("Dispatching event %s", name)
         event = self.events.get(name)

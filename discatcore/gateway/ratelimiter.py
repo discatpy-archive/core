@@ -93,6 +93,9 @@ class Ratelimiter:
 
     async def set(self):
         """Sets the lock until the ratelimit is finished."""
+        if self.is_set():
+            return
+
         start_time = datetime.now()
         _log.info("Starting Gateway ratelimiting.")
 
@@ -108,17 +111,16 @@ class Ratelimiter:
 
     async def wait(self):
         """Waits for the lock to be unlocked."""
-        if not self._lock.is_set():
-            start_time = datetime.now()
-            _log.info("Waiting for Gateway ratelimit lock.")
+        start_time = datetime.now()
+        _log.info("Waiting for the Gateway ratelimit lock.")
 
-            await self._lock.wait()
+        await self._lock.wait()
 
-            end_time = datetime.now()
-            _log.info(
-                "Done waiting for the Gateway ratelimit lock. It took %f seconds.",
-                (end_time - start_time).total_seconds(),
-            )
+        end_time = datetime.now()
+        _log.info(
+            "Done waiting for the Gateway ratelimit lock! It took %f seconds.",
+            (end_time - start_time).total_seconds(),
+        )
 
     def is_set(self):
         """:class:`bool` Returns a bool signifying if the lock is currently set or not."""

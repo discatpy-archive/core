@@ -161,9 +161,7 @@ class GatewayClient:
 
     async def send(self, data: dict[str, Any]):
         if self.ratelimiter.is_ratelimited():
-            if not self.ratelimiter.is_set():
-                await self.ratelimiter.set()
-            await self.ratelimiter.wait()
+            await self.ratelimiter.set()
 
         await self.ws.send_json(data, dumps=dumps)
         _log.debug("Sent JSON payload %s to the Gateway.", data)
