@@ -37,6 +37,7 @@ from discord_typings import GetGatewayBotData
 from discatcore import __version__
 from discatcore.errors import BucketMigrated, HTTPException, UnsupportedAPIVersionWarning
 from discatcore.file import BasicFile
+from discatcore.http.endpoints import *
 from discatcore.http.ratelimiter import Ratelimiter
 from discatcore.http.route import Route
 from discatcore.types import Unset
@@ -74,7 +75,20 @@ def _filter_dict_for_unset(d: dict[Any, Any]):
     return dict(filter(lambda item: item[1] is not Unset, d.items()))
 
 
-class HTTPClient:
+class HTTPClient(
+    AuditLogEndpoints,
+    AutoModerationEndpoints,
+    ChannelEndpoints,
+    EmojiEndpoints,
+    GuildScheduledEventEndpoints,
+    GuildTemplateEndpoints,
+    GuildEndpoints,
+    InviteEndpoints,
+    StageInstanceEndpoints,
+    StickerEndpoints,
+    UserEndpoints,
+    VoiceEndpoints,
+):
     __slots__ = (
         "token",
         "_ratelimiter",
