@@ -27,7 +27,6 @@ import logging
 import sys
 import warnings
 from dataclasses import dataclass
-from datetime import datetime
 from typing import Any, Optional, cast
 from urllib.parse import quote as _urlquote
 
