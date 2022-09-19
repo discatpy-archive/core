@@ -57,6 +57,20 @@ class StickerEndpoints(EndpointMixin):
             )
         )
 
+    async def create_guild_sticker(
+        self, guild_id: Snowflake, *, name: str, description: str = "", tags: str, file: BasicFile
+    ):
+        from aiohttp import FormData
+
+        form_data = FormData()
+        form_data.add_field("name", name)
+        form_data.add_field("description", description)
+        form_data.add_field("tags", tags)
+        form_data.add_field("file", file.fp, content_type=file.content_type)
+        return await self.request(
+            Route("POST", "/guilds/{guild_id}/stickers", guild_id=guild_id), data=form_data
+        )
+
     async def modify_guild_sticker(
         self,
         guild_id: Snowflake,

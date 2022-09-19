@@ -27,6 +27,31 @@
                 "sticker_id": "Snowflake"
             }
         },
+        "create_guild_sticker": {
+            "method": "POST",
+            "url": "/guilds/{guild_id}/stickers",
+            "url-parameters": {
+                "guild_id": "Snowflake"
+            },
+            "extra-parameters": {
+                "name": "str",
+                "description": ["str", "\"\""],
+                "tags": "str",
+                "file": "BasicFile"
+            },
+            "extra-request-parameters": {
+                "data": "form_data"
+            },
+            "extra-code": [
+                "from aiohttp import FormData",
+                "",
+                "form_data = FormData()",
+                "form_data.add_field(\"name\", name)",
+                "form_data.add_field(\"description\", description)",
+                "form_data.add_field(\"tags\", tags)",
+                "form_data.add_field(\"file\", file.fp, content_type=file.content_type)"
+            ]
+        },
         "modify_guild_sticker": {
             "method": "PATCH",
             "url": "/guilds/{guild_id}/stickers/{sticker_id}",

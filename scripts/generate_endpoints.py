@@ -310,21 +310,23 @@ def _generate_func_args(
     url_params: dict[Any, Any],
     json_params: dict[Any, Any],
     query_params: dict[Any, Any],
+    extra_params: dict[Any, Any],
 ):
     if url_params is not Unset:
         for param_name, param_anno in url_params.items():
             func_gen.append_arg(FunctionArg(param_name, annotation=param_anno))
 
-    if json_params is not Unset or query_params is not Unset:
+    if json_params is not Unset or query_params is not Unset or extra_params is not Unset:
         func_gen.append_arg(FunctionArg(kw_modifier=True))
 
-        if json_params is not Unset and query_params is not Unset:  # rare case
+        if json_params is not Unset:
             _generate_func_args_json_query(func_gen, json_params)
+
+        if query_params is not Unset:
             _generate_func_args_json_query(func_gen, query_params)
-        else:
-            _generate_func_args_json_query(
-                func_gen, json_params if json_params is not Unset else query_params
-            )
+
+        if extra_params is not Unset:
+            _generate_func_args_json_query(func_gen, extra_params)
 
 
 def parse_endpoint_func(name: str, func: dict[str, Any]):
@@ -332,9 +334,20 @@ def parse_endpoint_func(name: str, func: dict[str, Any]):
     if method not in VALID_METHODS:
         raise ValueError(f"Invalid method {method}!")
     url = _dict_type_check(func, "url", str)
-    url_params = _dict_type_check(func, "url-parameters", dict, is_required=False)
-    json_params = _dict_type_check(func, "json-parameters", dict, is_required=False)
-    query_params = _dict_type_check(func, "query-parameters", dict, is_required=False)
+    url_params: dict[str, str] = _dict_type_check(func, "url-parameters", dict, is_required=False)
+    json_params: dict[str, Union[str, list[str]]] = _dict_type_check(
+        func, "json-parameters", dict, is_required=False
+    )
+    query_params: dict[str, Union[str, list[str]]] = _dict_type_check(
+        func, "query-parameters", dict, is_required=False
+    )
+    extra_params: dict[str, Union[str, list[str]]] = _dict_type_check(
+        func, "extra-parameters", dict, is_required=False
+    )
+    extra_request_params: dict[str, str] = _dict_type_check(
+        func, "extra-request-parameters", dict, is_required=False
+    )
+    extra_code: list[str] = list(func.get("extra-code", []))
     supports_reason = bool(func.get("supports-reason"))
     supports_files = bool(func.get("supports-files"))
 
@@ -342,7 +355,7 @@ def parse_endpoint_func(name: str, func: dict[str, Any]):
 
     # generate arguments
     func_generator.append_arg(FunctionArg("self"))
-    _generate_func_args(func_generator, url_params, json_params, query_params)
+    _generate_func_args(func_generator, url_params, json_params, query_params, extra_params)
 
     if supports_reason:
         func_generator.append_arg(FunctionArg("reason", annotation="Optional[str]", default="None"))
@@ -356,23 +369,36 @@ def parse_endpoint_func(name: str, func: dict[str, Any]):
     if url_params is not Unset:
         fmted_url_params += ", " + ", ".join([f"{name}={name}" for name in url_params])
 
-    extra_params = ""
+    fmted_extra_params = ""
     if json_params is not Unset:
-        extra_params += ", json_params={"
-        extra_params += ",".join([f'"{param_name}":{param_name}' for param_name in json_params])
-        extra_params += "}"
+        fmted_extra_params += ", json_params={"
+        fmted_extra_params += ",".join(
+            [f'"{param_name}":{param_name}' for param_name in json_params]
+        )
+        fmted_extra_params += "}"
     if query_params is not Unset:
-        extra_params += ", query_params={"
-        extra_params += ",".join([f'"{param_name}":{param_name}' for param_name in query_params])
-        extra_params += "}"
+        fmted_extra_params += ", query_params={"
+        fmted_extra_params += ",".join(
+            [f'"{param_name}":{param_name}' for param_name in query_params]
+        )
+        fmted_extra_params += "}"
+    if extra_request_params is not Unset:
+        fmted_extra_params += ", " + ", ".join(
+            [
+                f"{param_name}={param_value}"
+                for param_name, param_value in extra_request_params.items()
+            ]
+        )
 
     if supports_reason:
-        extra_params += ", reason=reason"
+        fmted_extra_params += ", reason=reason"
     if supports_files:
-        extra_params += ", files=files"
+        fmted_extra_params += ", files=files"
 
+    if extra_code:
+        func_generator.print(*extra_code)
     func_generator.print(
-        f'return await self.request(Route("{method}", "{url}"{fmted_url_params}){extra_params})'
+        f'return await self.request(Route("{method}", "{url}"{fmted_url_params}){fmted_extra_params})'
     )
 
     return func_generator.generate_raw()
