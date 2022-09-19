@@ -58,19 +58,6 @@ class _PreparedData:
     multipart_content: aiohttp.FormData = Unset
 
 
-def _calculate_reset_after(resp: aiohttp.ClientResponse) -> float:
-    headers = resp.headers
-
-    if "X-RateLimit-Reset" in headers:
-        now = datetime.now()
-        reset = datetime.fromtimestamp(float(headers.get("X-RateLimit-Reset", 0.0)))
-        reset_after = (reset - now).total_seconds()
-    else:
-        reset_after = float(headers.get("X-RateLimit-Reset-After", 0.0))
-
-    return reset_after if reset_after >= 0.0 else 0.0
-
-
 def _filter_dict_for_unset(d: dict[Any, Any]):
     return dict(filter(lambda item: item[1] is not Unset, d.items()))
 
