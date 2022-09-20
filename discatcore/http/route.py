@@ -54,4 +54,11 @@ class Route:
             if getattr(self, k, ...) is not ...
         ]
         top_level_params = {k: getattr(self, k) for k in available_top_level_params}
-        return f"{self.method}:{self.url.format_map(top_level_params)}"
+
+        # we can't use format_map here because that expects EVERYTHING to be
+        # formatted in the string
+        url = self.url
+        for param_name, param in top_level_params.items():
+            url = url.replace(f"{{{param_name}}}", str(param))
+
+        return f"{self.method}:{url}"
