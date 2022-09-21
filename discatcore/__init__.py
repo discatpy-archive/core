@@ -27,7 +27,8 @@ __author__ = "EmreTech"
 __version__ = "0.1.0"
 __license__ = "MIT"
 
-from . import types, utils
+# I have no idea how to prevent this type error
+from . import types, utils  # type: ignore
 from .client import *
 from .dispatcher import *
 from .enums import *

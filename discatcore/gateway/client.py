@@ -167,6 +167,7 @@ class GatewayClient:
         _log.debug("Sent JSON payload %s to the Gateway.", data)
 
     async def receive(self):
+        msg: aiohttp.WSMessage
         try:
             msg = await self.ws.receive()
         except asyncio.TimeoutError:
@@ -174,20 +175,23 @@ class GatewayClient:
             await self.close(code=1012)
             return False
 
-        _log.debug("Received WS message from Gateway with type %s", msg.type.name)
+        # aiohttp.WSMessage has 0 typing
+        # great job aio-libs
 
-        if msg.type in (aiohttp.WSMsgType.BINARY, aiohttp.WSMsgType.TEXT):
+        _log.debug("Received WS message from Gateway with type %s", msg.type.name)  # type: ignore
+
+        if msg.type in (aiohttp.WSMsgType.BINARY, aiohttp.WSMsgType.TEXT):  # type: ignore
             received_msg = None
-            if msg.type == aiohttp.WSMsgType.BINARY:
-                received_msg = self._decompress_msg(msg.data)
-            elif msg.type == aiohttp.WSMsgType.TEXT:
-                received_msg = msg.data
+            if msg.type == aiohttp.WSMsgType.BINARY:  # type: ignore
+                received_msg = self._decompress_msg(msg.data)  # type: ignore
+            elif msg.type == aiohttp.WSMsgType.TEXT:  # type: ignore
+                received_msg = msg.data  # type: ignore
 
             self.recent_gp = cast(GatewayPayload, loads(received_msg))  # type: ignore
             _log.debug("Received payload from the Gateway: %s", self.recent_gp)
             self._sequence = self.recent_gp.get("s")
             return True
-        elif msg.type == aiohttp.WSMsgType.CLOSE:
+        elif msg.type == aiohttp.WSMsgType.CLOSE:  # type: ignore
             await self.close(reconnect=False)
             return False
 
@@ -221,6 +225,7 @@ class GatewayClient:
 
             # if we need to reconnect, set the event
             if reconnect:
+                # TODO: raise exception instead of accessing a private method
                 self.client._gateway_reconnect.set()
 
     @property

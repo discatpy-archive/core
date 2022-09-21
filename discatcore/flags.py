@@ -45,16 +45,10 @@ class flag_value:
         self.value = value
 
     def __get__(self, instance: BaseFlags, owner: type[BaseFlags]):
-        if not isinstance(instance, BaseFlags):
-            raise TypeError("Owner instance has to be of type BaseFlags!")
-
-        return instance._has_flag(self.value)
+        return instance.has_flag(self.value)
 
     def __set__(self, instance: BaseFlags, value: bool):
-        if not isinstance(instance, BaseFlags):
-            raise TypeError("Owner instance has to be of type BaseFlags!")
-
-        instance._set_flag(self.value, value)
+        instance.set_flag(self.value, value)
 
 
 class FlagMeta(type):
@@ -118,13 +112,13 @@ class BaseFlags(metaclass=FlagMeta):
 
     __slots__ = ("value",)
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: bool):
         self.value: int = self.DEFAULT_VALUE
 
         for k, v in kwargs.items():
             if k not in self.VALID_FLAGS:
                 raise TypeError(f"Invalid flag name {k} passed in")
-            self._set_flag(self.VALID_FLAGS[k], v)
+            self.set_flag(self.VALID_FLAGS[k], v)
 
     def _get_error_msg(self, other: Union[BaseFlags, flag_value, int], op: str):
         form = '{0} and {1} are incompatible with operator "{2}"'
@@ -138,7 +132,7 @@ class BaseFlags(metaclass=FlagMeta):
     def __or__(self, other: Union[BaseFlags, flag_value, int]):
         if isinstance(other, BaseFlags) and isinstance(other, self.__class__):
             return self.__class__._from_value(self.value | other.value)
-        elif isinstance(other, flag_value) and other in self.__dict__:
+        elif isinstance(other, flag_value) and other in vars(self).values():
             return self.__class__._from_value(self.value | other.value)
         elif isinstance(other, int) and other in self.VALID_FLAGS.values():
             return self.__class__._from_value(self.value | other)
@@ -148,7 +142,7 @@ class BaseFlags(metaclass=FlagMeta):
     def __and__(self, other: Union[BaseFlags, flag_value, int]):
         if isinstance(other, BaseFlags) and isinstance(other, self.__class__):
             return self.__class__._from_value(self.value & other.value)
-        elif isinstance(other, flag_value) and other in self.__dict__:
+        elif isinstance(other, flag_value) and other in vars(self).values():
             return self.__class__._from_value(self.value & other.value)
         elif isinstance(other, int) and other in self.VALID_FLAGS.values():
             return self.__class__._from_value(self.value & other)
@@ -164,7 +158,7 @@ class BaseFlags(metaclass=FlagMeta):
     def __sub__(self, other: Union[BaseFlags, flag_value, int]):
         if isinstance(other, BaseFlags) and isinstance(other, self.__class__):
             return self.__class__._from_value(self.value & ~other.value)
-        elif isinstance(other, flag_value) and other in self.__dict__:
+        elif isinstance(other, flag_value) and other in vars(self).values():
             return self.__class__._from_value(self.value & ~other.value)
         elif isinstance(other, int) and other in self.VALID_FLAGS.values():
             return self.__class__._from_value(self.value & ~other)
@@ -180,10 +174,10 @@ class BaseFlags(metaclass=FlagMeta):
         self.value = value
         return self
 
-    def _has_flag(self, v: int):
+    def has_flag(self, v: int):
         return (self.value & v) == v
 
-    def _set_flag(self, v: int, toggle: bool):
+    def set_flag(self, v: int, toggle: bool):
         if toggle:
             self.value |= v
         else:

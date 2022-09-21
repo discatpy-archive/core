@@ -26,7 +26,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from datetime import datetime
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 if TYPE_CHECKING:
     from discatcore.gateway.client import GatewayClient
@@ -54,7 +54,7 @@ class Ratelimiter:
         self.cmds_per_time_frame = cmds_per_time_frame
         self.time_frame = time_frame
         self.parent = parent
-        self._task: Optional[asyncio.Task] = None
+        self._task: Optional[asyncio.Task[Any]] = None
         self._ratelimit_done = asyncio.Event()
         self._lock = asyncio.Event()
 

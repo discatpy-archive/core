@@ -22,7 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import Optional
+from typing import Any, Optional
 from urllib.parse import quote as _urlquote
 
 from discatcore.types import Snowflake
@@ -31,7 +31,7 @@ __all__ = ("Route",)
 
 
 class Route:
-    def __init__(self, method: str, url: str, **params):
+    def __init__(self, method: str, url: str, **params: Any):
         self.params = params
         self.method = method
         self.url = url

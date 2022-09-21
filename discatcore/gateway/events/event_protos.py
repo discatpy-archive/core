@@ -80,7 +80,7 @@ class GatewayEventProtos:
             for k in dir(self):
                 v = getattr(self, k)
                 if not k.startswith("_") and callable(v):
-                    self.client.add_event(k).set_proto(v)
+                    self.client.new_event(k).set_proto(v)
 
             self.client._event_protos_handler_hooked = True
 

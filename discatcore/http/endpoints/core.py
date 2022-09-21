@@ -22,7 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from discatcore.file import BasicFile
 from discatcore.http.route import Route
@@ -41,5 +41,5 @@ class EndpointMixin:
         reason: Optional[str] = None,
         files: list[BasicFile] = Unset,
         **extras: Any,
-    ):
+    ) -> Union[Any, str]:
         pass

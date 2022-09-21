@@ -148,7 +148,7 @@ class Client(Dispatcher):
     @property
     def api_version(self):
         """:class:`int` The api version the HTTP Client is using. Shortcut for :attr:`Client.http._api_version`."""
-        return self.http._api_version
+        return self.http.api_version
 
     @property
     def loop(self):

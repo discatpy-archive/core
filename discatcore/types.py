@@ -22,7 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import Any, Union
+from typing import Any, NoReturn, Union
 
 from discord_typings import (
     CategoryChannelData,
@@ -43,7 +43,7 @@ class _UnsetDefine:
     __slots__ = ()
     __name__ = "Unset"
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> NoReturn:
         raise NotImplementedError("You cannot compare unset")
 
     def __repr__(self):
@@ -51,7 +51,7 @@ class _UnsetDefine:
 
     __str__ = __repr__
 
-    def __bool__(self):
+    def __bool__(self) -> NoReturn:
         raise NotImplementedError("Unset is not set, it is not True, False, or None.")
 
 

@@ -23,7 +23,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import asyncio
-from typing import Optional
+from typing import Any, Optional
 
 __all__ = (
     "BaseRatelimiter",
@@ -66,7 +66,7 @@ class BaseRatelimiter:
         await self.acquire()
         return None
 
-    async def __aexit__(self, *args):
+    async def __aexit__(self, *args: Any):
         pass
 
 

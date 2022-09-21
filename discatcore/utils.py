@@ -30,11 +30,11 @@ from typing import Any, Optional, Union
 
 from discatcore.types import Snowflake
 
-HAS_ORJSON = False
+has_orjson = False
 try:
     import orjson
 
-    HAS_ORJSON = True
+    has_orjson = True
 except ImportError:
     import json
 
@@ -114,13 +114,13 @@ class SnowflakeUtils:
 
 
 def dumps(obj: Any):
-    if HAS_ORJSON:
+    if has_orjson:
         return orjson.dumps(obj).decode("utf-8")
     return json.dumps(obj)
 
 
 def loads(obj: str):
-    if HAS_ORJSON:
+    if has_orjson:
         return orjson.loads(obj)
     return json.loads(obj)
 
@@ -177,11 +177,14 @@ def create_fn(
     txt = f"def __create_fn__({local_vars}):\n{indent_text(txt)}\n    return {name}"
     ns = {}
     exec(txt, globals, ns)
-    return ns["__create_fn__"](**locals)
+
+    # there's no good way to explicity inform pyright the return of this
+    # it is a static type checker after all
+    return ns["__create_fn__"](**locals)  # type: ignore
 
 
-def _get_everything_from_module(mod):
-    everything = {}
+def _get_everything_from_module(mod: types.ModuleType):
+    everything: dict[str, Any] = {}
     keys = [k for k in dir(mod) if not k.startswith("_")]
 
     for k in keys:

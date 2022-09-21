@@ -110,12 +110,16 @@ class HTTPClient(
 
     @property
     def _session(self):
-        if self.__session is None or self.__session.closed:  # type: ignore
+        if self.__session is None or self.__session.closed:
             self.__session = aiohttp.ClientSession(
                 headers={"User-Agent": self.user_agent}, json_serialize=dumps
             )
 
         return self.__session
+
+    @property
+    def api_version(self):
+        return self._api_version
 
     async def ws_connect(self, url: str):
         """Starts a websocket connection.
@@ -133,7 +137,9 @@ class HTTPClient(
             "compress": 0,
         }
 
-        return await self._session.ws_connect(url, **kwargs)
+        # this function is partially unknown
+        # not our fault, aiohttp's fault
+        return await self._session.ws_connect(url, **kwargs)  # type: ignore
 
     async def close(self):
         """Closes the connection."""
@@ -153,12 +159,10 @@ class HTTPClient(
                 "payload_json", _filter_dict_for_unset(json), content_type="application/json"
             )
 
-            # this has to be done because otherwise Pyright will complain about files not being an iterable type
-            if isinstance(files, list):
-                for i, f in enumerate(files):
-                    form_dat.add_field(
-                        f"files[{i}]", f.fp, content_type=f.content_type, filename=f.filename
-                    )
+            for i, f in enumerate(files):
+                form_dat.add_field(
+                    f"files[{i}]", f.fp, content_type=f.content_type, filename=f.filename
+                )
 
             pd.multipart_content = form_dat
 

@@ -34,7 +34,7 @@ from discatcore.utils import create_fn, from_import, indent_text
 __all__ = ("generate_handlers_from",)
 
 T = TypeVar("T")
-_custom_type_handlers = OrderedDict(
+_custom_type_handlers: OrderedDict[Callable[[type], bool], str] = OrderedDict(
     {
         (
             lambda t: t is datetime or datetime in get_args(t)

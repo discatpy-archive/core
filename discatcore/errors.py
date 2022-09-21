@@ -22,9 +22,10 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import Any, Optional, Union
+from typing import Optional, Union
 
 from aiohttp import ClientResponse
+from discord_typings import HTTPErrorResponseData, NestedHTTPErrorsData
 
 __all__ = (
     "DisCatCoreException",
@@ -41,24 +42,40 @@ class DisCatCoreException(Exception):
     pass
 
 
-def _shorten_error_dict(d: dict[str, Any], key: str = "") -> dict[str, str]:
-    ret_items: list[tuple[str, str]] = []
+# def _shorten_error_dict(d: Union[NestedHTTPErrorsData, dict[str, Any]], key: str = "") -> dict[str, str]:
+#    ret_items: list[tuple[str, str]] = []
+#
+#    for k, val in d.items():
+#        new_k = key + "." + k if key else k
+#
+#        if isinstance(val, dict):
+#            try:
+#                _errors = val.get("_errors")
+#            except KeyError:
+#                # recursively go through the dict to find the _errors list
+#                ret_items.extend(_shorten_error_dict(val, new_k).items())
+#            else:
+#                ret_items.append((new_k, " ".join([str(x.get("message", "")) for x in _errors])))
+#        else:
+#            ret_items.append((new_k, str(val)))
+#
+#    return dict(ret_items)
 
-    for k, val in d.items():
-        new_k = key + "." + k if key else k
 
-        if isinstance(val, dict):
-            try:
-                _errors: list[dict[str, Any]] = val["_errors"]
-            except KeyError:
-                # recursively go through the dict to find the _errors list
-                ret_items.extend(_shorten_error_dict(val, new_k).items())
-            else:
-                ret_items.append((new_k, " ".join(x.get("message", "") for x in _errors)))
-        else:
-            ret_items.append((new_k, val))
+def _shorten_error_dict(d: NestedHTTPErrorsData, parent_key: str = ""):
+    ret_items: dict[str, str] = {}
 
-    return dict(ret_items)
+    _errors = d.get("_errors")
+    if _errors is not None and isinstance(_errors, list):
+        ret_items[parent_key] = ", ".join([msg["message"] for msg in _errors])
+    else:
+        for key, value in d.items():
+            key_path = f"{parent_key}.{key}" if parent_key else key
+            # pyright thinks the type of value could be object which violates the first parameter
+            # of this function
+            ret_items.update([(k, v) for k, v in _shorten_error_dict(value, key_path).items()])  # type: ignore
+
+    return ret_items
 
 
 class HTTPException(DisCatCoreException):
@@ -78,7 +95,7 @@ class HTTPException(DisCatCoreException):
 
     __all__ = ()
 
-    def __init__(self, response: ClientResponse, data: Optional[Union[dict[str, Any], str]]):
+    def __init__(self, response: ClientResponse, data: Optional[Union[HTTPErrorResponseData, str]]):
         self.response = response
         self.status = response.status
 
@@ -102,7 +119,8 @@ class HTTPException(DisCatCoreException):
 
         format += ")"
 
-        super().__init__(format.format(response.status, response.reason, self.code, self.text))
+        # more shitty aiohttp typing
+        super().__init__(format.format(response.status, response.reason, self.code, self.text))  # type: ignore
 
 
 class BucketMigrated(DisCatCoreException):
