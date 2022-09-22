@@ -30,6 +30,20 @@ __all__ = ("BasicFile",)
 
 
 class BasicFile:
+    """Represents a file being POSTed to the Discord API.
+
+    Args:
+        fp (Union[io.IOBase, str, bytes]): The raw file contents or the path to the target file.
+        content_type (str): The content type of this file. This has to be in the HTTP format.
+        filename (Optional[str]): The custom filename of this file. Defaults to None.
+        spoiler (bool): Whether this file is a spoiler or not. Defaults to False.
+
+    Attributes:
+        fp (Union[io.IOBase, str, bytes]): The raw file contents.
+        filename (str): The filename of this file. Defaults to the filename from the fp if the argument is None.
+        content_type (str): The content type of this file. This has to be in the HTTP format.
+    """
+
     __slots__ = (
         "fp",
         "filename",
@@ -73,13 +87,20 @@ class BasicFile:
 
     @property
     def spoiler(self):
+        """:bool: Whether the file is a spoiler or not."""
         return self.filename.startswith("SPOILER_")
 
     def close(self):
+        """Closes the raw file."""
         self.fp.close = self._orig_close
         if not self._owner:
             self.fp.close()
 
     def reset(self, hard: bool = True):
+        """Resets this file.
+
+        Args:
+            hard (bool): Whether the file should be hard reset or not. Defaults to True.
+        """
         if hard:
             self.fp.seek(0)

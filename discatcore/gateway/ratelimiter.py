@@ -36,6 +36,8 @@ __all__ = ("Ratelimiter",)
 _log = logging.getLogger(__name__)
 
 
+# TODO: refactor to incorporate the ratelimiting implementations in
+# impl/ratelimit.py (for consistency)
 class Ratelimiter:
     """Represents a ratelimiter for a Gateway Client."""
 
@@ -45,14 +47,14 @@ class Ratelimiter:
         "_task",
         "_ratelimit_done",
         "_lock",
-        "cmds_per_time_frame",
-        "time_frame",
+        "limit",
+        "reset_after",
     )
 
-    def __init__(self, parent: GatewayClient, cmds_per_time_frame: int = 120, time_frame: int = 60):
+    def __init__(self, parent: GatewayClient, limit: int = 120, reset_after: int = 60):
         self.commands_used = 0
-        self.cmds_per_time_frame = cmds_per_time_frame
-        self.time_frame = time_frame
+        self.limit = limit
+        self.reset_after = reset_after
         self.parent = parent
         self._task: Optional[asyncio.Task[Any]] = None
         self._ratelimit_done = asyncio.Event()
@@ -64,7 +66,7 @@ class Ratelimiter:
             try:
                 self._ratelimit_done.clear()
 
-                await asyncio.sleep(self.time_frame)
+                await asyncio.sleep(self.reset_after)
 
                 self._ratelimit_done.set()
                 self.commands_used = 0
@@ -89,32 +91,17 @@ class Ratelimiter:
         _log.debug("A Gateway command has been used.")
 
     def is_ratelimited(self):
-        return self.commands_used == self.cmds_per_time_frame - 1
+        return self.commands_used == self.limit - 1
 
-    async def set(self):
-        """Sets the lock until the ratelimit is finished."""
-        if self.is_set():
+    async def acquire(self):
+        """Waits for the lock to be unlocked."""
+        if not self.is_ratelimited():
             return
 
         start_time = datetime.now()
-        _log.info("Starting Gateway ratelimiting.")
-
-        self._lock.clear()
-        await self._ratelimit_done.wait()
-        self._lock.set()
-
-        end_time = datetime.now()
-        _log.info(
-            "Gateway ratelimiting has finished. It took %f seconds.",
-            (end_time - start_time).total_seconds(),
-        )
-
-    async def wait(self):
-        """Waits for the lock to be unlocked."""
-        start_time = datetime.now()
         _log.info("Waiting for the Gateway ratelimit lock.")
 
-        await self._lock.wait()
+        await self._ratelimit_done.wait()
 
         end_time = datetime.now()
         _log.info(
@@ -122,6 +109,8 @@ class Ratelimiter:
             (end_time - start_time).total_seconds(),
         )
 
-    def is_set(self):
-        """:class:`bool` Returns a bool signifying if the lock is currently set or not."""
-        return not self._lock.is_set()
+    async def __aenter__(self):
+        await self.acquire()
+
+    async def __aexit__(self, *args: Any):
+        pass

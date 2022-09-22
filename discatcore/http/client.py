@@ -75,6 +75,24 @@ class HTTPClient(
     UserEndpoints,
     VoiceEndpoints,
 ):
+    """The HTTP client that helps makes connections to the REST API. This handles ratelimiting and wraps
+    Discord REST API endpoints into easy to use coroutine functions.
+
+    Args:
+        token (str): The bot token to use when sending a request to the Discord API.
+            Normal user tokens WILL NOT WORK intentionally.
+        api_version (Optional[int]): The Discord API version to use.
+            It's not recommended to set this argument because this library will only
+            be able to handle one API version at a time. Defaults to None.
+
+    Attributes:
+        token (str): The bot token to use when sending a request to the Discord API.
+        user_agent (str): The user agent headers to use when sending a request to the Discord API.
+            This contains the repo of this library, version of this library, and Python version.
+        default_headers (dict[str, str]): Default headers to include in every request to the Discord API.
+            This currently only includes the authorization headers, but the user agent header might be added too.
+    """
+
     __slots__ = (
         "token",
         "_ratelimiter",
@@ -83,7 +101,7 @@ class HTTPClient(
         "__session",
         "user_agent",
         "default_headers",
-        "request_id",
+        "_request_id",
     )
 
     def __init__(self, token: str, *, api_version: Optional[int] = None):
@@ -106,7 +124,7 @@ class HTTPClient(
             __version__, sys.version_info
         )
         self.default_headers = {"Authorization": f"Bot {self.token}"}
-        self.request_id = 0
+        self._request_id = 0
 
     @property
     def _session(self):
@@ -119,15 +137,14 @@ class HTTPClient(
 
     @property
     def api_version(self):
+        """:int: The Discord API version to use."""
         return self._api_version
 
     async def ws_connect(self, url: str):
         """Starts a websocket connection.
 
-        Parameters
-        ----------
-        url: :class:`str`
-            The url of the websocket to connect to.
+        Args:
+            url (str): The url of the websocket to connect to.
         """
         kwargs = {
             "max_msg_size": 0,
@@ -142,7 +159,9 @@ class HTTPClient(
         return await self._session.ws_connect(url, **kwargs)  # type: ignore
 
     async def close(self):
-        """Closes the connection."""
+        """Closes the HTTP session.
+        If the HTTP session is attempted to be reused again then it'll be automatically regenerated.
+        """
         if self.__session and not self.__session.closed:
             await self._session.close()
 
@@ -187,8 +206,30 @@ class HTTPClient(
         files: list[BasicFile] = Unset,
         **extras: Any,
     ):
-        self.request_id += 1
-        rid = self.request_id
+        """Sends a request to the Discord API. This automatically handles ratelimiting and data processing.
+
+        Args:
+            route (.Route): The route to send a request to.
+            query_params (Optional[dict[str, Any]]): The query parameters to include in the url of this request.
+                Any Unset values detected will be filtered out automatically. Defaults to None.
+            json_params (dict[str, Any]): The json parameters to include in the request.
+                Any Unset values detected will be filtered out automatically. Defaults to Unset.
+            reason (Optional[str]): If this route supports reasons, the reason for the action caused by the
+                route being performed. This will be included in the headers under "X-Audit-Log-Reason".
+                Defaults to None.
+            files (list[BasicFile]): The files to include in the request.
+                This will be processed along with the json paramters to generate multipart content.
+                Attachments are not automatically calculated in the json parameters.
+                Defaults to Unset.
+            **extras (Any): Any extra parameters to include in the underlying aiohttp request function.
+                This SHOULD NOT be used by users, this is a internal parameter for special routes
+                (like Create Guild Sticker).
+
+        Returns:
+            If this route returns any content, it will be processed and returned.
+        """
+        self._request_id += 1
+        rid = self._request_id
         _log.debug("Request with id %d has started.", rid)
         url = route.endpoint
 
@@ -286,10 +327,24 @@ class HTTPClient(
         )
 
     async def get_gateway_bot(self) -> GetGatewayBotData:
+        """Fetches the gateway information from the Discord API.
+
+        Returns:
+            A dict containing bot-specific gateway information (like shard_count, max_concurrency, etc).
+        """
         gb_info = await self.request(Route("GET", "/gateway/bot"))
         return cast(GetGatewayBotData, gb_info)
 
     async def get_from_cdn(self, url: str) -> bytes:
+        """Fetches an asset from the Discord CDN.
+        Unlike the normal request function, these routes have 0 ratelimiting or data processing.
+
+        Args:
+            url (str): The url of the CDN asset to fetch.
+
+        Returns:
+            The raw bytes of the response (which is expected to be an image).
+        """
         async with self._session.get(url) as resp:
             if resp.status == 200:
                 return await resp.read()

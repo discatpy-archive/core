@@ -42,26 +42,6 @@ class DisCatCoreException(Exception):
     pass
 
 
-# def _shorten_error_dict(d: Union[NestedHTTPErrorsData, dict[str, Any]], key: str = "") -> dict[str, str]:
-#    ret_items: list[tuple[str, str]] = []
-#
-#    for k, val in d.items():
-#        new_k = key + "." + k if key else k
-#
-#        if isinstance(val, dict):
-#            try:
-#                _errors = val.get("_errors")
-#            except KeyError:
-#                # recursively go through the dict to find the _errors list
-#                ret_items.extend(_shorten_error_dict(val, new_k).items())
-#            else:
-#                ret_items.append((new_k, " ".join([str(x.get("message", "")) for x in _errors])))
-#        else:
-#            ret_items.append((new_k, str(val)))
-#
-#    return dict(ret_items)
-
-
 def _shorten_error_dict(d: NestedHTTPErrorsData, parent_key: str = ""):
     ret_items: dict[str, str] = {}
 
@@ -81,23 +61,18 @@ def _shorten_error_dict(d: NestedHTTPErrorsData, parent_key: str = ""):
 class HTTPException(DisCatCoreException):
     """Represents an error while attempting to connect to the Discord REST API.
 
-    Attributes
-    ----------
-    response: :type:`aiohttp.ClientResponse`
-        The response from the attempted REST API request.
-    text :type:`str`
-        The error text. Might be empty.
-    status :type:`int`
-        The status of the request.
-    code :type:`int`
-        The Discord specfic error code of the request.
+    Args:
+        response (aiohttp.ClientResponse): The response from the attempted REST API request.
+        data (Union[discord_typings.HTTPErrorResponseData, str, None]): The raw data retrieved from the response.
+
+    Attributes:
+        text (str): The error text. Might be empty.
+        code (int): The Discord specfic error code of the request.
     """
 
-    __all__ = ()
+    __slots__ = ("text", "code")
 
     def __init__(self, response: ClientResponse, data: Optional[Union[HTTPErrorResponseData, str]]):
-        self.response = response
-        self.status = response.status
 
         if isinstance(data, dict):
             self.code = data.get("code", 0)

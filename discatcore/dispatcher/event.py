@@ -51,6 +51,10 @@ class _EventCallbackMetadata:
 class Event:
     """Represents an event for a dispatcher.
 
+    Args:
+        name (str): The name of this event.
+        parent (Dispatcher): The parent dispatcher of this event.
+
     Attributes:
         name (str): The name of this event.
         parent (Dispatcher): The parent dispatcher of this event.

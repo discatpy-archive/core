@@ -48,18 +48,23 @@ _log = logging.getLogger(__name__)
 
 
 class HeartbeatHandler:
+    """A class that helps keep the Gateway connection alive.
+
+    Args:
+        parent (.GatewayClient): The parent reference of this heartbeat handler.
+
+    Attributes:
+        parent (.GatewayClient): The parent reference of this heartbeat handler.
+    """
+
     __slots__ = (
         "parent",
         "_task",
-        "heartbeat_payload",
-        "heartbeat_interval",
         "_first_heartbeat",
     )
 
     def __init__(self, parent: GatewayClient):
         self.parent = parent
-        self.heartbeat_payload = parent.heartbeat_payload
-        self.heartbeat_interval = parent.heartbeat_interval
         self._first_heartbeat = True
 
         self._task = asyncio.create_task(self.loop())
@@ -67,9 +72,9 @@ class HeartbeatHandler:
     async def loop(self):
         while not self.parent.ws.closed:
             try:
-                await self.parent.send(self.heartbeat_payload)
+                await self.parent.send(self.parent.heartbeat_payload)
 
-                delta = self.heartbeat_interval
+                delta = self.parent.heartbeat_interval
                 if self._first_heartbeat:
                     delta *= random.uniform(0.0, 1.0)
                     self._first_heartbeat = False
@@ -84,31 +89,26 @@ class HeartbeatHandler:
 
 
 class GatewayClient:
-    """
-    The Gateway Client between your Client and Discord.
+    """The Gateway client that manages connections to and from the Discord API.
 
-    Parameters
-    ----------
-    ws: :class:`aiohttp.ClientWebSocketResponse`
-        The websockets response.
-    client: :class:`Client`
-        The Client.
-    heartbeat_timeout: :class:`int`
-        The amount of time (in seconds) to wait for a heartbeat ack
-        to come in.
+    Args:
+        ws (aiohttp.ClientWebSocketResponse): The websocket client. This is created via the :class:`HTTPClient` client.
+        client (Client): The parent client. This is used for dispatching events recieved from the gateway.
+        heartbeat_timeout (int): The amount of time (in seconds) to wait for a heartbeat ack to come in.
+            Defaults to 30 seconds.
 
-    Attributes
-    ----------
-    inflator: :class:`zlib.decompressobj`
-        The Gateways inflator.
-    heartbeat_interval: :class:`float`
-        The interval to heartbeat given by Discord.
-    session_id: :class:`str`
-        The session id of this Gateway connection.
-    recent_gp: :class:`GatewayPayload`
-        The newest Gateway Payload.
-    keep_alive_task: :class:`Optional[asyncio.Task]`
-        The task used to keep the connection alive.
+    Attributes:
+        inflator (zlib.decompressobj): The compression inflator.
+            This is used for messages that are compressed, which is enabled by default.
+        heartbeat_interval (float): The interval to heartbeat given by Discord. This is used with the heartbeat handler.
+        session_id (str): The session id of this Gateway connection. This is also used when we resume connection.
+        recent_gp (.GatewayPayload): The newest Gateway Payload.
+        heartbeat_timeout (int): The amount of time (in seconds) to wait for a heartbeat ack to come in.
+        ratelimiter (.Ratelimiter): The ratelimiter for the Gateway connection.
+            This is used to limit the number of commands (except for heartbeats) so we don't get kicked off of the
+            gateway connection with opcode 9.
+        heartbeat_handler (Optional[.HeartbeatHandler]): The heartbeat handler for the Gateway connection.
+            This is used to keep the connection alive via Discord's guidelines.
     """
 
     __slots__ = (
@@ -160,13 +160,21 @@ class GatewayClient:
         return out_str
 
     async def send(self, data: dict[str, Any]):
-        if self.ratelimiter.is_ratelimited():
-            await self.ratelimiter.set()
+        """Sends a dict payload to the websocket connection.
 
+        Args:
+            data (dict[str, Any]): The data to send to the websocket connection.
+        """
+        await self.ratelimiter.acquire()
         await self.ws.send_json(data, dumps=dumps)
         _log.debug("Sent JSON payload %s to the Gateway.", data)
 
     async def receive(self):
+        """Receives a message from the websocket connection and decompresses the message.
+
+        Returns:
+            A bool correspoding to whether we received a message or not.
+        """
         msg: aiohttp.WSMessage
         try:
             msg = await self.ws.receive()
@@ -196,17 +204,11 @@ class GatewayClient:
             return False
 
     async def close(self, code: int = 1000, reconnect: bool = True):
-        """
-        Closes the connection with the gateway.
+        """Closes the connection with the websocket.
 
-        For internal use only.
-
-        Parameters
-        ----------
-        code: :type:`int`
-            The websocket code to close with. Set to 1000 by default
-        reconnect: :type:`bool`
-            If we should reconnect or not. Set to True by default
+        Args:
+            code (int): The websocket code to close with. Defaults to 1000.
+            reconnect (bool): If we should reconnect or not. Defaults to True.
         """
         if not self.ws.closed:
             _log.info(
@@ -230,7 +232,7 @@ class GatewayClient:
 
     @property
     def identify_payload(self):
-        """:type:`Dict[str, Any]` Returns the identifcation payload."""
+        """:dict[str, Any]: Returns the identifcation payload."""
         identify_dict = {
             "op": GatewayOpcode.IDENTIFY.value,
             "d": {
@@ -251,7 +253,7 @@ class GatewayClient:
 
     @property
     def resume_payload(self):
-        """:type:`Dict[str, Any]` Returns the resume payload."""
+        """:dict[str, Any]: Returns the resume payload."""
         return {
             "op": GatewayOpcode.RESUME.value,
             "d": {
@@ -263,19 +265,16 @@ class GatewayClient:
 
     @property
     def heartbeat_payload(self):
-        """:type:`Dict[str, Any]` Returns the heartbeat payload."""
+        """:dict[str, Any]: Returns the heartbeat payload."""
         return {"op": GatewayOpcode.HEARTBEAT.value, "d": self._sequence}
 
     async def loop(self):
-        """
-        Executes the main Gateway loop, which is the following:
+        """Executes the main Gateway loop, which is the following:
 
         - compare the last time the heartbeat ack was sent from the server to current time
             - if that comparison is greater than the heartbeat timeout, then we reconnect
-        - receive the latest message from the server
-        - decompress and convert this message to the GatewayPayload format
-        - poll the latest message to see what to do
-
+        - receive the latest message from the server via :meth:`.receive`
+        - poll the latest message and perform an action based on that payload
         """
         while not self.ws.closed:
             if self._gateway_resume:
@@ -331,26 +330,17 @@ class GatewayClient:
         query: str = "",
         presences: bool = False,
     ):
-        """
-        Sends a command to the Gateway requesting members from a certain guild.
+        """Sends a guild members request to the Gateway.
 
-        When the chucks of the members are received, they will be automatically
-        inserted into the client's cache.
-
-        Parameters
-        ----------
-        guild_id: :type:`int`
-            The guild ID we are requesting members from
-        user_ids: :type:`Optional[Union[int, List[int]]]`
-            The user id(s) to request. Set to nothing by default
-        limit: :type:`int`
-            The maximum amount of members to grab. Set to 0 by default
-        query: :type:`str`
-            The string the username starts with. Set to "" by default
-        presences: :type:`bool`
-            If we want to grab the presences of the members. Set to False by default
+        Args:
+            guild_id (int): The guild ID we are requesting members from.
+            user_ids (Optional[Union[int, List[int]]]): The user id(s) to request. Defaults to None.
+            limit (int): The maximum amount of members to grab. Defaults to 0.
+            query (str): The string the username starts with. Defaults to "".
+            presences (bool): Whether or not Discord should give us the presences of the members.
+                Defaults to False.
         """
-        guild_mems_req = {
+        guild_mems_req: dict[str, Any] = {
             "op": GatewayOpcode.REQUEST_GUILD_MEMBERS.value,
             "d": {
                 "guild_id": str(guild_id),
@@ -366,21 +356,15 @@ class GatewayClient:
         await self.send(guild_mems_req)
 
     async def update_presence(self, *, since: int, status: str, afk: bool):
-        """
-        Sends a presence update to the Gateway.
+        """Sends a presence update to the Gateway.
 
-        Parameters
-        ----------
-        since: :type:`int`
-            When the bot went AFK
-        activities: :type:`List[Activity]`
-            The current activities
-        status: :type:`str`
-            The current status of the bot now
-        afk: :type:`bool`
-            If the bot is AFK or not
+        Args:
+            since (int): When the bot went AFK.
+            activities (List[Activity]): The new activities for the presence.
+            status (str): The new status of the presence.
+            afk (bool): Whether or not the bot is AFK or not.
         """
-        new_presence_dict = {
+        new_presence_dict: dict[str, Any] = {
             "op": GatewayOpcode.PRESENCE_UPDATE.value,
             "d": {
                 "since": since,

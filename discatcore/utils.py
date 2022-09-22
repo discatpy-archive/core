@@ -50,67 +50,47 @@ __all__ = (
 )
 
 
-def _ensure_snowflake_is_int(sf: Snowflake) -> int:
-    ret_id = sf
-    if isinstance(ret_id, str):
-        ret_id = int(ret_id)
-
-    return ret_id
-
-
 DISCORD_EPOCH = 1420070400000
 
 
 class SnowflakeUtils:
+    """Utilities for handling Snowflakes."""
+
     @staticmethod
     def snowflake_timestamp(id: Snowflake) -> int:
-        """
-        The timestamp stored in this object's Snowflake ID.
+        """The timestamp of the provided Snowflake.
 
-        Parameters
-        ----------
-        id: :type:`Snowflake`
-            The snowflake to extract from
+        Args:
+            id (Snowflake): The snowflake to extract from.
         """
-        return (_ensure_snowflake_is_int(id) >> 22) + DISCORD_EPOCH
+        return (int(id) >> 22) + DISCORD_EPOCH
 
     @staticmethod
     def snowflake_iwid(id: Snowflake) -> int:
-        """
-        The internal worker ID stored in this object's
-        Snowflake ID.
+        """The internal worker ID of the provided Snowflake.
 
-        Parameters
-        ----------
-        id: :type:`Snowflake`
-            The snowflake to extract from
+        Args:
+            id (Snowflake): The snowflake to extract from.
         """
-        return (_ensure_snowflake_is_int(id) & 0x3E0000) >> 17
+        return (int(id) & 0x3E0000) >> 17
 
     @staticmethod
     def snowflake_ipid(id: Snowflake) -> int:
-        """
-        The internal process ID stored in this object's
-        Snowflake ID.
+        """The internal process ID of the provided Snowflake.
 
-        Parameters
-        ----------
-        id: :type:`Snowflake`
-            The snowflake to extract from
+        Args:
+            id (Snowflake): The snowflake to extract from.
         """
-        return (_ensure_snowflake_is_int(id) & 0x1F000) >> 12
+        return (int(id) & 0x1F000) >> 12
 
     @staticmethod
     def snowflake_increment(id: Snowflake) -> int:
-        """
-        The increment of the object's Snowflake ID.
+        """The increment of the provided Snowflake.
 
-        Parameters
-        ----------
-        id: :type:`Snowflake`
-            The snowflake to extract from
+        Args:
+            id (Snowflake): The snowflake to extract from.
         """
-        return _ensure_snowflake_is_int(id) & 0xFFF
+        return int(id) & 0xFFF
 
 
 def dumps(obj: Any):

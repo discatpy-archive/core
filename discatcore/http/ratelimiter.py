@@ -40,7 +40,14 @@ __all__ = (
 
 
 class Bucket(BurstRatelimiter):
-    """Represents a ratelimiting bucket."""
+    """Represents a bucket in the Discord API.
+
+    Attributes:
+        reset (Optional[datetime.datetime]): The raw timestamp (processed into a datetime) when the bucket will reset.
+            Defaults to None.
+        bucket (Optional[str]): The hash denoting this bucket. This value is straight from the Discord API.
+            Defaults to None.
+    """
 
     __slots__ = (
         "reset",
@@ -105,6 +112,11 @@ class Bucket(BurstRatelimiter):
             self.lock_for(self.reset_after)
 
     def migrate_to(self, discord_hash: str):
+        """Migrates this bucket to a new one provided by the Discord API.
+
+        Raises:
+            BucketMigrated: An internal exception for the request function to change buckets.
+        """
         self._migrated = True
         raise BucketMigrated(discord_hash)
 
@@ -114,7 +126,16 @@ class Bucket(BurstRatelimiter):
 
 
 class Ratelimiter:
-    """Represents the global ratelimiter."""
+    """Represents the global ratelimiter.
+
+    Attributes:
+        discord_buckets (dict[str, .Bucket]): A mapping that maps Discord hashes to bucket objects.
+        url_buckets (dict[str, .Bucket]): A mapping that maps psuedo-buckets to bucket objects.
+            This is primarily used by new requests that do not know their Discord hashes.
+        url_to_discord_hash (dict[str, str]): A mapping that maps psuedo-buckets to Discord hashes.
+            This is primarily set by requests that have just discovered their Discord hashes.
+        global_bucket (.ManualRatelimiter): The global bucket. Used for requests that involve global 429s.
+    """
 
     __slots__ = ("discord_buckets", "url_buckets", "url_to_discord_hash", "global_bucket")
 
@@ -125,6 +146,12 @@ class Ratelimiter:
         self.global_bucket = ManualRatelimiter()
 
     def get_bucket(self, url: str):
+        """Gets a bucket object from the providing url.
+
+        Args:
+            url (str): The url to grab the bucket with.
+                This can either be a pseudo-bucket or an actual Discord hash.
+        """
         if url not in self.url_to_discord_hash:
             # this serves as a temporary bucket until further ratelimiting info is provided
             # or since some routes have no ratelimiting, they have to backfire to this bucket instead
@@ -136,6 +163,13 @@ class Ratelimiter:
         return self.discord_buckets[discord_hash]
 
     def migrate_bucket(self, url: str, discord_hash: str):
+        """Migrates a bucket object from a pseudo-bucket to a Discord hash.
+        Not only will this call :meth:`Bucket.migrate_to`, but the mappings will be updated.
+
+        Args:
+            url (str): The pseudo-bucket of the bucket to migrate.
+            discord_hash (str): The Discord hash to migrate the bucket to.
+        """
         self.url_to_discord_hash[url] = discord_hash
 
         cur_bucket = self.url_buckets[url]
