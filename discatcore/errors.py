@@ -109,3 +109,24 @@ class UnsupportedAPIVersionWarning(Warning):
     """Represents a warning for unsupported API versions."""
 
     pass
+
+
+class GatewayReconnect(DisCatCoreException):
+    """Represents an exception signaling that the Gateway needs to be reconnected.
+
+    Args:
+        url (str): The url to reconnect with. This will be set to the normal gateway url if we cannot resume.
+        resume (bool): Whether we can resume or not.
+
+    Attributes:
+        url (str): The url to reconnect with. This will be set to the normal gateway url if we cannot resume.
+        resume (bool): Whether we can resume or not.
+    """
+
+    __slots__ = ("url", "resume")
+
+    def __init__(self, url: str, resume: bool):
+        self.url = url
+        self.resume = resume
+
+        super().__init__(f"The Gateway should be reconnected to with url {self.url}.")

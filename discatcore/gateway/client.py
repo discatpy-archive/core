@@ -29,18 +29,18 @@ import logging
 import platform
 import random
 import zlib
-from typing import TYPE_CHECKING, Any, Optional, Union, cast
+from typing import Any, Optional, Union, cast
 
 import aiohttp
+from discord_typings import GatewayEvent
 
+from discatcore.dispatcher import Dispatcher
 from discatcore.enums import GatewayOpcode
+from discatcore.errors import GatewayReconnect
 from discatcore.gateway.ratelimiter import Ratelimiter
-from discatcore.gateway.types import GatewayPayload
+from discatcore.http import HTTPClient
 from discatcore.types import Snowflake
 from discatcore.utils import dumps, loads
-
-if TYPE_CHECKING:
-    from discatcore.client import Client
 
 __all__ = ("GatewayClient",)
 
@@ -67,21 +67,21 @@ class HeartbeatHandler:
         self.parent = parent
         self._first_heartbeat = True
 
-        self._task = asyncio.create_task(self.loop())
-
     async def loop(self):
-        while not self.parent.ws.closed:
+        while not self.parent.is_closed:
             try:
-                await self.parent.send(self.parent.heartbeat_payload)
-
                 delta = self.parent.heartbeat_interval
                 if self._first_heartbeat:
                     delta *= random.uniform(0.0, 1.0)
                     self._first_heartbeat = False
 
+                await self.parent.heartbeat()
                 await asyncio.sleep(delta)
             except asyncio.CancelledError:
                 break
+
+    def start(self):
+        self._task = asyncio.create_task(self.loop())
 
     async def stop(self):
         self._task.cancel()
@@ -89,6 +89,7 @@ class HeartbeatHandler:
 
 
 class GatewayClient:
+    # TODO: docs rework
     """The Gateway client that manages connections to and from the Discord API.
 
     Args:
@@ -112,39 +113,56 @@ class GatewayClient:
     """
 
     __slots__ = (
-        "ws",
-        "inflator",
-        "client",
+        "_ws",
+        "_inflator",
+        "_http",
+        "_dispatcher",
+        "intents",
         "heartbeat_interval",
-        "_sequence",
+        "sequence",
         "session_id",
-        "recent_gp",
+        "recent_payload",
+        "can_resume",
+        "heartbeat_handler",
+        "ratelimiter",
         "_last_heartbeat_ack",
         "heartbeat_timeout",
-        "_gateway_resume",
-        "ratelimiter",
-        "heartbeat_handler",
     )
 
     def __init__(
         self,
-        ws: aiohttp.ClientWebSocketResponse,
-        client: Client,
+        http: HTTPClient,
+        dispatcher: Dispatcher,
+        *,
         heartbeat_timeout: float = 30.0,
+        intents: int = 0,
     ):
-        self.ws: aiohttp.ClientWebSocketResponse = ws
-        self.inflator = zlib.decompressobj()
-        self.client: Client = client
+        # Internal attribs
+        self._ws: Optional[aiohttp.ClientWebSocketResponse] = None
+        self._inflator = zlib.decompressobj()
+        self._http: HTTPClient = http
+        self._dispatcher: Dispatcher = dispatcher
+
+        # Values for the Gateway
+        self.intents: int = intents
+
+        # Values from the Gateway
         self.heartbeat_interval: float = 0.0
-        self._sequence: Optional[int] = None
+        self.sequence: Optional[int] = None
         self.session_id: str = ""
-        self.recent_gp: Optional[GatewayPayload] = None
-        self._last_heartbeat_ack: datetime.datetime = datetime.datetime.now()
-        self.heartbeat_timeout: float = heartbeat_timeout
-        self._gateway_resume: bool = False
-        self.ratelimiter = Ratelimiter(self)
+        self.recent_payload: Optional[GatewayEvent] = None
+        self.can_resume: bool = False
+
+        # Handlers
+        self.heartbeat_handler: HeartbeatHandler = HeartbeatHandler(self)
+        self.ratelimiter: Ratelimiter = Ratelimiter(self)
         self.ratelimiter.start()
-        self.heartbeat_handler: Optional[HeartbeatHandler] = None
+
+        # Misc
+        self._last_heartbeat_ack: Optional[datetime.datetime] = None
+        self.heartbeat_timeout: float = heartbeat_timeout
+
+    # Internal functions
 
     def _decompress_msg(self, msg: bytes):
         ZLIB_SUFFIX = b"\x00\x00\xff\xff"
@@ -155,7 +173,7 @@ class GatewayClient:
         if len(msg) < 4 or msg[-4:] != ZLIB_SUFFIX:
             return out_str
 
-        buff = self.inflator.decompress(msg)
+        buff = self._inflator.decompress(msg)
         out_str = buff.decode("utf-8")
         return out_str
 
@@ -165,8 +183,11 @@ class GatewayClient:
         Args:
             data (dict[str, Any]): The data to send to the websocket connection.
         """
+        if not self._ws:
+            return
+
         await self.ratelimiter.acquire()
-        await self.ws.send_json(data, dumps=dumps)
+        await self._ws.send_json(data, dumps=dumps)
         _log.debug("Sent JSON payload %s to the Gateway.", data)
 
     async def receive(self):
@@ -175,9 +196,12 @@ class GatewayClient:
         Returns:
             A bool correspoding to whether we received a message or not.
         """
+        if not self._ws:
+            return
+
         msg: aiohttp.WSMessage
         try:
-            msg = await self.ws.receive()
+            msg = await self._ws.receive()
         except asyncio.TimeoutError:
             # try to re-establish the connection with the Gateway
             await self.close(code=1012)
@@ -195,22 +219,103 @@ class GatewayClient:
             elif msg.type == aiohttp.WSMsgType.TEXT:  # type: ignore
                 received_msg = msg.data  # type: ignore
 
-            self.recent_gp = cast(GatewayPayload, loads(received_msg))  # type: ignore
-            _log.debug("Received payload from the Gateway: %s", self.recent_gp)
-            self._sequence = self.recent_gp.get("s")
+            self.recent_payload = cast(GatewayEvent, loads(received_msg))  # type: ignore
+            _log.debug("Received payload from the Gateway: %s", self.recent_payload)
+            self.sequence = self.recent_payload.get("s")
             return True
         elif msg.type == aiohttp.WSMsgType.CLOSE:  # type: ignore
             await self.close(reconnect=False)
             return False
 
-    async def close(self, code: int = 1000, reconnect: bool = True):
+    # Connection management
+
+    async def connect(self, url: Optional[str] = None):
+        """Starts a connection with the Gateway.
+
+        Args:
+            url (Optional[str]): The url to connect to the Gateway with. This should only be used if we are resuming.
+                If this is not provided, then the url will be fetched via the Get Gateway Bot endpoint. Defaults to None.
+
+        Returns:
+            An `asyncio.Task` that is running the connection loop.
+        """
+        if not url:
+            url = (await self._http.get_gateway_bot())["url"]
+
+        self._ws = await self._http.ws_connect(url)
+
+        res = await self.receive()
+        if res and self.recent_payload is not None and self.recent_payload["op"] == 10:
+            self.heartbeat_interval = self.recent_payload["d"].get("heartbeat_interval")
+        else:
+            # I guess Discord is having issues today if we get here
+            # Disconnect and DO NOT ATTEMPT a reconnection
+            await self.close(reconnect=False)
+
+        self.heartbeat_handler.start()
+        if self.can_resume:
+            await self.resume()
+        else:
+            await self.identify()
+
+        return asyncio.create_task(self.connection_loop())
+
+    async def connection_loop(self):
+        """Executes the main Gateway loop, which is the following:
+
+        - compare the last time the heartbeat ack was sent from the server to current time
+            - if that comparison is greater than the heartbeat timeout, then we reconnect
+        - receive the latest message from the server via :meth:`.receive`
+        - poll the latest message and perform an action based on that payload
+        """
+        if not self._ws:
+            return
+
+        while not self.is_closed:
+            if (
+                self._last_heartbeat_ack
+                and (datetime.datetime.now() - self._last_heartbeat_ack).total_seconds()
+                > self.heartbeat_timeout
+            ):
+                _log.debug("Zombified connection detected. Closing connection with code 1008.")
+                await self.close(code=1008)
+                break
+
+            res = await self.receive()
+
+            if res and self.recent_payload is not None:
+                op = int(self.recent_payload["op"])
+                if op == GatewayOpcode.DISPATCH and self.recent_payload.get("t") is not None:
+                    event_name = str(self.recent_payload.get("t")).lower()
+                    self._dispatcher.dispatch(event_name, self.recent_payload.get("d"))
+
+                # these should be rare, but it's better to be safe than sorry
+                elif op == GatewayOpcode.HEARTBEAT:
+                    await self.heartbeat()
+
+                elif op == GatewayOpcode.RECONNECT:
+                    await self.close(code=1012)
+                    break
+
+                elif op == GatewayOpcode.INVALID_SESSION:
+                    self.can_resume = bool(self.recent_payload.get("t"))
+                    await self.close(code=1012)
+                    break
+
+                elif op == GatewayOpcode.HEARTBEAT_ACK:
+                    self._last_heartbeat_ack = datetime.datetime.now()
+
+    async def close(self, *, code: int = 1000, reconnect: bool = True, resume_url: str = ""):
         """Closes the connection with the websocket.
 
         Args:
             code (int): The websocket code to close with. Defaults to 1000.
             reconnect (bool): If we should reconnect or not. Defaults to True.
         """
-        if not self.ws.closed:
+        if not self._ws:
+            return
+
+        if not self._ws.closed:
             _log.info(
                 "Closing Gateway connection with code %d that %s reconnect.",
                 code,
@@ -218,7 +323,7 @@ class GatewayClient:
             )
 
             # Close the websocket connection
-            await self.ws.close(code=code)
+            await self._ws.close(code=code)
 
             # Clean up lingering tasks (this will throw exceptions if we get the client to do it)
             await self.ratelimiter.stop()
@@ -227,8 +332,9 @@ class GatewayClient:
 
             # if we need to reconnect, set the event
             if reconnect:
-                # TODO: raise exception instead of accessing a private method
-                self.client._gateway_reconnect.set()
+                raise GatewayReconnect(resume_url, self.can_resume)
+
+    # Payloads
 
     @property
     def identify_payload(self):
@@ -236,8 +342,8 @@ class GatewayClient:
         identify_dict = {
             "op": GatewayOpcode.IDENTIFY.value,
             "d": {
-                "token": self.client.token,
-                "intents": self.client.intents.value,
+                "token": self._http.token,
+                "intents": self.intents,
                 "properties": {
                     "os": platform.uname().system,
                     "browser": "discatcore",
@@ -257,69 +363,30 @@ class GatewayClient:
         return {
             "op": GatewayOpcode.RESUME.value,
             "d": {
-                "token": self.client.token,
+                "token": self._http.token,
                 "session_id": self.session_id,
-                "seq": self._sequence,
+                "seq": self.sequence,
             },
         }
 
     @property
     def heartbeat_payload(self):
         """:dict[str, Any]: Returns the heartbeat payload."""
-        return {"op": GatewayOpcode.HEARTBEAT.value, "d": self._sequence}
+        return {"op": GatewayOpcode.HEARTBEAT.value, "d": self.sequence}
 
-    async def loop(self):
-        """Executes the main Gateway loop, which is the following:
+    # Gateway commands
 
-        - compare the last time the heartbeat ack was sent from the server to current time
-            - if that comparison is greater than the heartbeat timeout, then we reconnect
-        - receive the latest message from the server via :meth:`.receive`
-        - poll the latest message and perform an action based on that payload
-        """
-        while not self.ws.closed:
-            if self._gateway_resume:
-                await self.send(self.resume_payload)
-                _log.info("Resumed connection with the Gateway.")
-                self._gateway_resume = False
+    async def heartbeat(self):
+        """Sends the heartbeat payload to the Gateway."""
+        await self.send(self.heartbeat_payload)
 
-            if (
-                datetime.datetime.now() - self._last_heartbeat_ack
-            ).total_seconds() > self.heartbeat_timeout:
-                _log.debug("Zombified connection detected. Closing connection with code 1008.")
-                await self.close(code=1008)
-                break
+    async def identify(self):
+        """Sends the identify payload to the Gateway."""
+        await self.send(self.identify_payload)
 
-            res = await self.receive()
-
-            if res and self.recent_gp is not None:
-                op = self.recent_gp.get("op")
-                if op == GatewayOpcode.DISPATCH and self.recent_gp["t"] is not None:
-                    event_name = self.recent_gp["t"].lower()
-                    args = getattr(self.client.event_handler, f"handle_{event_name}")(
-                        self.recent_gp["d"]
-                    )
-                    self.client.dispatch(event_name, *args)
-
-                elif op == GatewayOpcode.RECONNECT:
-                    await self.close(code=1012)
-                    break
-
-                elif op == GatewayOpcode.INVALID_SESSION:
-                    resumable: bool = (
-                        self.recent_gp["d"] if isinstance(self.recent_gp["d"], bool) else False
-                    )
-                    self._gateway_resume = resumable
-                    await self.close(code=1012)
-                    break
-
-                elif op == GatewayOpcode.HELLO:
-                    self.heartbeat_interval = self.recent_gp["d"]["heartbeat_interval"] / 1000  # type: ignore
-                    await self.send(self.identify_payload)
-                    self.heartbeat_handler = HeartbeatHandler(self)
-                    _log.debug("Heartbeat handler has started.")
-
-                elif op == GatewayOpcode.HEARTBEAT_ACK:
-                    self._last_heartbeat_ack = datetime.datetime.now()
+    async def resume(self):
+        """Sends the resume payload to the Gateway."""
+        await self.send(self.resume_payload)
 
     async def request_guild_members(
         self,
@@ -330,7 +397,7 @@ class GatewayClient:
         query: str = "",
         presences: bool = False,
     ):
-        """Sends a guild members request to the Gateway.
+        """Sends the request guild members payload to the Gateway.
 
         Args:
             guild_id (int): The guild ID we are requesting members from.
@@ -340,7 +407,7 @@ class GatewayClient:
             presences (bool): Whether or not Discord should give us the presences of the members.
                 Defaults to False.
         """
-        guild_mems_req: dict[str, Any] = {
+        payload: dict[str, Any] = {
             "op": GatewayOpcode.REQUEST_GUILD_MEMBERS.value,
             "d": {
                 "guild_id": str(guild_id),
@@ -351,12 +418,12 @@ class GatewayClient:
         }
 
         if user_ids is not None:
-            guild_mems_req["d"]["user_ids"] = user_ids
+            payload["d"]["user_ids"] = user_ids
 
-        await self.send(guild_mems_req)
+        await self.send(payload)
 
     async def update_presence(self, *, since: int, status: str, afk: bool):
-        """Sends a presence update to the Gateway.
+        """Sends the update presence payload to the Gateway.
 
         Args:
             since (int): When the bot went AFK.
@@ -364,7 +431,7 @@ class GatewayClient:
             status (str): The new status of the presence.
             afk (bool): Whether or not the bot is AFK or not.
         """
-        new_presence_dict: dict[str, Any] = {
+        payload: dict[str, Any] = {
             "op": GatewayOpcode.PRESENCE_UPDATE.value,
             "d": {
                 "since": since,
@@ -376,4 +443,41 @@ class GatewayClient:
 
         # TODO: Activities
 
-        await self.send(new_presence_dict)
+        await self.send(payload)
+
+    async def update_voice_state(
+        self,
+        *,
+        guild_id: Snowflake,
+        channel_id: Optional[Snowflake],
+        self_mute: bool,
+        self_deaf: bool,
+    ):
+        """Sends the update voice state payload to the Gateway.
+
+        Args:
+            guild_id (Snowflake): The id of the guild where the voice channel is in.
+            channel_id (Optional[Snowflake]): The id of the voice channel. Set this to None if you want to disconnect.
+            self_mute (bool): Whether the bot is muted or not.
+            self_deaf (bool): Whether the bot is deafened or not.
+        """
+        await self.send(
+            {
+                "op": GatewayOpcode.VOICE_STATE_UPDATE.value,
+                "d": {
+                    "guild_id": guild_id,
+                    "channel_id": channel_id,
+                    "self_mute": self_mute,
+                    "self_deaf": self_deaf,
+                },
+            }
+        )
+
+    # Misc
+
+    @property
+    def is_closed(self):
+        if not self._ws:
+            return False
+
+        return self._ws.closed
