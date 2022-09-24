@@ -38,39 +38,35 @@ __all__ = ("UserEndpoints",)
 
 
 class UserEndpoints(EndpointMixin):
-    async def get_current_user(self):
-        return await self.request(Route("GET", "/users/@me"))
+    def get_current_user(self):
+        return self.request(Route("GET", "/users/@me"))
 
-    async def get_user(self, user_id: Snowflake):
-        return await self.request(Route("GET", "/users/{user_id}", user_id=user_id))
+    def get_user(self, user_id: Snowflake):
+        return self.request(Route("GET", "/users/{user_id}", user_id=user_id))
 
-    async def modify_current_user(self, *, username: str = Unset, avatar: Optional[str] = Unset):
-        return await self.request(
+    def modify_current_user(self, *, username: str = Unset, avatar: Optional[str] = Unset):
+        return self.request(
             Route("PATCH", "/users/@me"), json_params={"username": username, "avatar": avatar}
         )
 
-    async def get_current_user_guilds(
+    def get_current_user_guilds(
         self, *, before: Snowflake = Unset, after: Snowflake = Unset, limit: int = 200
     ):
-        return await self.request(
+        return self.request(
             Route("GET", "/users/@me/guilds"),
             query_params={"before": before, "after": after, "limit": limit},
         )
 
-    async def get_current_user_guild_member(self, guild_id: Snowflake):
-        return await self.request(
-            Route("GET", "/users/@me/guilds/{guild_id}/member", guild_id=guild_id)
-        )
+    def get_current_user_guild_member(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/users/@me/guilds/{guild_id}/member", guild_id=guild_id))
 
-    async def leave_guild(self, guild_id: Snowflake):
-        return await self.request(
-            Route("DELETE", "/users/@me/guilds/{guild_id}", guild_id=guild_id)
-        )
+    def leave_guild(self, guild_id: Snowflake):
+        return self.request(Route("DELETE", "/users/@me/guilds/{guild_id}", guild_id=guild_id))
 
-    async def create_dm(self, *, recipient_id: Snowflake):
-        return await self.request(
+    def create_dm(self, *, recipient_id: Snowflake):
+        return self.request(
             Route("POST", "/users/@me/channels"), json_params={"recipient_id": recipient_id}
         )
 
-    async def get_user_connections(self):
-        return await self.request(Route("GET", "/users/@me/connections"))
+    def get_user_connections(self):
+        return self.request(Route("GET", "/users/@me/connections"))

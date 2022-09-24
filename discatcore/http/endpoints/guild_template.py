@@ -38,32 +38,32 @@ __all__ = ("GuildTemplateEndpoints",)
 
 
 class GuildTemplateEndpoints(EndpointMixin):
-    async def get_guild_template(self, template_code: Snowflake):
-        return await self.request(
+    def get_guild_template(self, template_code: Snowflake):
+        return self.request(
             Route("GET", "/guilds/templates/{template_code}", template_code=template_code)
         )
 
-    async def create_guild_from_guild_template(
+    def create_guild_from_guild_template(
         self, template_code: Snowflake, *, name: str, icon: str = Unset
     ):
-        return await self.request(
+        return self.request(
             Route("POST", "/guilds/templates/{template_code}", template_code=template_code),
             json_params={"name": name, "icon": icon},
         )
 
-    async def get_guild_templates(self, guild_id: Snowflake):
-        return await self.request(Route("GET", "/guilds/{guild_id}/templates", guild_id=guild_id))
+    def get_guild_templates(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/templates", guild_id=guild_id))
 
-    async def create_guild_template(
+    def create_guild_template(
         self, guild_id: Snowflake, *, name: str, description: Optional[str] = Unset
     ):
-        return await self.request(
+        return self.request(
             Route("POST", "/guilds/{guild_id}/templates", guild_id=guild_id),
             json_params={"name": name, "description": description},
         )
 
-    async def sync_guild_template(self, guild_id: Snowflake, template_code: Snowflake):
-        return await self.request(
+    def sync_guild_template(self, guild_id: Snowflake, template_code: Snowflake):
+        return self.request(
             Route(
                 "PUT",
                 "/guilds/{guild_id}/templates/{template_code}",
@@ -72,7 +72,7 @@ class GuildTemplateEndpoints(EndpointMixin):
             )
         )
 
-    async def modify_guild_template(
+    def modify_guild_template(
         self,
         guild_id: Snowflake,
         template_code: Snowflake,
@@ -80,7 +80,7 @@ class GuildTemplateEndpoints(EndpointMixin):
         name: str = Unset,
         description: Optional[str] = Unset,
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "PATCH",
                 "/guilds/{guild_id}/templates/{template_code}",
@@ -90,8 +90,8 @@ class GuildTemplateEndpoints(EndpointMixin):
             json_params={"name": name, "description": description},
         )
 
-    async def delete_guild_template(self, guild_id: Snowflake, template_code: Snowflake):
-        return await self.request(
+    def delete_guild_template(self, guild_id: Snowflake, template_code: Snowflake):
+        return self.request(
             Route(
                 "DELETE",
                 "/guilds/{guild_id}/templates/{template_code}",

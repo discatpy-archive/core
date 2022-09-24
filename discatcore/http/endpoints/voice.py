@@ -38,5 +38,5 @@ __all__ = ("VoiceEndpoints",)
 
 
 class VoiceEndpoints(EndpointMixin):
-    async def list_voice_regions(self):
-        return await self.request(Route("GET", "/voice/regions"))
+    def list_voice_regions(self):
+        return self.request(Route("GET", "/voice/regions"))

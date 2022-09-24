@@ -38,7 +38,7 @@ __all__ = ("GuildEndpoints",)
 
 
 class GuildEndpoints(EndpointMixin):
-    async def create_guild(
+    def create_guild(
         self,
         *,
         name: str,
@@ -54,7 +54,7 @@ class GuildEndpoints(EndpointMixin):
         system_channel_id: Snowflake = Unset,
         system_channel_flags: int = Unset,
     ):
-        return await self.request(
+        return self.request(
             Route("POST", "/guilds"),
             json_params={
                 "name": name,
@@ -72,16 +72,16 @@ class GuildEndpoints(EndpointMixin):
             },
         )
 
-    async def get_guild(self, guild_id: Snowflake, *, with_counts: bool = False):
-        return await self.request(
+    def get_guild(self, guild_id: Snowflake, *, with_counts: bool = False):
+        return self.request(
             Route("GET", "/guilds/{guild_id}", guild_id=guild_id),
             query_params={"with_counts": with_counts},
         )
 
-    async def get_guild_preview(self, guild_id: Snowflake):
-        return await self.request(Route("GET", "/guilds/{guild_id}/preview", guild_id=guild_id))
+    def get_guild_preview(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/preview", guild_id=guild_id))
 
-    async def modify_guild(
+    def modify_guild(
         self,
         guild_id: Snowflake,
         *,
@@ -107,7 +107,7 @@ class GuildEndpoints(EndpointMixin):
         premium_progress_bar_enabled: bool = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route("PATCH", "/guilds/{guild_id}", guild_id=guild_id),
             json_params={
                 "name": name,
@@ -134,13 +134,13 @@ class GuildEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def delete_guild(self, guild_id: Snowflake):
-        return await self.request(Route("DELETE", "/guilds/{guild_id}", guild_id=guild_id))
+    def delete_guild(self, guild_id: Snowflake):
+        return self.request(Route("DELETE", "/guilds/{guild_id}", guild_id=guild_id))
 
-    async def get_guild_channels(self, guild_id: Snowflake):
-        return await self.request(Route("GET", "/guilds/{guild_id}/channels", guild_id=guild_id))
+    def get_guild_channels(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/channels", guild_id=guild_id))
 
-    async def create_guild_channel(
+    def create_guild_channel(
         self,
         guild_id: Snowflake,
         *,
@@ -159,7 +159,7 @@ class GuildEndpoints(EndpointMixin):
         default_auto_archive_duration: Optional[int] = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route("POST", "/guilds/{guild_id}/channels", guild_id=guild_id),
             json_params={
                 "name": name,
@@ -179,7 +179,7 @@ class GuildEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def modify_guild_channel_positions(
+    def modify_guild_channel_positions(
         self,
         guild_id: Snowflake,
         *,
@@ -188,7 +188,7 @@ class GuildEndpoints(EndpointMixin):
         lock_permissions: Optional[bool] = Unset,
         parent_id: Optional[Snowflake] = Unset,
     ):
-        return await self.request(
+        return self.request(
             Route("PATCH", "/guilds/{guild_id}/channels", guild_id=guild_id),
             json_params={
                 "id": id,
@@ -198,31 +198,27 @@ class GuildEndpoints(EndpointMixin):
             },
         )
 
-    async def list_active_guild_threads(self, guild_id: Snowflake):
-        return await self.request(
-            Route("GET", "/guilds/{guild_id}/threads/active", guild_id=guild_id)
-        )
+    def list_active_guild_threads(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/threads/active", guild_id=guild_id))
 
-    async def get_guild_member(self, guild_id: Snowflake, user_id: Snowflake):
-        return await self.request(
+    def get_guild_member(self, guild_id: Snowflake, user_id: Snowflake):
+        return self.request(
             Route("GET", "/guilds/{guild_id}/members/{user_id}", guild_id=guild_id, user_id=user_id)
         )
 
-    async def list_guild_members(
-        self, guild_id: Snowflake, *, limit: int = 1, after: Snowflake = Unset
-    ):
-        return await self.request(
+    def list_guild_members(self, guild_id: Snowflake, *, limit: int = 1, after: Snowflake = Unset):
+        return self.request(
             Route("GET", "/guilds/{guild_id}/members", guild_id=guild_id),
             query_params={"limit": limit, "after": after},
         )
 
-    async def search_guild_members(self, guild_id: Snowflake, *, query: str, limit: int = 1):
-        return await self.request(
+    def search_guild_members(self, guild_id: Snowflake, *, query: str, limit: int = 1):
+        return self.request(
             Route("GET", "/guilds/{guild_id}/members/search", guild_id=guild_id),
             query_params={"query": query, "limit": limit},
         )
 
-    async def modify_guild_member(
+    def modify_guild_member(
         self,
         guild_id: Snowflake,
         user_id: Snowflake,
@@ -235,7 +231,7 @@ class GuildEndpoints(EndpointMixin):
         communication_disabled_until: Optional[str] = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "PATCH", "/guilds/{guild_id}/members/{user_id}", guild_id=guild_id, user_id=user_id
             ),
@@ -250,23 +246,23 @@ class GuildEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def modify_current_member(
+    def modify_current_member(
         self, guild_id: Snowflake, *, nick: Optional[str] = Unset, reason: Optional[str] = None
     ):
-        return await self.request(
+        return self.request(
             Route("PATCH", "/guilds/{guild_id}/members/@me", guild_id=guild_id),
             json_params={"nick": nick},
             reason=reason,
         )
 
-    async def add_guild_member_role(
+    def add_guild_member_role(
         self,
         guild_id: Snowflake,
         user_id: Snowflake,
         role_id: Snowflake,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "PUT",
                 "/guilds/{guild_id}/members/{user_id}/roles/{role_id}",
@@ -277,14 +273,14 @@ class GuildEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def remove_guild_member_role(
+    def remove_guild_member_role(
         self,
         guild_id: Snowflake,
         user_id: Snowflake,
         role_id: Snowflake,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "DELETE",
                 "/guilds/{guild_id}/members/{user_id}/roles/{role_id}",
@@ -295,17 +291,17 @@ class GuildEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def remove_guild_member(
+    def remove_guild_member(
         self, guild_id: Snowflake, user_id: Snowflake, reason: Optional[str] = None
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "DELETE", "/guilds/{guild_id}/members/{user_id}", guild_id=guild_id, user_id=user_id
             ),
             reason=reason,
         )
 
-    async def get_guild_bans(
+    def get_guild_bans(
         self,
         guild_id: Snowflake,
         *,
@@ -313,17 +309,17 @@ class GuildEndpoints(EndpointMixin):
         before: Snowflake = Unset,
         after: Snowflake = Unset,
     ):
-        return await self.request(
+        return self.request(
             Route("GET", "/guilds/{guild_id}/bans", guild_id=guild_id),
             query_params={"limit": limit, "before": before, "after": after},
         )
 
-    async def get_guild_ban(self, guild_id: Snowflake, user_id: Snowflake):
-        return await self.request(
+    def get_guild_ban(self, guild_id: Snowflake, user_id: Snowflake):
+        return self.request(
             Route("GET", "/guilds/{guild_id}/bans/{user_id}", guild_id=guild_id, user_id=user_id)
         )
 
-    async def create_guild_ban(
+    def create_guild_ban(
         self,
         guild_id: Snowflake,
         user_id: Snowflake,
@@ -331,26 +327,26 @@ class GuildEndpoints(EndpointMixin):
         delete_message_seconds: int = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route("PUT", "/guilds/{guild_id}/bans/{user_id}", guild_id=guild_id, user_id=user_id),
             json_params={"delete_message_seconds": delete_message_seconds},
             reason=reason,
         )
 
-    async def remove_guild_ban(
+    def remove_guild_ban(
         self, guild_id: Snowflake, user_id: Snowflake, reason: Optional[str] = None
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "DELETE", "/guilds/{guild_id}/bans/{user_id}", guild_id=guild_id, user_id=user_id
             ),
             reason=reason,
         )
 
-    async def get_guild_roles(self, guild_id: Snowflake):
-        return await self.request(Route("GET", "/guilds/{guild_id}/roles", guild_id=guild_id))
+    def get_guild_roles(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/roles", guild_id=guild_id))
 
-    async def create_guild_role(
+    def create_guild_role(
         self,
         guild_id: Snowflake,
         *,
@@ -363,7 +359,7 @@ class GuildEndpoints(EndpointMixin):
         mentionable: bool = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route("POST", "/guilds/{guild_id}/roles", guild_id=guild_id),
             json_params={
                 "name": name,
@@ -377,7 +373,7 @@ class GuildEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def modify_guild_role_positions(
+    def modify_guild_role_positions(
         self,
         guild_id: Snowflake,
         *,
@@ -385,13 +381,13 @@ class GuildEndpoints(EndpointMixin):
         position: Optional[int] = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route("PATCH", "/guilds/{guild_id}/roles", guild_id=guild_id),
             json_params={"id": id, "position": position},
             reason=reason,
         )
 
-    async def modify_guild_role(
+    def modify_guild_role(
         self,
         guild_id: Snowflake,
         role_id: Snowflake,
@@ -405,7 +401,7 @@ class GuildEndpoints(EndpointMixin):
         mentionable: Optional[bool] = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "PATCH", "/guilds/{guild_id}/roles/{role_id}", guild_id=guild_id, role_id=role_id
             ),
@@ -421,34 +417,34 @@ class GuildEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def modify_guild_mfa_level(
+    def modify_guild_mfa_level(
         self, guild_id: Snowflake, *, level: int, reason: Optional[str] = None
     ):
-        return await self.request(
+        return self.request(
             Route("POST", "/guilds/{guild_id}/mfa", guild_id=guild_id),
             json_params={"level": level},
             reason=reason,
         )
 
-    async def delete_guild_role(
+    def delete_guild_role(
         self, guild_id: Snowflake, role_id: Snowflake, reason: Optional[str] = None
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "DELETE", "/guilds/{guild_id}/roles/{role_id}", guild_id=guild_id, role_id=role_id
             ),
             reason=reason,
         )
 
-    async def get_guild_prune_count(
+    def get_guild_prune_count(
         self, guild_id: Snowflake, *, days: int = 7, include_roles: str = Unset
     ):
-        return await self.request(
+        return self.request(
             Route("GET", "/guilds/{guild_id}/prune", guild_id=guild_id),
             query_params={"days": days, "include_roles": include_roles},
         )
 
-    async def begin_guild_prune(
+    def begin_guild_prune(
         self,
         guild_id: Snowflake,
         *,
@@ -457,7 +453,7 @@ class GuildEndpoints(EndpointMixin):
         include_roles: list[Snowflake] = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route("POST", "/guilds/{guild_id}/prune", guild_id=guild_id),
             json_params={
                 "days": days,
@@ -467,21 +463,19 @@ class GuildEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def get_guild_voice_regions(self, guild_id: Snowflake):
-        return await self.request(Route("GET", "/guilds/{guild_id}/regions", guild_id=guild_id))
+    def get_guild_voice_regions(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/regions", guild_id=guild_id))
 
-    async def get_guild_invites(self, guild_id: Snowflake):
-        return await self.request(Route("GET", "/guilds/{guild_id}/invites", guild_id=guild_id))
+    def get_guild_invites(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/invites", guild_id=guild_id))
 
-    async def get_guild_integrations(self, guild_id: Snowflake):
-        return await self.request(
-            Route("GET", "/guilds/{guild_id}/integrations", guild_id=guild_id)
-        )
+    def get_guild_integrations(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/integrations", guild_id=guild_id))
 
-    async def delete_guild_integration(
+    def delete_guild_integration(
         self, guild_id: Snowflake, integration_id: Snowflake, reason: Optional[str] = None
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "DELETE",
                 "/guilds/{guild_id}/integrations/{integration_id}",
@@ -491,10 +485,10 @@ class GuildEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def get_guild_widget_settings(self, guild_id: Snowflake):
-        return await self.request(Route("GET", "/guilds/{guild_id}/widget", guild_id=guild_id))
+    def get_guild_widget_settings(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/widget", guild_id=guild_id))
 
-    async def modify_guild_widget(
+    def modify_guild_widget(
         self,
         guild_id: Snowflake,
         *,
@@ -502,30 +496,28 @@ class GuildEndpoints(EndpointMixin):
         channel_id: Optional[Snowflake] = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route("PATCH", "/guilds/{guild_id}/widget", guild_id=guild_id),
             json_params={"enabled": enabled, "channel_id": channel_id},
             reason=reason,
         )
 
-    async def get_guild_widget(self, guild_id: Snowflake):
-        return await self.request(Route("GET", "/guilds/{guild_id}/widget.json", guild_id=guild_id))
+    def get_guild_widget(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/widget.json", guild_id=guild_id))
 
-    async def get_guild_vanity_url(self, guild_id: Snowflake):
-        return await self.request(Route("GET", "/guilds/{guild_id}/vanity-url", guild_id=guild_id))
+    def get_guild_vanity_url(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/vanity-url", guild_id=guild_id))
 
-    async def get_guild_widget_image(self, guild_id: Snowflake, *, style: str = Unset):
-        return await self.request(
+    def get_guild_widget_image(self, guild_id: Snowflake, *, style: str = Unset):
+        return self.request(
             Route("GET", "/guilds/{guild_id}/widget.png", guild_id=guild_id),
             query_params={"style": style},
         )
 
-    async def get_guild_welcome_screen(self, guild_id: Snowflake):
-        return await self.request(
-            Route("GET", "/guilds/{guild_id}/welcome-screen", guild_id=guild_id)
-        )
+    def get_guild_welcome_screen(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/welcome-screen", guild_id=guild_id))
 
-    async def modify_guild_welcome_screen(
+    def modify_guild_welcome_screen(
         self,
         guild_id: Snowflake,
         *,
@@ -534,7 +526,7 @@ class GuildEndpoints(EndpointMixin):
         description: Optional[str] = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route("PATCH", "/guilds/{guild_id}/welcome-screen", guild_id=guild_id),
             json_params={
                 "enabled": enabled,
@@ -544,7 +536,7 @@ class GuildEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def modify_current_user_voice_state(
+    def modify_current_user_voice_state(
         self,
         guild_id: Snowflake,
         *,
@@ -552,7 +544,7 @@ class GuildEndpoints(EndpointMixin):
         suppress: bool = Unset,
         request_to_speak_timestamp: Optional[str] = Unset,
     ):
-        return await self.request(
+        return self.request(
             Route("PATCH", "/guilds/{guild_id}/voice-states/@me", guild_id=guild_id),
             json_params={
                 "channel_id": channel_id,
@@ -561,7 +553,7 @@ class GuildEndpoints(EndpointMixin):
             },
         )
 
-    async def modify_user_voice_state(
+    def modify_user_voice_state(
         self,
         guild_id: Snowflake,
         user_id: Snowflake,
@@ -569,7 +561,7 @@ class GuildEndpoints(EndpointMixin):
         channel_id: Snowflake,
         suppress: bool = Unset,
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "PATCH",
                 "/guilds/{guild_id}/voice-states/{user_id}",

@@ -38,7 +38,7 @@ __all__ = ("InviteEndpoints",)
 
 
 class InviteEndpoints(EndpointMixin):
-    async def get_invite(
+    def get_invite(
         self,
         invite_code: Snowflake,
         *,
@@ -46,7 +46,7 @@ class InviteEndpoints(EndpointMixin):
         with_expiration: bool = Unset,
         guild_scheduled_event_id: Snowflake = Unset,
     ):
-        return await self.request(
+        return self.request(
             Route("GET", "/invites/{invite_code}", invite_code=invite_code),
             query_params={
                 "with_counts": with_counts,
@@ -55,7 +55,7 @@ class InviteEndpoints(EndpointMixin):
             },
         )
 
-    async def delete_invite(self, invite_code: Snowflake, reason: Optional[str] = None):
-        return await self.request(
+    def delete_invite(self, invite_code: Snowflake, reason: Optional[str] = None):
+        return self.request(
             Route("DELETE", "/invites/{invite_code}", invite_code=invite_code), reason=reason
         )

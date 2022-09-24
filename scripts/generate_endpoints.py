@@ -351,7 +351,7 @@ def parse_endpoint_func(name: str, func: dict[str, Any]):
     supports_reason = bool(func.get("supports-reason"))
     supports_files = bool(func.get("supports-files"))
 
-    func_generator = FunctionCreator(name, is_async=True)
+    func_generator = FunctionCreator(name, is_async=False)
 
     # generate arguments
     func_generator.append_arg(FunctionArg("self"))
@@ -398,7 +398,7 @@ def parse_endpoint_func(name: str, func: dict[str, Any]):
     if extra_code:
         func_generator.print(*extra_code)
     func_generator.print(
-        f'return await self.request(Route("{method}", "{url}"{fmted_url_params}){fmted_extra_params})'
+        f'return self.request(Route("{method}", "{url}"{fmted_url_params}){fmted_extra_params})'
     )
 
     return func_generator.generate_raw()

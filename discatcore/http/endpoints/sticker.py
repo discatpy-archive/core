@@ -38,17 +38,17 @@ __all__ = ("StickerEndpoints",)
 
 
 class StickerEndpoints(EndpointMixin):
-    async def get_sticker(self, sticker_id: Snowflake):
-        return await self.request(Route("GET", "/stickers/{sticker_id}", sticker_id=sticker_id))
+    def get_sticker(self, sticker_id: Snowflake):
+        return self.request(Route("GET", "/stickers/{sticker_id}", sticker_id=sticker_id))
 
-    async def list_nitro_sticker_packs(self):
-        return await self.request(Route("GET", "/sticker-packs"))
+    def list_nitro_sticker_packs(self):
+        return self.request(Route("GET", "/sticker-packs"))
 
-    async def list_guild_stickers(self, guild_id: Snowflake):
-        return await self.request(Route("GET", "/guilds/{guild_id}/stickers", guild_id=guild_id))
+    def list_guild_stickers(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/stickers", guild_id=guild_id))
 
-    async def get_guild_sticker(self, guild_id: Snowflake, sticker_id: Snowflake):
-        return await self.request(
+    def get_guild_sticker(self, guild_id: Snowflake, sticker_id: Snowflake):
+        return self.request(
             Route(
                 "GET",
                 "/guilds/{guild_id}/stickers/{sticker_id}",
@@ -57,7 +57,7 @@ class StickerEndpoints(EndpointMixin):
             )
         )
 
-    async def create_guild_sticker(
+    def create_guild_sticker(
         self, guild_id: Snowflake, *, name: str, description: str = "", tags: str, file: BasicFile
     ):
         from aiohttp import FormData
@@ -67,11 +67,11 @@ class StickerEndpoints(EndpointMixin):
         form_data.add_field("description", description)
         form_data.add_field("tags", tags)
         form_data.add_field("file", file.fp, content_type=file.content_type)
-        return await self.request(
+        return self.request(
             Route("POST", "/guilds/{guild_id}/stickers", guild_id=guild_id), data=form_data
         )
 
-    async def modify_guild_sticker(
+    def modify_guild_sticker(
         self,
         guild_id: Snowflake,
         sticker_id: Snowflake,
@@ -81,7 +81,7 @@ class StickerEndpoints(EndpointMixin):
         tags: str = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "PATCH",
                 "/guilds/{guild_id}/stickers/{sticker_id}",
@@ -92,10 +92,10 @@ class StickerEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def delete_guild_sticker(
+    def delete_guild_sticker(
         self, guild_id: Snowflake, sticker_id: Snowflake, reason: Optional[str] = None
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "DELETE",
                 "/guilds/{guild_id}/stickers/{sticker_id}",

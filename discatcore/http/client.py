@@ -252,75 +252,70 @@ class HTTPClient(
         bucket = self._ratelimiter.get_bucket(route.bucket)
 
         for tries in range(max_tries):
-            try:
-                async with self._ratelimiter.global_bucket:
-                    async with bucket:
-                        _log.debug("REQUEST:%d All ratelimit buckets have been acquired!", rid)
+            async with self._ratelimiter.global_bucket:
+                async with bucket:
+                    _log.debug("REQUEST:%d All ratelimit buckets have been acquired!", rid)
 
-                        response = await self._session.request(
-                            route.method,
-                            f"{self._api_url}{url}",
-                            params=query_params,
-                            headers=headers,
-                            **kwargs,
-                        )
-                        _log.debug(
-                            "REQUEST:%d Made request to %s with method %s.",
-                            rid,
-                            f"{self._api_url}{url}",
-                            route.method,
-                        )
+                    response = await self._session.request(
+                        route.method,
+                        f"{self._api_url}{url}",
+                        params=query_params,
+                        headers=headers,
+                        **kwargs,
+                    )
+                    _log.debug(
+                        "REQUEST:%d Made request to %s with method %s.",
+                        rid,
+                        f"{self._api_url}{url}",
+                        route.method,
+                    )
 
-                        URL_BUCKET = bucket.bucket is None
-                        bucket.update_info(response)
-                        await bucket.acquire()
+                    URL_BUCKET = bucket.bucket is None
+                    bucket.update_info(response)
+                    await bucket.acquire()
 
-                        if URL_BUCKET and bucket.bucket is not None:
+                    if URL_BUCKET and bucket.bucket is not None:
+                        try:
                             self._ratelimiter.migrate_bucket(route.bucket, bucket.bucket)
+                        except BucketMigrated:
+                            bucket = self._ratelimiter.get_bucket(route.bucket)
 
-                        # Everything is ok
-                        if 200 <= response.status < 300:
-                            return await self._text_or_json(response)
+                    # Everything is ok
+                    if 200 <= response.status < 300:
+                        return await self._text_or_json(response)
 
-                        # Ratelimited
-                        if response.status == 429:
-                            if "Via" not in response.headers:
-                                # something about Cloudflare and Google responding and adding something to the headers
-                                # it means we're Cloudflare banned
-                                raise HTTPException(response, await self._text_or_json(response))
-
-                            retry_after = float(response.headers["Retry-After"])
-                            is_global = response.headers["X-RateLimit-Scope"] == "global"
-
-                            if is_global:
-                                _log.info(
-                                    "REQUEST:%d All requests have hit a global ratelimit! Retrying in %f.",
-                                    rid,
-                                    retry_after,
-                                )
-                                self._ratelimiter.global_bucket.lock_for(retry_after)
-                                await self._ratelimiter.global_bucket.acquire()
-
-                            _log.info(
-                                "REQUEST:%d Ratelimit is over. Continuing with the request.", rid
-                            )
-                            continue
-
-                        # Specific Server Errors, retry after some time
-                        if response.status in {500, 502, 504}:
-                            wait_time = 1 + tries * 2
-                            _log.info(
-                                "REQUEST:%d Got a server error! Retrying in %d.", rid, wait_time
-                            )
-                            await asyncio.sleep(wait_time)
-                            continue
-
-                        # Client/Server errors
-                        if response.status >= 400:
+                    # Ratelimited
+                    if response.status == 429:
+                        if "Via" not in response.headers:
+                            # something about Cloudflare and Google responding and adding something to the headers
+                            # it means we're Cloudflare banned
                             raise HTTPException(response, await self._text_or_json(response))
-            except BucketMigrated:
-                bucket = self._ratelimiter.get_bucket(route.bucket)
-                continue
+
+                        retry_after = float(response.headers["Retry-After"])
+                        is_global = response.headers["X-RateLimit-Scope"] == "global"
+
+                        if is_global:
+                            _log.info(
+                                "REQUEST:%d All requests have hit a global ratelimit! Retrying in %f.",
+                                rid,
+                                retry_after,
+                            )
+                            self._ratelimiter.global_bucket.lock_for(retry_after)
+                            await self._ratelimiter.global_bucket.acquire()
+
+                        _log.info("REQUEST:%d Ratelimit is over. Continuing with the request.", rid)
+                        continue
+
+                    # Specific Server Errors, retry after some time
+                    if response.status in {500, 502, 504}:
+                        wait_time = 1 + tries * 2
+                        _log.info("REQUEST:%d Got a server error! Retrying in %d.", rid, wait_time)
+                        await asyncio.sleep(wait_time)
+                        continue
+
+                    # Client/Server errors
+                    if response.status >= 400:
+                        raise HTTPException(response, await self._text_or_json(response))
 
         raise RuntimeError(
             f'REQUEST:{rid} Tried sending request to "{url}" with method {route.method} {max_tries} times.'

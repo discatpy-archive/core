@@ -38,17 +38,17 @@ __all__ = ("EmojiEndpoints",)
 
 
 class EmojiEndpoints(EndpointMixin):
-    async def list_guild_emojis(self, guild_id: Snowflake):
-        return await self.request(Route("GET", "/guilds/{guild_id}/emojis", guild_id=guild_id))
+    def list_guild_emojis(self, guild_id: Snowflake):
+        return self.request(Route("GET", "/guilds/{guild_id}/emojis", guild_id=guild_id))
 
-    async def get_guild_emoji(self, guild_id: Snowflake, emoji_id: Snowflake):
-        return await self.request(
+    def get_guild_emoji(self, guild_id: Snowflake, emoji_id: Snowflake):
+        return self.request(
             Route(
                 "GET", "/guilds/{guild_id}/emojis/{emoji_id}", guild_id=guild_id, emoji_id=emoji_id
             )
         )
 
-    async def create_guild_emoji(
+    def create_guild_emoji(
         self,
         guild_id: Snowflake,
         *,
@@ -57,13 +57,13 @@ class EmojiEndpoints(EndpointMixin):
         roles: list[Snowflake],
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route("POST", "/guilds/{guild_id}/emojis", guild_id=guild_id),
             json_params={"name": name, "image": image, "roles": roles},
             reason=reason,
         )
 
-    async def modify_guild_emoji(
+    def modify_guild_emoji(
         self,
         guild_id: Snowflake,
         emoji_id: Snowflake,
@@ -72,7 +72,7 @@ class EmojiEndpoints(EndpointMixin):
         roles: list[Snowflake] = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "PATCH",
                 "/guilds/{guild_id}/emojis/{emoji_id}",
@@ -83,10 +83,10 @@ class EmojiEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def delete_guild_emoji(
+    def delete_guild_emoji(
         self, guild_id: Snowflake, emoji_id: Snowflake, reason: Optional[str] = None
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "DELETE",
                 "/guilds/{guild_id}/emojis/{emoji_id}",

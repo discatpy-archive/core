@@ -38,15 +38,13 @@ __all__ = ("AutoModerationEndpoints",)
 
 
 class AutoModerationEndpoints(EndpointMixin):
-    async def list_auto_moderation_rules(self, guild_id: Snowflake):
-        return await self.request(
+    def list_auto_moderation_rules(self, guild_id: Snowflake):
+        return self.request(
             Route("GET", "/guilds/{guild_id}/auto-moderation/rules", guild_id=guild_id)
         )
 
-    async def get_auto_moderation_rule(
-        self, guild_id: Snowflake, auto_moderation_rule_id: Snowflake
-    ):
-        return await self.request(
+    def get_auto_moderation_rule(self, guild_id: Snowflake, auto_moderation_rule_id: Snowflake):
+        return self.request(
             Route(
                 "GET",
                 "/guilds/{guild_id}/auto-moderation/rules/{auto_moderation_rule_id}",
@@ -55,7 +53,7 @@ class AutoModerationEndpoints(EndpointMixin):
             )
         )
 
-    async def create_auto_moderation_rule(
+    def create_auto_moderation_rule(
         self,
         guild_id: Snowflake,
         *,
@@ -69,7 +67,7 @@ class AutoModerationEndpoints(EndpointMixin):
         exempt_channels: list[Snowflake] = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route("POST", "/guilds/{guild_id}/auto-moderation/rules", guild_id=guild_id),
             json_params={
                 "name": name,
@@ -84,7 +82,7 @@ class AutoModerationEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def modify_auto_moderation_rule(
+    def modify_auto_moderation_rule(
         self,
         guild_id: Snowflake,
         auto_moderation_rule_id: Snowflake,
@@ -99,7 +97,7 @@ class AutoModerationEndpoints(EndpointMixin):
         exempt_channels: list[Snowflake] = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "PATCH",
                 "/guilds/{guild_id}/auto-moderation/rules/{auto_moderation_rule_id}",
@@ -119,10 +117,10 @@ class AutoModerationEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def delete_auto_moderation_rule(
+    def delete_auto_moderation_rule(
         self, guild_id: Snowflake, auto_moderation_rule_id: Snowflake, reason: Optional[str] = None
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "DELETE",
                 "/guilds/{guild_id}/auto-moderation/rules/{auto_moderation_rule_id}",

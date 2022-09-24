@@ -38,15 +38,15 @@ __all__ = ("GuildScheduledEventEndpoints",)
 
 
 class GuildScheduledEventEndpoints(EndpointMixin):
-    async def list_scheduled_events_for_guild(
+    def list_scheduled_events_for_guild(
         self, guild_id: Snowflake, *, with_user_count: bool = Unset
     ):
-        return await self.request(
+        return self.request(
             Route("GET", "/guilds/{guild_id}/scheduled-events", guild_id=guild_id),
             query_params={"with_user_count": with_user_count},
         )
 
-    async def create_guild_scheduled_event(
+    def create_guild_scheduled_event(
         self,
         guild_id: Snowflake,
         *,
@@ -61,7 +61,7 @@ class GuildScheduledEventEndpoints(EndpointMixin):
         image: str = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route("POST", "/guilds/{guild_id}/scheduled-events", guild_id=guild_id),
             json_params={
                 "channel_id": channel_id,
@@ -77,14 +77,14 @@ class GuildScheduledEventEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def get_guild_scheduled_event(
+    def get_guild_scheduled_event(
         self,
         guild_id: Snowflake,
         guild_scheduled_event_id: Snowflake,
         *,
         with_user_count: bool = Unset,
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "GET",
                 "/guilds/{guild_id}/scheduled-events/{guild_scheduled_event_id}",
@@ -94,7 +94,7 @@ class GuildScheduledEventEndpoints(EndpointMixin):
             query_params={"with_user_count": with_user_count},
         )
 
-    async def modify_guild_scheduled_event(
+    def modify_guild_scheduled_event(
         self,
         guild_id: Snowflake,
         guild_scheduled_event_id: Snowflake,
@@ -111,7 +111,7 @@ class GuildScheduledEventEndpoints(EndpointMixin):
         status: int = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "PATCH",
                 "/guilds/{guild_id}/scheduled-events/{guild_scheduled_event_id}",
@@ -133,10 +133,10 @@ class GuildScheduledEventEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def delete_guild_scheduled_event(
+    def delete_guild_scheduled_event(
         self, guild_id: Snowflake, guild_scheduled_event_id: Snowflake
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "DELETE",
                 "/guilds/{guild_id}/scheduled-events/{guild_scheduled_event_id}",
@@ -145,7 +145,7 @@ class GuildScheduledEventEndpoints(EndpointMixin):
             )
         )
 
-    async def get_guild_scheduled_event_users(
+    def get_guild_scheduled_event_users(
         self,
         guild_id: Snowflake,
         guild_scheduled_event_id: Snowflake,
@@ -155,7 +155,7 @@ class GuildScheduledEventEndpoints(EndpointMixin):
         before: Snowflake = Unset,
         after: Snowflake = Unset,
     ):
-        return await self.request(
+        return self.request(
             Route(
                 "GET",
                 "/guilds/{guild_id}/scheduled-events/{guild_scheduled_event_id}/users",

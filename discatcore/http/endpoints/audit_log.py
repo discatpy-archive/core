@@ -38,7 +38,7 @@ __all__ = ("AuditLogEndpoints",)
 
 
 class AuditLogEndpoints(EndpointMixin):
-    async def get_guild_audit_log(
+    def get_guild_audit_log(
         self,
         guild_id: Snowflake,
         *,
@@ -47,7 +47,7 @@ class AuditLogEndpoints(EndpointMixin):
         before: Snowflake = Unset,
         limit: int = Unset,
     ):
-        return await self.request(
+        return self.request(
             Route("GET", "/guilds/{guild_id}/audit-logs", guild_id=guild_id),
             query_params={
                 "user_id": user_id,

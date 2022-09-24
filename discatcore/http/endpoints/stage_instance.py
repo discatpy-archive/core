@@ -38,7 +38,7 @@ __all__ = ("StageInstanceEndpoints",)
 
 
 class StageInstanceEndpoints(EndpointMixin):
-    async def create_stage_instance(
+    def create_stage_instance(
         self,
         *,
         channel_id: Snowflake,
@@ -47,7 +47,7 @@ class StageInstanceEndpoints(EndpointMixin):
         send_start_notification: bool = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route("POST", "/stage-instances"),
             json_params={
                 "channel_id": channel_id,
@@ -58,12 +58,10 @@ class StageInstanceEndpoints(EndpointMixin):
             reason=reason,
         )
 
-    async def get_stage_instance(self, channel_id: Snowflake):
-        return await self.request(
-            Route("GET", "/stage-instances/{channel_id}", channel_id=channel_id)
-        )
+    def get_stage_instance(self, channel_id: Snowflake):
+        return self.request(Route("GET", "/stage-instances/{channel_id}", channel_id=channel_id))
 
-    async def modify_stage_instance(
+    def modify_stage_instance(
         self,
         channel_id: Snowflake,
         *,
@@ -71,13 +69,13 @@ class StageInstanceEndpoints(EndpointMixin):
         privacy_level: int = Unset,
         reason: Optional[str] = None,
     ):
-        return await self.request(
+        return self.request(
             Route("PATCH", "/stage-instances/{channel_id}", channel_id=channel_id),
             json_params={"topic": topic, "privacy_level": privacy_level},
             reason=reason,
         )
 
-    async def delete_stage_instance(self, channel_id: Snowflake, reason: Optional[str] = None):
-        return await self.request(
+    def delete_stage_instance(self, channel_id: Snowflake, reason: Optional[str] = None):
+        return self.request(
             Route("DELETE", "/stage-instances/{channel_id}", channel_id=channel_id), reason=reason
         )
