@@ -209,7 +209,7 @@ class HTTPClient(
         """Sends a request to the Discord API. This automatically handles ratelimiting and data processing.
 
         Args:
-            route (.Route): The route to send a request to.
+            route (Route): The route to send a request to.
             query_params (Optional[dict[str, Any]]): The query parameters to include in the url of this request.
                 Any Unset values detected will be filtered out automatically. Defaults to None.
             json_params (dict[str, Any]): The json parameters to include in the request.

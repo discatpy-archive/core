@@ -104,12 +104,12 @@ class GatewayClient:
             This is used for messages that are compressed, which is enabled by default.
         heartbeat_interval (float): The interval to heartbeat given by Discord. This is used with the heartbeat handler.
         session_id (str): The session id of this Gateway connection. This is also used when we resume connection.
-        recent_gp (.GatewayPayload): The newest Gateway Payload.
+        recent_payload (discord_typings.GatewayEvent): The newest Gateway Payload.
         heartbeat_timeout (int): The amount of time (in seconds) to wait for a heartbeat ack to come in.
-        ratelimiter (.Ratelimiter): The ratelimiter for the Gateway connection.
+        ratelimiter (Ratelimiter): The ratelimiter for the Gateway connection.
             This is used to limit the number of commands (except for heartbeats) so we don't get kicked off of the
             gateway connection with opcode 9.
-        heartbeat_handler (Optional[.HeartbeatHandler]): The heartbeat handler for the Gateway connection.
+        heartbeat_handler (Optional[HeartbeatHandler]): The heartbeat handler for the Gateway connection.
             This is used to keep the connection alive via Discord's guidelines.
     """
 
@@ -338,8 +338,8 @@ class GatewayClient:
     # Payloads
 
     @property
-    def identify_payload(self):
-        """:dict[str, Any]: Returns the identifcation payload."""
+    def identify_payload(self) -> dict[str, Any]:
+        """Returns the identifcation payload."""
         identify_dict = {
             "op": GatewayOpcode.IDENTIFY.value,
             "d": {
@@ -359,8 +359,8 @@ class GatewayClient:
         return identify_dict
 
     @property
-    def resume_payload(self):
-        """:dict[str, Any]: Returns the resume payload."""
+    def resume_payload(self) -> dict[str, Any]:
+        """Returns the resume payload."""
         return {
             "op": GatewayOpcode.RESUME.value,
             "d": {
@@ -371,8 +371,8 @@ class GatewayClient:
         }
 
     @property
-    def heartbeat_payload(self):
-        """:dict[str, Any]: Returns the heartbeat payload."""
+    def heartbeat_payload(self) -> dict[str, Any]:
+        """Returns the heartbeat payload."""
         return {"op": GatewayOpcode.HEARTBEAT.value, "d": self.sequence}
 
     # Gateway commands
