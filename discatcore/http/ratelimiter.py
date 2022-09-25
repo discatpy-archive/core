@@ -129,12 +129,12 @@ class Ratelimiter:
     """Represents the global ratelimiter.
 
     Attributes:
-        discord_buckets (dict[str, .Bucket]): A mapping that maps Discord hashes to bucket objects.
-        url_buckets (dict[str, .Bucket]): A mapping that maps psuedo-buckets to bucket objects.
+        discord_buckets (dict[str, Bucket]): A mapping that maps Discord hashes to bucket objects.
+        url_buckets (dict[str, Bucket]): A mapping that maps psuedo-buckets to bucket objects.
             This is primarily used by new requests that do not know their Discord hashes.
         url_to_discord_hash (dict[str, str]): A mapping that maps psuedo-buckets to Discord hashes.
             This is primarily set by requests that have just discovered their Discord hashes.
-        global_bucket (.ManualRatelimiter): The global bucket. Used for requests that involve global 429s.
+        global_bucket (ManualRatelimiter): The global bucket. Used for requests that involve global 429s.
     """
 
     __slots__ = ("discord_buckets", "url_buckets", "url_to_discord_hash", "global_bucket")

@@ -28,7 +28,7 @@ import inspect
 import logging
 from collections.abc import Callable, Coroutine
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Optional, TypeVar, Union
 
 if TYPE_CHECKING:
     from discatcore.dispatcher import Dispatcher
@@ -98,7 +98,9 @@ class Event:
         else:
             raise ValueError(f"Event prototype for event {self.name} has already been set!")
 
-    def proto(self, func: Optional[Func[Any]] = None, *, parent: bool = False):
+    def proto(
+        self, func: Optional[Func[Any]] = None, *, parent: bool = False
+    ) -> Union["Event", Callable[[Func[Any]], "Event"]]:
         """A decorator to set the prototype of this event.
 
         Args:
@@ -138,7 +140,7 @@ class Event:
         self._error_handler = func
         _log.debug("Registered new error handler under event %s", self.name)
 
-    def error_handler(self):
+    def error_handler(self) -> Callable[[Func[Any]], "Event"]:
         """A decorator to override the error handler of this event.
 
         Returns:
@@ -196,7 +198,7 @@ class Event:
 
     def callback(
         self, func: Optional[CoroFunc] = None, *, one_shot: bool = False, parent: bool = False
-    ):
+    ) -> Union["Event", Callable[[Func[Any]], "Event"]]:
         """A decorator to add a callback to this event.
 
         Args:

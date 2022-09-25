@@ -86,8 +86,8 @@ class BasicFile:
         self.content_type = content_type
 
     @property
-    def spoiler(self):
-        """:bool: Whether the file is a spoiler or not."""
+    def spoiler(self) -> bool:
+        """Whether the file is a spoiler or not."""
         return self.filename.startswith("SPOILER_")
 
     def close(self):

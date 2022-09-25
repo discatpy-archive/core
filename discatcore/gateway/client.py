@@ -93,10 +93,11 @@ class GatewayClient:
     """The Gateway client that manages connections to and from the Discord API.
 
     Args:
-        ws (aiohttp.ClientWebSocketResponse): The websocket client. This is created via the :class:`HTTPClient` client.
-        client (Client): The parent client. This is used for dispatching events recieved from the gateway.
+        http (HTTPClient): The http client. This is used to create the websocket connection and to retrieve the token.
+        dispatcher (Dispatcher): The dispatcher. This is used to dispatch events recieved over the gateway.
         heartbeat_timeout (int): The amount of time (in seconds) to wait for a heartbeat ack to come in.
             Defaults to 30 seconds.
+        intents (int): The intents to use.
 
     Attributes:
         inflator (zlib.decompressobj): The compression inflator.
@@ -190,7 +191,7 @@ class GatewayClient:
         await self._ws.send_json(data, dumps=dumps)
         _log.debug("Sent JSON payload %s to the Gateway.", data)
 
-    async def receive(self):
+    async def receive(self) -> Optional[bool]:
         """Receives a message from the websocket connection and decompresses the message.
 
         Returns:
@@ -229,7 +230,7 @@ class GatewayClient:
 
     # Connection management
 
-    async def connect(self, url: Optional[str] = None):
+    async def connect(self, url: Optional[str] = None) -> asyncio.Task[None]:
         """Starts a connection with the Gateway.
 
         Args:
@@ -427,7 +428,6 @@ class GatewayClient:
 
         Args:
             since (int): When the bot went AFK.
-            activities (List[Activity]): The new activities for the presence.
             status (str): The new status of the presence.
             afk (bool): Whether or not the bot is AFK or not.
         """

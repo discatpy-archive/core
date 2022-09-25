@@ -30,7 +30,9 @@ from discord_typings import HTTPErrorResponseData, NestedHTTPErrorsData
 __all__ = (
     "DisCatCoreException",
     "HTTPException",
+    "BucketMigrated",
     "UnsupportedAPIVersionWarning",
+    "GatewayReconnect",
 )
 
 

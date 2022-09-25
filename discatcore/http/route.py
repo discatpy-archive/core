@@ -64,13 +64,13 @@ class Route:
         self.webhook_token: Optional[str] = params.get("webhook_token")
 
     @property
-    def endpoint(self):
-        """:str: The formatted url for this route."""
+    def endpoint(self) -> str:
+        """The formatted url for this route."""
         return self.url.format_map({k: _urlquote(str(v)) for k, v in self.params.items()})
 
     @property
-    def bucket(self):
-        """:str: The pseudo-bucket that represents this route. This is generated via the method, raw url and top level parameters."""
+    def bucket(self) -> str:
+        """The pseudo-bucket that represents this route. This is generated via the method, raw url and top level parameters."""
         available_top_level_params = [
             k
             for k in ("guild_id", "channel_id", "webhook_id", "webhook_token")

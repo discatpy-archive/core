@@ -27,7 +27,7 @@ import logging
 import sys
 import warnings
 from dataclasses import dataclass
-from typing import Any, Optional, cast
+from typing import Any, Optional, Union, cast
 from urllib.parse import quote as _urlquote
 
 import aiohttp
@@ -136,8 +136,8 @@ class HTTPClient(
         return self.__session
 
     @property
-    def api_version(self):
-        """:int: The Discord API version to use."""
+    def api_version(self) -> int:
+        """The Discord API version to use."""
         return self._api_version
 
     async def ws_connect(self, url: str):
@@ -205,7 +205,7 @@ class HTTPClient(
         reason: Optional[str] = None,
         files: list[BasicFile] = Unset,
         **extras: Any,
-    ):
+    ) -> Union[Any, str]:
         """Sends a request to the Discord API. This automatically handles ratelimiting and data processing.
 
         Args:
