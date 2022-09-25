@@ -11,7 +11,10 @@ from discatcore.dispatcher.event import Event
 
 _log = logging.getLogger(__name__)
 
-__all__ = ("Dispatcher",)
+__all__ = (
+    "Dispatcher",
+    "Event",
+)
 
 T = TypeVar("T")
 Func = Callable[..., T]
