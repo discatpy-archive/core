@@ -1,5 +1,12 @@
 {
     "name": "WebhookEndpoints",
+    "requires": [
+        "Optional",
+        "discord_typings",
+        "Snowflake",
+        "BasicFile",
+        "Unset"
+    ],
     "methods": {
         "create_webhook": {
             "method": "POST",

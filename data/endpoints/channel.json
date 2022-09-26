@@ -1,5 +1,12 @@
 {
     "name": "ChannelEndpoints",
+    "requires": [
+        "Optional",
+        "discord_typings",
+        "Snowflake",
+        "BasicFile",
+        "Unset"
+    ],
     "methods": {
         "get_channel": {
             "method": "GET",

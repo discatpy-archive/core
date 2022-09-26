@@ -1,5 +1,11 @@
 {
     "name": "ApplicationCommandEndpoints",
+    "requires": [
+        "Optional",
+        "discord_typings",
+        "Snowflake",
+        "Unset"
+    ],
     "methods": {
         "get_global_application_commands": {
             "method": "GET",

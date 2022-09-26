@@ -1,5 +1,11 @@
 {
     "name": "StickerEndpoints",
+    "requires": [
+        "Optional",
+        "Snowflake",
+        "BasicFile",
+        "Unset"
+    ],
     "methods": {
         "get_sticker": {
             "method": "GET",

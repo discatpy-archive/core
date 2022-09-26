@@ -1,5 +1,10 @@
 {
     "name": "StageInstanceEndpoints",
+    "requires": [
+        "Optional",
+        "Snowflake",
+        "Unset"
+    ],
     "methods": {
         "create_stage_instance": {
             "method": "POST",

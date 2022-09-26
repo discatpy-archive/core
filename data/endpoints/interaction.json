@@ -1,5 +1,12 @@
 {
     "name": "InteractionEndpoints",
+    "requires": [
+        "Optional",
+        "discord_typings",
+        "Snowflake",
+        "BasicFile",
+        "Unset"
+    ],
     "methods": {
         "create_interaction_response": {
             "method": "POST",

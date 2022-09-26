@@ -1,5 +1,11 @@
 {
     "name": "GuildScheduledEventEndpoints",
+    "requires": [
+        "Optional",
+        "discord_typings",
+        "Snowflake",
+        "Unset"
+    ],
     "methods": {
         "list_scheduled_events_for_guild": {
             "method": "GET",

@@ -1,5 +1,10 @@
 {
     "name": "UserEndpoints",
+    "requires": [
+        "Optional",
+        "Snowflake",
+        "Unset"
+    ],
     "methods": {
         "get_current_user": {
             "method": "GET",

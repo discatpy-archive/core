@@ -1,5 +1,10 @@
 {
     "name": "GuildTemplateEndpoints",
+    "requires": [
+        "Optional",
+        "Snowflake",
+        "Unset"
+    ],
     "methods": {
         "get_guild_template": {
             "method": "GET",

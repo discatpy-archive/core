@@ -1,5 +1,9 @@
 {
     "name": "AuditLogEndpoints",
+    "requires": [
+        "Snowflake",
+        "Unset"
+    ],
     "methods": {
         "get_guild_audit_log": {
             "method": "GET",

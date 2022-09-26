@@ -1,5 +1,12 @@
 {
     "name": "AutoModerationEndpoints",
+    "requires": [
+        "Any",
+        "Optional",
+        "discord_typings",
+        "Snowflake",
+        "Unset"
+    ],
     "methods": {
         "list_auto_moderation_rules": {
             "method": "GET",

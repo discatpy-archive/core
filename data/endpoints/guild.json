@@ -1,5 +1,11 @@
 {
     "name": "GuildEndpoints",
+    "requires": [
+        "Optional",
+        "discord_typings",
+        "Snowflake",
+        "Unset"
+    ],
     "methods": {
         "create_guild": {
             "method": "POST",

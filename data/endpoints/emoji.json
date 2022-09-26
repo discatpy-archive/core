@@ -1,5 +1,10 @@
 {
     "name": "EmojiEndpoints",
+    "requires": [
+        "Optional",
+        "Snowflake",
+        "Unset"
+    ],
     "methods": {
         "list_guild_emojis": {
             "method": "GET",
