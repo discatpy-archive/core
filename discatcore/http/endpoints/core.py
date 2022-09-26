@@ -15,7 +15,7 @@ class EndpointMixin:
         route: Route,
         *,
         query_params: Optional[dict[str, Any]] = None,
-        json_params: dict[str, Any] = Unset,
+        json_params: Union[dict[str, Any], list[Any]] = Unset,
         reason: Optional[str] = None,
         files: list[BasicFile] = Unset,
         **extras: Any,

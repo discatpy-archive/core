@@ -40,6 +40,7 @@ def _filter_dict_for_unset(d: dict[Any, Any]):
 
 
 class HTTPClient(
+    ApplicationCommandEndpoints,
     AuditLogEndpoints,
     AutoModerationEndpoints,
     ChannelEndpoints,
@@ -47,11 +48,13 @@ class HTTPClient(
     GuildScheduledEventEndpoints,
     GuildTemplateEndpoints,
     GuildEndpoints,
+    InteractionEndpoints,
     InviteEndpoints,
     StageInstanceEndpoints,
     StickerEndpoints,
     UserEndpoints,
     VoiceEndpoints,
+    WebhookEndpoints,
 ):
     """The HTTP client that helps makes connections to the REST API. This handles ratelimiting and wraps
     Discord REST API endpoints into easy to use coroutine functions.
@@ -144,16 +147,18 @@ class HTTPClient(
             await self._session.close()
 
     @staticmethod
-    def _prepare_data(json: dict[str, Any], files: list[BasicFile]):
+    def _prepare_data(json: Union[dict[str, Any], list[Any]], files: list[BasicFile]):
         pd = _PreparedData()
 
         if json is not Unset and files is Unset:
-            pd.json = _filter_dict_for_unset(json)
+            pd.json = _filter_dict_for_unset(json) if isinstance(json, dict) else json
 
         if json is not Unset and files is not Unset:
             form_dat = aiohttp.FormData()
             form_dat.add_field(
-                "payload_json", _filter_dict_for_unset(json), content_type="application/json"
+                "payload_json",
+                _filter_dict_for_unset(json) if isinstance(json, dict) else json,
+                content_type="application/json",
             )
 
             for i, f in enumerate(files):
@@ -179,7 +184,7 @@ class HTTPClient(
         route: Route,
         *,
         query_params: Optional[dict[str, Any]] = None,
-        json_params: dict[str, Any] = Unset,
+        json_params: Union[dict[str, Any], list[Any]] = Unset,
         reason: Optional[str] = None,
         files: list[BasicFile] = Unset,
         **extras: Any,
@@ -190,7 +195,7 @@ class HTTPClient(
             route (Route): The route to send a request to.
             query_params (Optional[dict[str, Any]]): The query parameters to include in the url of this request.
                 Any Unset values detected will be filtered out automatically. Defaults to None.
-            json_params (dict[str, Any]): The json parameters to include in the request.
+            json_params (Union[dict[str, Any], list[Any]]): The json parameters to include in the request.
                 Any Unset values detected will be filtered out automatically. Defaults to Unset.
             reason (Optional[str]): If this route supports reasons, the reason for the action caused by the
                 route being performed. This will be included in the headers under "X-Audit-Log-Reason".

@@ -196,6 +196,30 @@ class GuildEndpoints(EndpointMixin):
             query_params={"query": query, "limit": limit},
         )
 
+    def add_guild_member(
+        self,
+        guild_id: Snowflake,
+        user_id: Snowflake,
+        *,
+        access_token: str,
+        nick: str = Unset,
+        roles: list[Snowflake] = Unset,
+        mute: bool = Unset,
+        deaf: bool = Unset,
+    ):
+        return self.request(
+            Route(
+                "PUT", "/guilds/{guild_id}/members/{user_id}", guild_id=guild_id, user_id=user_id
+            ),
+            json_params={
+                "access_token": access_token,
+                "nick": nick,
+                "roles": roles,
+                "mute": mute,
+                "deaf": deaf,
+            },
+        )
+
     def modify_guild_member(
         self,
         guild_id: Snowflake,

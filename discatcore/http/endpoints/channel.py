@@ -439,6 +439,43 @@ class ChannelEndpoints(EndpointMixin):
             reason=reason,
         )
 
+    def start_thread_in_forum_channel(
+        self,
+        channel_id: Snowflake,
+        *,
+        name: str,
+        auto_archive_duration: int = Unset,
+        rate_limit_per_user: Optional[int] = Unset,
+        content: str = Unset,
+        embeds: list[discord_typings.EmbedData] = Unset,
+        allowed_mentions: discord_typings.AllowedMentionsData = Unset,
+        components: list[discord_typings.ComponentData] = Unset,
+        sticker_ids: list[Snowflake] = Unset,
+        attachments: list[discord_typings.PartialAttachmentData] = Unset,
+        flags: int = Unset,
+        applied_tags: list[Snowflake] = Unset,
+        reason: Optional[str] = None,
+        files: list[BasicFile] = Unset,
+    ):
+        return self.request(
+            Route("POST", "/channels/{channel_id}/threads", channel_id=channel_id),
+            json_params={
+                "name": name,
+                "auto_archive_duration": auto_archive_duration,
+                "rate_limit_per_user": rate_limit_per_user,
+                "content": content,
+                "embeds": embeds,
+                "allowed_mentions": allowed_mentions,
+                "components": components,
+                "sticker_ids": sticker_ids,
+                "attachments": attachments,
+                "flags": flags,
+                "applied_tags": applied_tags,
+            },
+            reason=reason,
+            files=files,
+        )
+
     def join_thread(self, channel_id: Snowflake):
         return self.request(
             Route("PUT", "/channels/{channel_id}/thread-members/@me", channel_id=channel_id)
