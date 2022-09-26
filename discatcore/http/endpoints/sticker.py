@@ -6,10 +6,10 @@ from typing import Optional
 
 from discord_typings import Snowflake
 
-from discatcore.file import BasicFile
-from discatcore.http.endpoints.core import EndpointMixin
-from discatcore.http.route import Route
-from discatcore.types import Unset
+from ...file import BasicFile
+from ...types import Unset
+from ..route import Route
+from .core import EndpointMixin
 
 __all__ = ("StickerEndpoints",)
 

@@ -20,16 +20,16 @@ IMPORTS = {
     "Optional": "from typing import Optional",
     "Snowflake": "from discord_typings import Snowflake",
     "discord_typings": "import discord_typings",
-    "BasicFile": "from discatcore.file import BasicFile",
-    "Unset": "from discatcore.types import Unset",
+    "BasicFile": "from ...file import BasicFile",
+    "Unset": "from ...types import Unset",
 }
 FILE_TEMPLATE = f"""# SPDX-License-Identifier: MIT
 
 {GENERATION_COMMENT}
 
 {{0}}
-from discatcore.http.endpoints.core import EndpointMixin
-from discatcore.http.route import Route
+from .core import EndpointMixin
+from ..route import Route
 
 __all__ = ("{{1}}",)
 

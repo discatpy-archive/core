@@ -13,13 +13,13 @@ from typing import Any, Optional, Union, cast
 import aiohttp
 from discord_typings import GatewayEvent
 
-from discatcore.dispatcher import Dispatcher
-from discatcore.enums import GatewayOpcode
-from discatcore.errors import GatewayReconnect
-from discatcore.gateway.ratelimiter import Ratelimiter
-from discatcore.http import HTTPClient
-from discatcore.types import Snowflake
-from discatcore.utils import dumps, loads
+from ..dispatcher import Dispatcher
+from ..enums import GatewayOpcode
+from ..errors import GatewayReconnect
+from ..http import HTTPClient
+from ..types import Snowflake
+from ..utils import dumps, loads
+from .ratelimiter import Ratelimiter
 
 __all__ = ("GatewayClient",)
 

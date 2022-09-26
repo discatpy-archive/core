@@ -11,10 +11,12 @@ from urllib.parse import quote as _urlquote
 import aiohttp
 from discord_typings import GetGatewayBotData
 
-from discatcore import __version__
-from discatcore.errors import BucketMigrated, HTTPException, UnsupportedAPIVersionWarning
-from discatcore.file import BasicFile
-from discatcore.http.endpoints import (
+from .. import __version__
+from ..errors import BucketMigrated, HTTPException, UnsupportedAPIVersionWarning
+from ..file import BasicFile
+from ..types import Unset
+from ..utils import dumps, loads
+from .endpoints import (
     ApplicationCommandEndpoints,
     AuditLogEndpoints,
     AutoModerationEndpoints,
@@ -31,10 +33,8 @@ from discatcore.http.endpoints import (
     VoiceEndpoints,
     WebhookEndpoints,
 )
-from discatcore.http.ratelimiter import Ratelimiter
-from discatcore.http.route import Route
-from discatcore.types import Unset
-from discatcore.utils import dumps, loads
+from .ratelimiter import Ratelimiter
+from .route import Route
 
 BASE_API_URL = "https://discord.com/api/v{0}"
 VALID_API_VERSIONS = [9, 10]

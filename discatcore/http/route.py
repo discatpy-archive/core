@@ -3,7 +3,7 @@
 from typing import Any, Optional
 from urllib.parse import quote as _urlquote
 
-from discatcore.types import Snowflake
+from ..types import Snowflake
 
 __all__ = ("Route",)
 

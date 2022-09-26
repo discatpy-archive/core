@@ -7,7 +7,7 @@ import traceback
 from collections.abc import Callable, Coroutine
 from typing import Any, Optional, TypeVar
 
-from discatcore.dispatcher.event import Event
+from .event import Event
 
 _log = logging.getLogger(__name__)
 

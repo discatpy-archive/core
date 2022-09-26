@@ -6,8 +6,8 @@ from typing import Optional
 
 from aiohttp import ClientResponse
 
-from discatcore.errors import BucketMigrated
-from discatcore.impl.ratelimit import BurstRatelimiter, ManualRatelimiter
+from ..errors import BucketMigrated
+from ..impl.ratelimit import BurstRatelimiter, ManualRatelimiter
 
 _log = logging.getLogger(__name__)
 

@@ -2,9 +2,9 @@
 
 from typing import Any, Optional, Union
 
-from discatcore.file import BasicFile
-from discatcore.http.route import Route
-from discatcore.types import Unset
+from ...file import BasicFile
+from ...types import Unset
+from ..route import Route
 
 __all__ = ("EndpointMixin",)
 

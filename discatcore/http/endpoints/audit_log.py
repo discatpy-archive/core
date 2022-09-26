@@ -4,9 +4,9 @@
 
 from discord_typings import Snowflake
 
-from discatcore.http.endpoints.core import EndpointMixin
-from discatcore.http.route import Route
-from discatcore.types import Unset
+from ...types import Unset
+from ..route import Route
+from .core import EndpointMixin
 
 __all__ = ("AuditLogEndpoints",)
 
