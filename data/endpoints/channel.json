@@ -478,6 +478,46 @@
             },
             "supports-reason": true
         },
+        "start_thread_in_forum_channel": {
+            "method": "POST",
+            "url": "/channels/{channel_id}/threads",
+            "url-parameters": {
+                "channel_id": "Snowflake"
+            },
+            "json-parameters": {
+                "name": "str",
+                "auto_archive_duration": ["int", "Unset"],
+                "rate_limit_per_user": ["Optional[int]", "Unset"],
+                "content": ["str", "Unset"],
+                "embeds": [
+                    "list[discord_typings.EmbedData]",
+                    "Unset"
+                ],
+                "allowed_mentions": [
+                    "discord_typings.AllowedMentionsData",
+                    "Unset"
+                ],
+                "components": [
+                    "list[discord_typings.ComponentData]",
+                    "Unset"
+                ],
+                "sticker_ids": [
+                    "list[Snowflake]",
+                    "Unset"
+                ],
+                "attachments": [
+                    "list[discord_typings.PartialAttachmentData]",
+                    "Unset"
+                ],
+                "flags": [
+                    "int",
+                    "Unset"
+                ],
+                "applied_tags": ["list[Snowflake]", "Unset"]
+            },
+            "supports-reason": true,
+            "supports-files": true
+        },
         "join_thread": {
             "method": "PUT",
             "url": "/channels/{channel_id}/thread-members/@me",
