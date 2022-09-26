@@ -29,7 +29,6 @@ __license__ = "MIT"
 
 # I have no idea how to prevent this type error
 from . import types, utils  # type: ignore
-from .client import *
 from .dispatcher import *
 from .enums import *
 from .errors import *
