@@ -60,7 +60,7 @@ Unset: Final[Any] = _UnsetDefine()
 
 # taken from typing
 # https://github.com/python/cpython/blob/3.10/Lib/typing.py#L185-L203
-def _type_repr(obj):
+def _type_repr(obj: Any):
     """Return the repr() of an object, special-casing types (internal helper).
     If obj is a type, we return a shorter version than the default
     type.__repr__, based on the module and qualified name, which is
@@ -173,7 +173,7 @@ class FunctionCreator:
         finally:
             self.func_indent_level -= 1
 
-    def print(self, *args):
+    def print(self, *args: str):
         if not args:
             self.func_body.append("")
         else:
@@ -228,10 +228,12 @@ class FunctionCreator:
         ns = {}
         exec(func_creator_str, globals, ns)
 
-        func = ns["__create_fn__"](**locals)
+        # since pyright is a static type checker, it doesn't know the type of what was generated
+        # in the ns
+        func = ns["__create_fn__"](**locals)  # type: ignore
         if not isinstance(func, types.FunctionType):
             raise TypeError(
-                f"the generated object was of type {type(func)!r}, not types.FunctionType!"
+                f"the generated object was of type {type(func)!r}, not types.FunctionType!"  # type: ignore
             )
         return func
 
@@ -269,13 +271,13 @@ def _dict_type_check(
 
 def _generate_func_args_json_query(
     func_gen: FunctionCreator,
-    params: dict[Any, Any],
+    params: dict[str, Union[str, list[Any]]],
 ):
     for param_name, param in params.items():
         default = Unset
         if isinstance(param, str):
             anno = param
-        elif isinstance(param, list) and len(param) == 2:
+        elif isinstance(param, list) and len(param) == 2:  # type: ignore
             anno, default = param
         else:
             raise TypeError(f"Invalid type {_type_repr(param)} for JSON/Query parameter values")
@@ -385,7 +387,7 @@ def parse_endpoint_func(name: str, func: dict[str, Any]):
 def parse_json_file(file: dict[str, Any]):
     funcs: list[str] = []
     name = _dict_type_check(file, "name", str)
-    methods = _dict_type_check(file, "methods", dict)
+    methods: dict[str, Any] = _dict_type_check(file, "methods", dict)
 
     for func_name, func_metadata in methods.items():
         func = parse_endpoint_func(func_name, func_metadata)
