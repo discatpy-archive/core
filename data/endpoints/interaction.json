@@ -1,0 +1,104 @@
+{
+    "name": "InteractionEndpoints",
+    "methods": {
+        "create_interaction_response": {
+            "method": "POST",
+            "url": "/interactions/{interaction_id}/{interaction_token}/callback",
+            "url-parameters": {
+                "interaction_id": "Snowflake",
+                "interaction_token": "str"
+            },
+            "json-parameters": {
+                "type": "discord_typings.InteractionCallbackTypes",
+                "data": ["discord_typings.InteractionCallbackData", "Unset"]
+            },
+            "supports-files": true
+        },
+        "get_original_interaction_response": {
+            "method": "GET",
+            "url": "/webhooks/{application_id}/{interaction_token}/messages/@original",
+            "url-parameters": {
+                "application_id": "Snowflake",
+                "interaction_token": "str"
+            }
+        },
+        "edit_original_interaction_response": {
+            "method": "PATCH",
+            "url": "/webhooks/{application_id}/{interaction_token}/messages/@original",
+            "url-parameters": {
+                "application_id": "Snowflake",
+                "interaction_token": "str"
+            },
+            "json-parameters": {
+                "content": ["Optional[str]", "Unset"],
+                "embeds": ["Optional[list[discord_typings.EmbedData]]", "Unset"],
+                "allowed_mentions": ["Optional[discord_typings.AllowedMentionsData]", "Unset"],
+                "components": ["Optional[list[discord_typings.ComponentData]]", "Unset"],
+                "attachments": ["Optional[list[discord_typings.PartialAttachmentData]]", "Unset"]
+            },
+            "supports-files": true
+        },
+        "delete_original_interaction_response": {
+            "method": "DELETE",
+            "url": "/webhooks/{application_id}/{interaction_token}/messages/@original",
+            "url-parameters": {
+                "application_id": "Snowflake",
+                "interaction_token": "str"
+            }
+        },
+        "create_followup_message": {
+            "method": "POST",
+            "url": "/webhooks/{application_id}/{interaction_token}",
+            "url-parameters": {
+                "application_id": "Snowflake",
+                "interaction_token": "str"
+            },
+            "json-parameters": {
+                "content": ["str", "Unset"],
+                "tts": ["bool", "Unset"],
+                "embeds": ["list[discord_typings.EmbedData]", "Unset"],
+                "allowed_mentions": ["discord_typings.AllowedMentionsData", "Unset"],
+                "components": ["list[discord_typings.ComponentData]", "Unset"],
+                "attachments": ["list[discord_typings.PartialAttachmentData]", "Unset"],
+                "flags": ["int", "Unset"],
+                "thread_name": ["str", "Unset"]
+            },
+            "supports-files": true
+        },
+        "get_followup_message": {
+            "method": "GET",
+            "url": "/webhooks/{application_id}/{interaction_token}/messages/{message_id}",
+            "url-parameters": {
+                "application_id": "Snowflake",
+                "interaction_token": "str",
+                "message_id": "Snowflake"
+            }
+        },
+        "edit_followup_message": {
+            "method": "PATCH",
+            "url": "/webhooks/{application_id}/{interaction_token}/messages/{message_id}",
+            "url-parameters": {
+                "application_id": "Snowflake",
+                "interaction_token": "str",
+                "message_id": "Snowflake"
+            },
+            "json-parameters": {
+                "content": ["Optional[str]", "Unset"],
+                "embeds": ["Optional[list[discord_typings.EmbedData]]", "Unset"],
+                "allowed_mentions": ["Optional[discord_typings.AllowedMentionsData]", "Unset"],
+                "components": ["Optional[list[discord_typings.ComponentData]]", "Unset"],
+                "attachments": ["Optional[list[discord_typings.PartialAttachmentData]]", "Unset"]
+            },
+            "supports-files": true
+        },
+        "delete_followup_message": {
+            "method": "DELETE",
+            "url": "/webhooks/{application_id}/{interaction_token}/messages/{message_id}",
+            "url-parameters": {
+                "application_id": "Snowflake",
+                "interaction_token": "str",
+                "message_id": "Snowflake"
+            }
+        }
+    }
+}
