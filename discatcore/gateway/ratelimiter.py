@@ -41,7 +41,7 @@ class Ratelimiter:
 
     async def ratelimit_loop(self):
         """Updates the amount of commands used per minute."""
-        while not self.parent.ws.closed:
+        while not self.parent.is_closed:
             try:
                 self._ratelimit_done.clear()
 

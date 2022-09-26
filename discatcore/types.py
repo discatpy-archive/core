@@ -1,19 +1,12 @@
 # SPDX-License-Identifier: MIT
 
-from typing import Any, NoReturn, Union
+from typing import Any, NoReturn
 
-from discord_typings import (
-    CategoryChannelData,
-    NewsChannelData,
-    Snowflake,
-    TextChannelData,
-    VoiceChannelData,
-)
+from discord_typings import Snowflake
 
 __all__ = (
     "Snowflake",
     "Unset",
-    "GuildChannelData",
 )
 
 
@@ -34,5 +27,3 @@ class _UnsetDefine:
 
 
 Unset: Any = _UnsetDefine()
-
-GuildChannelData = Union[TextChannelData, NewsChannelData, VoiceChannelData, CategoryChannelData]

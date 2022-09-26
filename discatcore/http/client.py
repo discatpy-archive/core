@@ -14,7 +14,23 @@ from discord_typings import GetGatewayBotData
 from discatcore import __version__
 from discatcore.errors import BucketMigrated, HTTPException, UnsupportedAPIVersionWarning
 from discatcore.file import BasicFile
-from discatcore.http.endpoints import *
+from discatcore.http.endpoints import (
+    ApplicationCommandEndpoints,
+    AuditLogEndpoints,
+    AutoModerationEndpoints,
+    ChannelEndpoints,
+    EmojiEndpoints,
+    GuildEndpoints,
+    GuildScheduledEventEndpoints,
+    GuildTemplateEndpoints,
+    InteractionEndpoints,
+    InviteEndpoints,
+    StageInstanceEndpoints,
+    StickerEndpoints,
+    UserEndpoints,
+    VoiceEndpoints,
+    WebhookEndpoints,
+)
 from discatcore.http.ratelimiter import Ratelimiter
 from discatcore.http.route import Route
 from discatcore.types import Unset
