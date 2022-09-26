@@ -303,6 +303,21 @@
                 ]
             }
         },
+        "add_guild_member": {
+            "method": "PUT",
+            "url": "/guilds/{guild_id}/members/{user_id}",
+            "url-parameters": {
+                "guild_id": "Snowflake",
+                "user_id": "Snowflake"
+            },
+            "json-parameters": {
+                "access_token": "str",
+                "nick": ["str", "Unset"],
+                "roles": ["list[Snowflake]", "Unset"],
+                "mute": ["bool", "Unset"],
+                "deaf": ["bool", "Unset"]
+            }
+        },
         "modify_guild_member": {
             "method": "PATCH",
             "url": "/guilds/{guild_id}/members/{user_id}",
