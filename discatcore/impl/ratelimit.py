@@ -11,14 +11,31 @@ __all__ = (
 
 
 class BaseRatelimiter:
+    """The base class for all ratelimiters. Locking algorithms are up to the subclassed Ratelimiter."""
+
     __slots__ = ("_lock",)
 
     def __init__(self):
-        self._lock = asyncio.Event()
+        self._lock: asyncio.Event = asyncio.Event()
         self._lock.set()
 
     async def acquire(self):
         await self._lock.wait()
+
+    def is_locked(self):
+        """:bool: Returns whether the bucket is locked or not."""
+        return not self._lock.is_set()
+
+    async def __aenter__(self):
+        await self.acquire()
+        return None
+
+    async def __aexit__(self, *args: Any):
+        pass
+
+
+class ManualRatelimiter(BaseRatelimiter):
+    """A simple ratelimiter that simply locks at the command of anything."""
 
     async def _unlock(self, delay: float):
         await asyncio.sleep(delay)
@@ -36,23 +53,16 @@ class BaseRatelimiter:
         self._lock.clear()
         asyncio.create_task(self._unlock(delay))
 
-    def is_locked(self):
-        """:bool: Returns whether the bucket is locked or not."""
-        return not self._lock.is_set()
 
-    async def __aenter__(self):
-        await self.acquire()
-        return None
+class BurstRatelimiter(ManualRatelimiter):
+    """A ratelimiter that automatically locks when acquired based on its information.
 
-    async def __aexit__(self, *args: Any):
-        pass
+    Attributes:
+        limit (Optional[int]): The amount of times this ratelimiter can be acquired before being locked.
+        remaining (Optional[int]): The remaining amount of times this ratelimiter can be acquired before locking.
+        reset_after (Optional[float]): How long the ratelimiter has to wait before it has been renewed.
+    """
 
-
-class ManualRatelimiter(BaseRatelimiter):
-    pass
-
-
-class BurstRatelimiter(BaseRatelimiter):
     __slots__ = ("limit", "remaining", "reset_after")
 
     def __init__(self):

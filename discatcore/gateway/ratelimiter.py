@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from datetime import datetime
 from typing import TYPE_CHECKING, Any, Optional
+
+from ..impl.ratelimit import BaseRatelimiter
 
 if TYPE_CHECKING:
     from .client import GatewayClient
@@ -15,39 +16,36 @@ __all__ = ("Ratelimiter",)
 _log = logging.getLogger(__name__)
 
 
-# TODO: refactor to incorporate the ratelimiting implementations in
-# impl/ratelimit.py (for consistency)
-class Ratelimiter:
+class Ratelimiter(BaseRatelimiter):
     """Represents a ratelimiter for a Gateway Client."""
 
     __slots__ = (
         "commands_used",
         "parent",
         "_task",
-        "_ratelimit_done",
         "_lock",
         "limit",
         "reset_after",
     )
 
-    def __init__(self, parent: GatewayClient, limit: int = 120, reset_after: int = 60):
-        self.commands_used = 0
-        self.limit = limit
-        self.reset_after = reset_after
-        self.parent = parent
+    def __init__(self, parent: GatewayClient, limit: int = 120, reset_after: float = 60.0):
+        super().__init__()
+
+        self.commands_used: int = 0
+        self.limit: int = limit
+        self.reset_after: float = reset_after
+        self.parent: GatewayClient = parent
         self._task: Optional[asyncio.Task[Any]] = None
-        self._ratelimit_done = asyncio.Event()
-        self._lock = asyncio.Event()
 
     async def ratelimit_loop(self):
         """Updates the amount of commands used per minute."""
         while not self.parent.is_closed:
             try:
-                self._ratelimit_done.clear()
+                self._lock.clear()
 
                 await asyncio.sleep(self.reset_after)
 
-                self._ratelimit_done.set()
+                self._lock.set()
                 self.commands_used = 0
             except asyncio.CancelledError:
                 break
@@ -77,19 +75,4 @@ class Ratelimiter:
         if not self.is_ratelimited():
             return
 
-        start_time = datetime.now()
-        _log.info("Waiting for the Gateway ratelimit lock.")
-
-        await self._ratelimit_done.wait()
-
-        end_time = datetime.now()
-        _log.info(
-            "Done waiting for the Gateway ratelimit lock! It took %f seconds.",
-            (end_time - start_time).total_seconds(),
-        )
-
-    async def __aenter__(self):
-        await self.acquire()
-
-    async def __aexit__(self, *args: Any):
-        pass
+        return await super().acquire()
