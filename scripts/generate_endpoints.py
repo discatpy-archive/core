@@ -51,11 +51,7 @@ The implementations for Discord API endpoints. These are for internal use only, 
 T = TypeVar("T")
 
 
-class _UnsetDefine:
-    pass
-
-
-Unset: Final[Any] = _UnsetDefine()
+Unset: Final[Any] = object()
 
 #
 #  Function Creator
