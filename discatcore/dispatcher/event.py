@@ -38,6 +38,7 @@ class Event:
         name (str): The name of this event.
         parent (Dispatcher): The parent dispatcher of this event.
         callbacks (list[Callable[..., Coroutine[Any, Any, Any]]]): The callbacks for this event.
+        metadata (dict[Callable[..., Coroutine[Any, Any, Any]], _EventCallbackMetadata]): The metadata for the callbacks for this event.
         _proto (Optional[inspect.Signature]): The prototype of this event.
             This will define what signature all of the callbacks will have.
         _error_handler (Callable[..., Coroutine[Any, Any, Any]]): The error handler of this event.
@@ -49,6 +50,7 @@ class Event:
         self.name = name
         self.parent = parent
         self.callbacks: list[CoroFunc] = []
+        self.metadata: dict[CoroFunc, _EventCallbackMetadata] = {}
         self._proto: Optional[inspect.Signature] = None
         self._error_handler: CoroFunc = self.parent.error_handler
 
@@ -158,7 +160,7 @@ class Event:
             )
 
         metadat = _EventCallbackMetadata(one_shot)
-        setattr(func, "__callback_metadata__", metadat)
+        self.metadata[func] = metadat
         self.callbacks.append(func)
 
         _log.debug("Registered new event callback under event %s", self.name)
@@ -234,7 +236,7 @@ class Event:
             **kwargs (Any): Keyword arguments to pass into the event callbacks.
         """
         for i, callback in enumerate(self.callbacks):
-            metadata = getattr(callback, "__callback_metadata__", _EventCallbackMetadata())
+            metadata = self.metadata.get(callback, _EventCallbackMetadata())
             _log.debug("Running event callback under event %s with index %s", self.name, i)
 
             self._schedule_task(callback, i, *args, **kwargs)

@@ -11,7 +11,7 @@ import zlib
 from typing import Any, Optional, Union, cast
 
 import aiohttp
-from discord_typings import GatewayEvent
+from discord_typings import GatewayEvent, ReadyData
 
 from ..dispatcher import Dispatcher
 from ..enums import GatewayOpcode
@@ -68,7 +68,6 @@ class HeartbeatHandler:
 
 
 class GatewayClient:
-    # TODO: docs rework
     """The Gateway client that manages connections to and from the Discord API.
 
     Args:
@@ -103,6 +102,7 @@ class GatewayClient:
         "session_id",
         "recent_payload",
         "can_resume",
+        "resume_url",
         "heartbeat_handler",
         "ratelimiter",
         "_last_heartbeat_ack",
@@ -132,15 +132,25 @@ class GatewayClient:
         self.session_id: str = ""
         self.recent_payload: Optional[GatewayEvent] = None
         self.can_resume: bool = False
+        self.resume_url: str = "wss://gateway.discord.gg"
 
         # Handlers
         self.heartbeat_handler: HeartbeatHandler = HeartbeatHandler(self)
         self.ratelimiter: Ratelimiter = Ratelimiter(self)
-        self.ratelimiter.start()
 
         # Misc
         self._last_heartbeat_ack: Optional[datetime.datetime] = None
         self.heartbeat_timeout: float = heartbeat_timeout
+
+        # Event registering
+        ready_event = self._dispatcher.new_event("ready")
+        ready_event.add_callback(self.handle_ready)
+
+    # Events
+
+    async def handle_ready(self, data: ReadyData):
+        self.session_id = data["session_id"]
+        self.resume_url = data["resume_gateway_url"]
 
     # Internal functions
 
@@ -209,7 +219,7 @@ class GatewayClient:
 
     # Connection management
 
-    async def connect(self, url: Optional[str] = None) -> asyncio.Task[None]:
+    async def connect(self, url: Optional[str] = None):
         """Starts a connection with the Gateway.
 
         Args:
@@ -226,11 +236,13 @@ class GatewayClient:
 
         res = await self.receive()
         if res and self.recent_payload is not None and self.recent_payload["op"] == 10:
-            self.heartbeat_interval = self.recent_payload["d"].get("heartbeat_interval")
+            self.heartbeat_interval = self.recent_payload["d"]["heartbeat_interval"] / 1000
         else:
             # I guess Discord is having issues today if we get here
             # Disconnect and DO NOT ATTEMPT a reconnection
-            await self.close(reconnect=False)
+            return await self.close(reconnect=False)
+
+        self.ratelimiter.start()
 
         self.heartbeat_handler.start()
         if self.can_resume:
@@ -238,7 +250,7 @@ class GatewayClient:
         else:
             await self.identify()
 
-        return asyncio.create_task(self.connection_loop())
+        return await self.connection_loop()
 
     async def connection_loop(self):
         """Executes the main Gateway loop, which is the following:
@@ -285,7 +297,7 @@ class GatewayClient:
                 elif op == GatewayOpcode.HEARTBEAT_ACK:
                     self._last_heartbeat_ack = datetime.datetime.now()
 
-    async def close(self, *, code: int = 1000, reconnect: bool = True, resume_url: str = ""):
+    async def close(self, *, code: int = 1000, reconnect: bool = True):
         """Closes the connection with the websocket.
 
         Args:
@@ -312,7 +324,7 @@ class GatewayClient:
 
             # if we need to reconnect, set the event
             if reconnect:
-                raise GatewayReconnect(resume_url, self.can_resume)
+                raise GatewayReconnect(self.resume_url, self.can_resume)
 
     # Payloads
 

@@ -53,7 +53,7 @@ class Dispatcher:
         Returns:
             The new event created.
         """
-        if name not in self.events:
+        if name in self.events:
             return self.events[name]
 
         new_event = Event(name, self)
