@@ -143,7 +143,13 @@ class Event:
             parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
         """
         if not self._proto:
-            raise ValueError(f"Event prototype for event {self.name} has not been defined.")
+            self.set_proto(func, parent=parent)
+            # this is to prevent static type checkers from inferring that self._proto is
+            # still None after setting it indirectly via a different function
+            # (it should never go here tho because exceptions stop the flow of this code
+            # and it should be set if we don't reach any exceptions)
+            if not self._proto:
+                return
 
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback provided is not a coroutine.")
