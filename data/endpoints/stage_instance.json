@@ -13,7 +13,7 @@
                 "channel_id": "Snowflake",
                 "topic": "str",
                 "privacy_level": [
-                    "int",
+                    "discord_typings.StageInstancePrivacyLevels",
                     "Unset"
                 ],
                 "send_start_notification": [
@@ -42,7 +42,7 @@
                     "Unset"
                 ],
                 "privacy_level": [
-                    "int",
+                    "discord_typings.StageInstancePrivacyLevels",
                     "Unset"
                 ]
             },

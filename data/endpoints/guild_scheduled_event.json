@@ -36,7 +36,7 @@
                     "Unset"
                 ],
                 "name": "str",
-                "privacy_level": "int",
+                "privacy_level": "discord_typings.GuildScheduledEventPrivacyLevels",
                 "scheduled_start_time": "str",
                 "scheduled_end_time": [
                     "str",
@@ -46,7 +46,7 @@
                     "str",
                     "Unset"
                 ],
-                "entity_type": "int",
+                "entity_type": "discord_typings.GuildScheduledEventEntityTypes",
                 "image": [
                     "str",
                     "Unset"
@@ -89,7 +89,7 @@
                     "Unset"
                 ],
                 "privacy_level": [
-                    "int",
+                    "discord_typings.GuildScheduledEventPrivacyLevels",
                     "Unset"
                 ],
                 "scheduled_start_time": [
@@ -105,7 +105,7 @@
                     "Unset"
                 ],
                 "entity_type": [
-                    "int",
+                    "discord_typings.GuildScheduledEventEntityTypes",
                     "Unset"
                 ],
                 "image": [
@@ -113,7 +113,7 @@
                     "Unset"
                 ],
                 "status": [
-                    "int",
+                    "discord_typings.GuildScheduledEventStatus",
                     "Unset"
                 ]
             },

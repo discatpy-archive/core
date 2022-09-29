@@ -19,11 +19,10 @@ class GuildEndpoints(EndpointMixin):
         self,
         *,
         name: str,
-        region: Optional[str] = Unset,
         icon: str = Unset,
-        verification_level: int = Unset,
-        default_message_notifications: int = Unset,
-        explicit_content_filter: int = Unset,
+        verification_level: discord_typings.VerificationLevels = Unset,
+        default_message_notifications: discord_typings.DefaultMessageNotificationLevels = Unset,
+        explicit_content_filter: discord_typings.ExplicitContentFilterLevels = Unset,
         roles: list[discord_typings.RoleData] = Unset,
         channels: list[discord_typings.PartialChannelData] = Unset,
         afk_channel_id: Snowflake = Unset,
@@ -35,7 +34,6 @@ class GuildEndpoints(EndpointMixin):
             Route("POST", "/guilds"),
             json_params={
                 "name": name,
-                "region": region,
                 "icon": icon,
                 "verification_level": verification_level,
                 "default_message_notifications": default_message_notifications,
@@ -63,11 +61,12 @@ class GuildEndpoints(EndpointMixin):
         guild_id: Snowflake,
         *,
         name: str = Unset,
-        region: Optional[str] = Unset,
         icon: Optional[str] = Unset,
-        verification_level: Optional[int] = Unset,
-        default_message_notifications: Optional[int] = Unset,
-        explicit_content_filter: Optional[int] = Unset,
+        verification_level: Optional[discord_typings.VerificationLevel] = Unset,
+        default_message_notifications: Optional[
+            discord_typings.DefaultMessageNotificationLevels
+        ] = Unset,
+        explicit_content_filter: Optional[discord_typings.ExplicitContentFilterLevels] = Unset,
         afk_channel_id: Optional[Snowflake] = Unset,
         afk_timeout: int = Unset,
         system_channel_id: Optional[Snowflake] = Unset,
@@ -88,7 +87,6 @@ class GuildEndpoints(EndpointMixin):
             Route("PATCH", "/guilds/{guild_id}", guild_id=guild_id),
             json_params={
                 "name": name,
-                "region": region,
                 "icon": icon,
                 "verification_level": verification_level,
                 "default_message_notifications": default_message_notifications,
@@ -122,7 +120,7 @@ class GuildEndpoints(EndpointMixin):
         guild_id: Snowflake,
         *,
         name: str,
-        type: Optional[int] = Unset,
+        type: Optional[discord_typings.ChannelTypes] = Unset,
         topic: Optional[str] = Unset,
         bitrate: Optional[int] = Unset,
         user_limit: Optional[int] = Unset,
@@ -132,8 +130,11 @@ class GuildEndpoints(EndpointMixin):
         parent_id: Optional[Snowflake] = Unset,
         nsfw: Optional[bool] = Unset,
         rtc_region: Optional[str] = Unset,
-        video_quality_mode: Optional[int] = Unset,
+        video_quality_mode: Optional[discord_typings.VideoQualityModes] = Unset,
         default_auto_archive_duration: Optional[int] = Unset,
+        default_reaction_emoji: Optional[discord_typings.DefaultReactionData] = Unset,
+        available_tags: Optional[list[discord_typings.ForumTagData]] = Unset,
+        default_sort_order: Optional[int] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -152,6 +153,9 @@ class GuildEndpoints(EndpointMixin):
                 "rtc_region": rtc_region,
                 "video_quality_mode": video_quality_mode,
                 "default_auto_archive_duration": default_auto_archive_duration,
+                "default_reaction_emoji": default_reaction_emoji,
+                "available_tags": available_tags,
+                "default_sort_order": default_sort_order,
             },
             reason=reason,
         )
@@ -419,7 +423,7 @@ class GuildEndpoints(EndpointMixin):
         )
 
     def modify_guild_mfa_level(
-        self, guild_id: Snowflake, *, level: int, reason: Optional[str] = None
+        self, guild_id: Snowflake, *, level: discord_typings.MFALevels, reason: Optional[str] = None
     ):
         return self.request(
             Route("POST", "/guilds/{guild_id}/mfa", guild_id=guild_id),

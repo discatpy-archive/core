@@ -17,7 +17,7 @@ class AuditLogEndpoints(EndpointMixin):
         guild_id: Snowflake,
         *,
         user_id: Snowflake = Unset,
-        action_type: int = Unset,
+        action_type: discord_typings.AuditLogEvents = Unset,
         before: Snowflake = Unset,
         limit: int = Unset,
     ):

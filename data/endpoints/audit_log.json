@@ -17,7 +17,7 @@
                     "Unset"
                 ],
                 "action_type": [
-                    "int",
+                    "discord_typings.AuditLogEvents",
                     "Unset"
                 ],
                 "before": [

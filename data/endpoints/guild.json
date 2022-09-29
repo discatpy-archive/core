@@ -12,24 +12,20 @@
             "url": "/guilds",
             "json-parameters": {
                 "name": "str",
-                "region": [
-                    "Optional[str]",
-                    "Unset"
-                ],
                 "icon": [
                     "str",
                     "Unset"
                 ],
                 "verification_level": [
-                    "int",
+                    "discord_typings.VerificationLevels",
                     "Unset"
                 ],
                 "default_message_notifications": [
-                    "int",
+                    "discord_typings.DefaultMessageNotificationLevels",
                     "Unset"
                 ],
                 "explicit_content_filter": [
-                    "int",
+                    "discord_typings.ExplicitContentFilterLevels",
                     "Unset"
                 ],
                 "roles": [
@@ -89,24 +85,20 @@
                     "str",
                     "Unset"
                 ],
-                "region": [
-                    "Optional[str]",
-                    "Unset"
-                ],
                 "icon": [
                     "Optional[str]",
                     "Unset"
                 ],
                 "verification_level": [
-                    "Optional[int]",
+                    "Optional[discord_typings.VerificationLevel]",
                     "Unset"
                 ],
                 "default_message_notifications": [
-                    "Optional[int]",
+                    "Optional[discord_typings.DefaultMessageNotificationLevels]",
                     "Unset"
                 ],
                 "explicit_content_filter": [
-                    "Optional[int]",
+                    "Optional[discord_typings.ExplicitContentFilterLevels]",
                     "Unset"
                 ],
                 "afk_channel_id": [
@@ -191,7 +183,7 @@
             "json-parameters": {
                 "name": "str",
                 "type": [
-                    "Optional[int]",
+                    "Optional[discord_typings.ChannelTypes]",
                     "Unset"
                 ],
                 "topic": [
@@ -231,10 +223,22 @@
                     "Unset"
                 ],
                 "video_quality_mode": [
-                    "Optional[int]",
+                    "Optional[discord_typings.VideoQualityModes]",
                     "Unset"
                 ],
                 "default_auto_archive_duration": [
+                    "Optional[int]",
+                    "Unset"
+                ],
+                "default_reaction_emoji": [
+                    "Optional[discord_typings.DefaultReactionData]",
+                    "Unset"
+                ],
+                "available_tags": [
+                    "Optional[list[discord_typings.ForumTagData]]",
+                    "Unset"
+                ],
+                "default_sort_order": [
                     "Optional[int]",
                     "Unset"
                 ]
@@ -561,7 +565,7 @@
                 "guild_id": "Snowflake"
             },
             "json-parameters": {
-                "level": "int"
+                "level": "discord_typings.MFALevels"
             },
             "supports-reason": true
         },

@@ -2,6 +2,7 @@
     "name": "ChannelEndpoints",
     "requires": [
         "Optional",
+        "Union",
         "discord_typings",
         "Snowflake",
         "BasicFile",
@@ -27,7 +28,7 @@
                     "Unset"
                 ],
                 "type": [
-                    "int",
+                    "discord_typings.ChannelTypes",
                     "Unset"
                 ],
                 "position": [
@@ -67,10 +68,30 @@
                     "Unset"
                 ],
                 "video_quality_mode": [
-                    "Optional[int]",
+                    "Optional[discord_typings.VideoQualityModes]",
                     "Unset"
                 ],
                 "default_auto_archive_duration": [
+                    "Optional[int]",
+                    "Unset"
+                ],
+                "flags": [
+                    "int",
+                    "Unset"
+                ],
+                "available_tags": [
+                    "list[discord_typings.ForumTagData]",
+                    "Unset"
+                ],
+                "default_reaction_emoji": [
+                    "Optional[discord_typings.DefaultReactionData]",
+                    "Unset"
+                ],
+                "default_thread_rate_limit_per_user": [
+                    "int",
+                    "Unset"
+                ],
+                "default_sort_order": [
                     "Optional[int]",
                     "Unset"
                 ]
@@ -107,7 +128,9 @@
                 "rate_limit_per_user": [
                     "Optional[int]",
                     "Unset"
-                ]
+                ],
+                "flags": ["int", "Unset"],
+                "applied_tags": ["list[Snowflake]", "Unset"]
             },
             "supports-reason": true
         },
@@ -161,6 +184,10 @@
             "json-parameters": {
                 "content": [
                     "str",
+                    "Unset"
+                ],
+                "nonce": [
+                    "Union[str, int]",
                     "Unset"
                 ],
                 "tts": [
@@ -286,6 +313,10 @@
                     "Optional[list[discord_typings.EmbedData]]",
                     "Unset"
                 ],
+                "flags": [
+                    "Optional[int]",
+                    "Unset"
+                ],
                 "allowed_mentions": [
                     "Optional[discord_typings.AllowedMentionsData]",
                     "Unset"
@@ -296,10 +327,6 @@
                 ],
                 "attachments": [
                     "Optional[list[discord_typings.PartialAttachmentData]]",
-                    "Unset"
-                ],
-                "flags": [
-                    "Optional[int]",
                     "Unset"
                 ]
             },
@@ -375,7 +402,7 @@
                     "bool",
                     "False"
                 ],
-                "target_type": "int",
+                "target_type": "discord_typings.InviteTargetTypes",
                 "target_user_id": [
                     "Snowflake",
                     "Unset"

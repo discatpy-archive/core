@@ -19,7 +19,7 @@ class StageInstanceEndpoints(EndpointMixin):
         *,
         channel_id: Snowflake,
         topic: str,
-        privacy_level: int = Unset,
+        privacy_level: discord_typings.StageInstancePrivacyLevels = Unset,
         send_start_notification: bool = Unset,
         reason: Optional[str] = None,
     ):
@@ -42,7 +42,7 @@ class StageInstanceEndpoints(EndpointMixin):
         channel_id: Snowflake,
         *,
         topic: str = Unset,
-        privacy_level: int = Unset,
+        privacy_level: discord_typings.StageInstancePrivacyLevels = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
