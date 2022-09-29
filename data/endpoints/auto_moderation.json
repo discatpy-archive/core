@@ -1,7 +1,6 @@
 {
     "name": "AutoModerationEndpoints",
     "requires": [
-        "Any",
         "Optional",
         "discord_typings",
         "Snowflake",

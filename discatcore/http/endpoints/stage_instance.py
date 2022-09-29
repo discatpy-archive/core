@@ -4,6 +4,7 @@
 
 from typing import Optional
 
+import discord_typings
 from discord_typings import Snowflake
 
 from ...types import Unset

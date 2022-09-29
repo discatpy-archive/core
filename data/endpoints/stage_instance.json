@@ -2,6 +2,7 @@
     "name": "StageInstanceEndpoints",
     "requires": [
         "Optional",
+        "discord_typings",
         "Snowflake",
         "Unset"
     ],

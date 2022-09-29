@@ -1,6 +1,7 @@
 {
     "name": "AuditLogEndpoints",
     "requires": [
+        "discord_typings",
         "Snowflake",
         "Unset"
     ],

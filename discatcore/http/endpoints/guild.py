@@ -62,7 +62,7 @@ class GuildEndpoints(EndpointMixin):
         *,
         name: str = Unset,
         icon: Optional[str] = Unset,
-        verification_level: Optional[discord_typings.VerificationLevel] = Unset,
+        verification_level: Optional[discord_typings.VerificationLevels] = Unset,
         default_message_notifications: Optional[
             discord_typings.DefaultMessageNotificationLevels
         ] = Unset,

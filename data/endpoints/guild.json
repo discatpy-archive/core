@@ -90,7 +90,7 @@
                     "Unset"
                 ],
                 "verification_level": [
-                    "Optional[discord_typings.VerificationLevel]",
+                    "Optional[discord_typings.VerificationLevels]",
                     "Unset"
                 ],
                 "default_message_notifications": [
