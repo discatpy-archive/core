@@ -14,7 +14,6 @@ import aiohttp
 from discord_typings import GatewayEvent, ReadyData
 
 from ..dispatcher import Dispatcher
-from ..enums import GatewayOpcode
 from ..errors import GatewayReconnect
 from ..http import HTTPClient
 from ..types import Snowflake
@@ -65,6 +64,19 @@ class HeartbeatHandler:
     async def stop(self):
         self._task.cancel()
         await self._task
+
+
+DISPATCH = 0
+HEARTBEAT = 1
+IDENTIFY = 2
+PRESENCE_UPDATE = 3
+VOICE_STATE_UPDATE = 4
+RESUME = 6
+RECONNECT = 7
+REQUEST_GUILD_MEMBERS = 8
+INVALID_SESSION = 9
+HELLO = 10
+HEARTBEAT_ACK = 11
 
 
 class GatewayClient:
@@ -277,24 +289,24 @@ class GatewayClient:
 
             if res and self.recent_payload is not None:
                 op = int(self.recent_payload["op"])
-                if op == GatewayOpcode.DISPATCH and self.recent_payload.get("t") is not None:
+                if op == DISPATCH and self.recent_payload.get("t") is not None:
                     event_name = str(self.recent_payload.get("t")).lower()
                     self._dispatcher.dispatch(event_name, self.recent_payload.get("d"))
 
                 # these should be rare, but it's better to be safe than sorry
-                elif op == GatewayOpcode.HEARTBEAT:
+                elif op == HEARTBEAT:
                     await self.heartbeat()
 
-                elif op == GatewayOpcode.RECONNECT:
+                elif op == RECONNECT:
                     await self.close(code=1012)
                     break
 
-                elif op == GatewayOpcode.INVALID_SESSION:
+                elif op == INVALID_SESSION:
                     self.can_resume = bool(self.recent_payload.get("t"))
                     await self.close(code=1012)
                     break
 
-                elif op == GatewayOpcode.HEARTBEAT_ACK:
+                elif op == HEARTBEAT_ACK:
                     self._last_heartbeat_ack = datetime.datetime.now()
 
     async def close(self, *, code: int = 1000, reconnect: bool = True):
@@ -332,7 +344,7 @@ class GatewayClient:
     def identify_payload(self) -> dict[str, Any]:
         """Returns the identifcation payload."""
         identify_dict = {
-            "op": GatewayOpcode.IDENTIFY.value,
+            "op": IDENTIFY,
             "d": {
                 "token": self._http.token,
                 "intents": self.intents,
@@ -353,7 +365,7 @@ class GatewayClient:
     def resume_payload(self) -> dict[str, Any]:
         """Returns the resume payload."""
         return {
-            "op": GatewayOpcode.RESUME.value,
+            "op": RESUME,
             "d": {
                 "token": self._http.token,
                 "session_id": self.session_id,
@@ -364,7 +376,7 @@ class GatewayClient:
     @property
     def heartbeat_payload(self) -> dict[str, Any]:
         """Returns the heartbeat payload."""
-        return {"op": GatewayOpcode.HEARTBEAT.value, "d": self.sequence}
+        return {"op": HEARTBEAT, "d": self.sequence}
 
     # Gateway commands
 
@@ -400,7 +412,7 @@ class GatewayClient:
                 Defaults to False.
         """
         payload: dict[str, Any] = {
-            "op": GatewayOpcode.REQUEST_GUILD_MEMBERS.value,
+            "op": REQUEST_GUILD_MEMBERS,
             "d": {
                 "guild_id": str(guild_id),
                 "query": query,
@@ -423,7 +435,7 @@ class GatewayClient:
             afk (bool): Whether or not the bot is AFK or not.
         """
         payload: dict[str, Any] = {
-            "op": GatewayOpcode.PRESENCE_UPDATE.value,
+            "op": PRESENCE_UPDATE,
             "d": {
                 "since": since,
                 "activities": [],
@@ -454,7 +466,7 @@ class GatewayClient:
         """
         await self.send(
             {
-                "op": GatewayOpcode.VOICE_STATE_UPDATE.value,
+                "op": VOICE_STATE_UPDATE,
                 "d": {
                     "guild_id": guild_id,
                     "channel_id": channel_id,
