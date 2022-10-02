@@ -13,9 +13,9 @@ from typing import Any, Optional, Union, cast
 import aiohttp
 from discord_typings import GatewayEvent, ReadyData
 
-from ..dispatcher import Dispatcher
 from ..errors import GatewayReconnect
 from ..http import HTTPClient
+from ..impl.dispatcher import Dispatcher
 from ..types import Snowflake
 from ..utils import dumps, loads
 from .ratelimiter import Ratelimiter

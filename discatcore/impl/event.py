@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Optional, TypeVar, Union
 
 if TYPE_CHECKING:
-    from . import Dispatcher
+    from .dispatcher import Dispatcher
 
 _log = logging.getLogger(__name__)
 

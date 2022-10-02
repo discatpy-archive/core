@@ -11,10 +11,7 @@ from .event import Event
 
 _log = logging.getLogger(__name__)
 
-__all__ = (
-    "Dispatcher",
-    "Event",
-)
+__all__ = ("Dispatcher",)
 
 T = TypeVar("T")
 Func = Callable[..., T]
