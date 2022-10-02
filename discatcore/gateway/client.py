@@ -154,10 +154,6 @@ class GatewayClient:
         self._last_heartbeat_ack: Optional[datetime.datetime] = None
         self.heartbeat_timeout: float = heartbeat_timeout
 
-        # Event registering
-        ready_event = self._dispatcher.new_event("ready")
-        ready_event.add_callback(self.handle_ready)
-
     # Events
 
     async def handle_ready(self, data: ReadyData):
@@ -215,7 +211,7 @@ class GatewayClient:
         _log.debug("Received WS message from Gateway with type %s", msg.type.name)  # type: ignore
 
         if msg.type in (aiohttp.WSMsgType.BINARY, aiohttp.WSMsgType.TEXT):  # type: ignore
-            received_msg = None
+            received_msg: Union[Any, str] = None
             if msg.type == aiohttp.WSMsgType.BINARY:  # type: ignore
                 received_msg = self._decompress_msg(msg.data)  # type: ignore
             elif msg.type == aiohttp.WSMsgType.TEXT:  # type: ignore
@@ -291,7 +287,12 @@ class GatewayClient:
                 op = int(self.recent_payload["op"])
                 if op == DISPATCH and self.recent_payload.get("t") is not None:
                     event_name = str(self.recent_payload.get("t")).lower()
-                    self._dispatcher.dispatch(event_name, self.recent_payload.get("d"))
+                    data = self.recent_payload.get("d")
+
+                    if event_name == "ready":
+                        await self.handle_ready(cast(ReadyData, data))
+
+                    self._dispatcher.dispatch(event_name, data)
 
                 # these should be rare, but it's better to be safe than sorry
                 elif op == HEARTBEAT:
@@ -302,7 +303,7 @@ class GatewayClient:
                     break
 
                 elif op == INVALID_SESSION:
-                    self.can_resume = bool(self.recent_payload.get("t"))
+                    self.can_resume = bool(self.recent_payload.get("d"))
                     await self.close(code=1012)
                     break
 
@@ -331,8 +332,7 @@ class GatewayClient:
 
             # Clean up lingering tasks (this will throw exceptions if we get the client to do it)
             await self.ratelimiter.stop()
-            if self.heartbeat_handler:
-                await self.heartbeat_handler.stop()
+            await self.heartbeat_handler.stop()
 
             # if we need to reconnect, set the event
             if reconnect:
