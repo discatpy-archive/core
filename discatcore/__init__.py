@@ -10,7 +10,6 @@ from .errors import *
 from .file import *
 from .impl import Dispatcher, Event
 
-# TODO: make a script to automatically generate this
 __all__ = (
     # errors.py
     "DisCatCoreException",
