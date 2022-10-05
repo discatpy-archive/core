@@ -7,7 +7,7 @@ from typing import Optional
 import discord_typings
 from discord_typings import Snowflake
 
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 from .core import EndpointMixin
 
@@ -20,8 +20,8 @@ class StageInstanceEndpoints(EndpointMixin):
         *,
         channel_id: Snowflake,
         topic: str,
-        privacy_level: discord_typings.StageInstancePrivacyLevels = Unset,
-        send_start_notification: bool = Unset,
+        privacy_level: UnsetOr[discord_typings.StageInstancePrivacyLevels] = Unset,
+        send_start_notification: UnsetOr[bool] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -42,8 +42,8 @@ class StageInstanceEndpoints(EndpointMixin):
         self,
         channel_id: Snowflake,
         *,
-        topic: str = Unset,
-        privacy_level: discord_typings.StageInstancePrivacyLevels = Unset,
+        topic: UnsetOr[str] = Unset,
+        privacy_level: UnsetOr[discord_typings.StageInstancePrivacyLevels] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(

@@ -14,11 +14,11 @@
                 "channel_id": "Snowflake",
                 "topic": "str",
                 "privacy_level": [
-                    "discord_typings.StageInstancePrivacyLevels",
+                    "UnsetOr[discord_typings.StageInstancePrivacyLevels]",
                     "Unset"
                 ],
                 "send_start_notification": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ]
             },
@@ -39,11 +39,11 @@
             },
             "json-parameters": {
                 "topic": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "privacy_level": [
-                    "discord_typings.StageInstancePrivacyLevels",
+                    "UnsetOr[discord_typings.StageInstancePrivacyLevels]",
                     "Unset"
                 ]
             },

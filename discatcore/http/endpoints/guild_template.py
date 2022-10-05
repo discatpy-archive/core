@@ -6,7 +6,7 @@ from typing import Optional
 
 from discord_typings import Snowflake
 
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 from .core import EndpointMixin
 
@@ -20,7 +20,7 @@ class GuildTemplateEndpoints(EndpointMixin):
         )
 
     def create_guild_from_guild_template(
-        self, template_code: Snowflake, *, name: str, icon: str = Unset
+        self, template_code: Snowflake, *, name: str, icon: UnsetOr[str] = Unset
     ):
         return self.request(
             Route("POST", "/guilds/templates/{template_code}", template_code=template_code),
@@ -31,7 +31,7 @@ class GuildTemplateEndpoints(EndpointMixin):
         return self.request(Route("GET", "/guilds/{guild_id}/templates", guild_id=guild_id))
 
     def create_guild_template(
-        self, guild_id: Snowflake, *, name: str, description: Optional[str] = Unset
+        self, guild_id: Snowflake, *, name: str, description: UnsetOr[Optional[str]] = Unset
     ):
         return self.request(
             Route("POST", "/guilds/{guild_id}/templates", guild_id=guild_id),
@@ -53,8 +53,8 @@ class GuildTemplateEndpoints(EndpointMixin):
         guild_id: Snowflake,
         template_code: Snowflake,
         *,
-        name: str = Unset,
-        description: Optional[str] = Unset,
+        name: UnsetOr[str] = Unset,
+        description: UnsetOr[Optional[str]] = Unset,
     ):
         return self.request(
             Route(

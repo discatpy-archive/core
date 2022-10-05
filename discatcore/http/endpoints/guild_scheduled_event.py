@@ -7,7 +7,7 @@ from typing import Optional
 import discord_typings
 from discord_typings import Snowflake
 
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 from .core import EndpointMixin
 
@@ -16,7 +16,7 @@ __all__ = ("GuildScheduledEventEndpoints",)
 
 class GuildScheduledEventEndpoints(EndpointMixin):
     def list_scheduled_events_for_guild(
-        self, guild_id: Snowflake, *, with_user_count: bool = Unset
+        self, guild_id: Snowflake, *, with_user_count: UnsetOr[bool] = Unset
     ):
         return self.request(
             Route("GET", "/guilds/{guild_id}/scheduled-events", guild_id=guild_id),
@@ -27,15 +27,15 @@ class GuildScheduledEventEndpoints(EndpointMixin):
         self,
         guild_id: Snowflake,
         *,
-        channel_id: Snowflake = Unset,
-        entity_metadata: discord_typings.GuildScheduledEventEntityMetadata = Unset,
+        channel_id: UnsetOr[Snowflake] = Unset,
+        entity_metadata: UnsetOr[discord_typings.GuildScheduledEventEntityMetadata] = Unset,
         name: str,
         privacy_level: discord_typings.GuildScheduledEventPrivacyLevels,
         scheduled_start_time: str,
-        scheduled_end_time: str = Unset,
-        description: str = Unset,
+        scheduled_end_time: UnsetOr[str] = Unset,
+        description: UnsetOr[str] = Unset,
         entity_type: discord_typings.GuildScheduledEventEntityTypes,
-        image: str = Unset,
+        image: UnsetOr[str] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -59,7 +59,7 @@ class GuildScheduledEventEndpoints(EndpointMixin):
         guild_id: Snowflake,
         guild_scheduled_event_id: Snowflake,
         *,
-        with_user_count: bool = Unset,
+        with_user_count: UnsetOr[bool] = Unset,
     ):
         return self.request(
             Route(
@@ -76,16 +76,18 @@ class GuildScheduledEventEndpoints(EndpointMixin):
         guild_id: Snowflake,
         guild_scheduled_event_id: Snowflake,
         *,
-        channel_id: Snowflake = Unset,
-        entity_metadata: Optional[discord_typings.GuildScheduledEventEntityMetadata] = Unset,
-        name: str = Unset,
-        privacy_level: discord_typings.GuildScheduledEventPrivacyLevels = Unset,
-        scheduled_start_time: str = Unset,
-        scheduled_end_time: str = Unset,
-        description: Optional[str] = Unset,
-        entity_type: discord_typings.GuildScheduledEventEntityTypes = Unset,
-        image: str = Unset,
-        status: discord_typings.GuildScheduledEventStatus = Unset,
+        channel_id: UnsetOr[Snowflake] = Unset,
+        entity_metadata: UnsetOr[
+            Optional[discord_typings.GuildScheduledEventEntityMetadata]
+        ] = Unset,
+        name: UnsetOr[str] = Unset,
+        privacy_level: UnsetOr[discord_typings.GuildScheduledEventPrivacyLevels] = Unset,
+        scheduled_start_time: UnsetOr[str] = Unset,
+        scheduled_end_time: UnsetOr[str] = Unset,
+        description: UnsetOr[Optional[str]] = Unset,
+        entity_type: UnsetOr[discord_typings.GuildScheduledEventEntityTypes] = Unset,
+        image: UnsetOr[str] = Unset,
+        status: UnsetOr[discord_typings.GuildScheduledEventStatus] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -129,8 +131,8 @@ class GuildScheduledEventEndpoints(EndpointMixin):
         *,
         limit: int = 100,
         with_member: bool = False,
-        before: Snowflake = Unset,
-        after: Snowflake = Unset,
+        before: UnsetOr[Snowflake] = Unset,
+        after: UnsetOr[Snowflake] = Unset,
     ):
         return self.request(
             Route(

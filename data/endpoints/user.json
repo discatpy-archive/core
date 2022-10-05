@@ -22,11 +22,11 @@
             "url": "/users/@me",
             "json-parameters": {
                 "username": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "avatar": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ]
             }
@@ -36,11 +36,11 @@
             "url": "/users/@me/guilds",
             "query-parameters": {
                 "before": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "after": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "limit": [

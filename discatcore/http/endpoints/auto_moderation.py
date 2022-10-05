@@ -7,7 +7,7 @@ from typing import Optional
 import discord_typings
 from discord_typings import Snowflake
 
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 from .core import EndpointMixin
 
@@ -37,11 +37,11 @@ class AutoModerationEndpoints(EndpointMixin):
         name: str,
         event_type: discord_typings.AutoModerationEventTypes,
         trigger_type: discord_typings.AutoModerationTriggerTypes,
-        trigger_metadata: discord_typings.AutoModerationTriggerMetadataData = Unset,
+        trigger_metadata: UnsetOr[discord_typings.AutoModerationTriggerMetadataData] = Unset,
         actions: list[discord_typings.AutoModerationActionData],
-        enabled: bool = Unset,
-        exempt_roles: list[Snowflake] = Unset,
-        exempt_channels: list[Snowflake] = Unset,
+        enabled: UnsetOr[bool] = Unset,
+        exempt_roles: UnsetOr[list[Snowflake]] = Unset,
+        exempt_channels: UnsetOr[list[Snowflake]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -64,13 +64,13 @@ class AutoModerationEndpoints(EndpointMixin):
         guild_id: Snowflake,
         auto_moderation_rule_id: Snowflake,
         *,
-        name: str = Unset,
-        event_type: discord_typings.AutoModerationEventTypes = Unset,
-        trigger_metadata: discord_typings.AutoModerationTriggerMetadataData = Unset,
-        actions: list[discord_typings.AutoModerationActionData] = Unset,
-        enabled: bool = Unset,
-        exempt_roles: list[Snowflake] = Unset,
-        exempt_channels: list[Snowflake] = Unset,
+        name: UnsetOr[str] = Unset,
+        event_type: UnsetOr[discord_typings.AutoModerationEventTypes] = Unset,
+        trigger_metadata: UnsetOr[discord_typings.AutoModerationTriggerMetadataData] = Unset,
+        actions: UnsetOr[list[discord_typings.AutoModerationActionData]] = Unset,
+        enabled: UnsetOr[bool] = Unset,
+        exempt_roles: UnsetOr[list[Snowflake]] = Unset,
+        exempt_channels: UnsetOr[list[Snowflake]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(

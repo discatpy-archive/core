@@ -1,29 +1,29 @@
 # SPDX-License-Identifier: MIT
 
-from typing import Any, NoReturn
+from enum import Enum, auto
+from typing import Literal, TypeVar, Union
 
 from discord_typings import Snowflake
 
 __all__ = (
     "Snowflake",
     "Unset",
+    "UnsetOr",
 )
 
 
-class _UnsetDefine:
-    __slots__ = ()
-    __name__ = "Unset"
+class _UnsetEnum(Enum):
+    Unset = auto()
 
-    def __eq__(self, other: Any) -> NoReturn:
-        raise NotImplementedError("You cannot compare unset")
+    def __bool__(self) -> bool:
+        return False
 
-    def __repr__(self):
-        return self.__class__.__name__
+    def __repr__(self) -> str:
+        return "Unset"
 
     __str__ = __repr__
 
-    def __bool__(self) -> NoReturn:
-        raise NotImplementedError("Unset is not set, it is not True, False, or None.")
 
-
-Unset: Any = _UnsetDefine()
+T = TypeVar("T")
+Unset: Literal[_UnsetEnum.Unset] = _UnsetEnum.Unset
+UnsetOr = Union[T, _UnsetEnum]

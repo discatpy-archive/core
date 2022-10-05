@@ -13,43 +13,43 @@
             "json-parameters": {
                 "name": "str",
                 "icon": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "verification_level": [
-                    "discord_typings.VerificationLevels",
+                    "UnsetOr[discord_typings.VerificationLevels]",
                     "Unset"
                 ],
                 "default_message_notifications": [
-                    "discord_typings.DefaultMessageNotificationLevels",
+                    "UnsetOr[discord_typings.DefaultMessageNotificationLevels]",
                     "Unset"
                 ],
                 "explicit_content_filter": [
-                    "discord_typings.ExplicitContentFilterLevels",
+                    "UnsetOr[discord_typings.ExplicitContentFilterLevels]",
                     "Unset"
                 ],
                 "roles": [
-                    "list[discord_typings.RoleData]",
+                    "UnsetOr[list[discord_typings.RoleData]]",
                     "Unset"
                 ],
                 "channels": [
-                    "list[discord_typings.PartialChannelData]",
+                    "UnsetOr[list[discord_typings.PartialChannelData]]",
                     "Unset"
                 ],
                 "afk_channel_id": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "afk_timeout": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ],
                 "system_channel_id": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "system_channel_flags": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ]
             }
@@ -82,79 +82,79 @@
             },
             "json-parameters": {
                 "name": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "icon": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "verification_level": [
-                    "Optional[discord_typings.VerificationLevels]",
+                    "UnsetOr[Optional[discord_typings.VerificationLevels]]",
                     "Unset"
                 ],
                 "default_message_notifications": [
-                    "Optional[discord_typings.DefaultMessageNotificationLevels]",
+                    "UnsetOr[Optional[discord_typings.DefaultMessageNotificationLevels]]",
                     "Unset"
                 ],
                 "explicit_content_filter": [
-                    "Optional[discord_typings.ExplicitContentFilterLevels]",
+                    "UnsetOr[Optional[discord_typings.ExplicitContentFilterLevels]]",
                     "Unset"
                 ],
                 "afk_channel_id": [
-                    "Optional[Snowflake]",
+                    "UnsetOr[Optional[Snowflake]]",
                     "Unset"
                 ],
                 "afk_timeout": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ],
                 "system_channel_id": [
-                    "Optional[Snowflake]",
+                    "UnsetOr[Optional[Snowflake]]",
                     "Unset"
                 ],
                 "system_channel_flags": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ],
                 "owner_id": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "splash": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "discovery_splash": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "banner": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "rules_channel_id": [
-                    "Optional[Snowflake]",
+                    "UnsetOr[Optional[Snowflake]]",
                     "Unset"
                 ],
                 "public_updates_channel_id": [
-                    "Optional[Snowflake]",
+                    "UnsetOr[Optional[Snowflake]]",
                     "Unset"
                 ],
                 "preferred_locale": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "features": [
-                    "list[str]",
+                    "UnsetOr[list[str]]",
                     "Unset"
                 ],
                 "description": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "premium_progress_bar_enabled": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ]
             },
@@ -183,63 +183,63 @@
             "json-parameters": {
                 "name": "str",
                 "type": [
-                    "Optional[discord_typings.ChannelTypes]",
+                    "UnsetOr[Optional[discord_typings.ChannelTypes]]",
                     "Unset"
                 ],
                 "topic": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "bitrate": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
                 "user_limit": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
                 "rate_limit_per_user": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
                 "position": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
                 "permission_overwrites": [
-                    "Optional[list[discord_typings.PermissionOverwriteData]]",
+                    "UnsetOr[Optional[list[discord_typings.PermissionOverwriteData]]]",
                     "Unset"
                 ],
                 "parent_id": [
-                    "Optional[Snowflake]",
+                    "UnsetOr[Optional[Snowflake]]",
                     "Unset"
                 ],
                 "nsfw": [
-                    "Optional[bool]",
+                    "UnsetOr[Optional[bool]]",
                     "Unset"
                 ],
                 "rtc_region": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "video_quality_mode": [
-                    "Optional[discord_typings.VideoQualityModes]",
+                    "UnsetOr[Optional[discord_typings.VideoQualityModes]]",
                     "Unset"
                 ],
                 "default_auto_archive_duration": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
                 "default_reaction_emoji": [
-                    "Optional[discord_typings.DefaultReactionData]",
+                    "UnsetOr[Optional[discord_typings.DefaultReactionData]]",
                     "Unset"
                 ],
                 "available_tags": [
-                    "Optional[list[discord_typings.ForumTagData]]",
+                    "UnsetOr[Optional[list[discord_typings.ForumTagData]]]",
                     "Unset"
                 ],
                 "default_sort_order": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ]
             },
@@ -254,15 +254,15 @@
             "json-parameters": {
                 "id": "Snowflake",
                 "position": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
                 "lock_permissions": [
-                    "Optional[bool]",
+                    "UnsetOr[Optional[bool]]",
                     "Unset"
                 ],
                 "parent_id": [
-                    "Optional[Snowflake]",
+                    "UnsetOr[Optional[Snowflake]]",
                     "Unset"
                 ]
             }
@@ -294,7 +294,7 @@
                     "1"
                 ],
                 "after": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ]
             }
@@ -322,10 +322,22 @@
             },
             "json-parameters": {
                 "access_token": "str",
-                "nick": ["str", "Unset"],
-                "roles": ["list[Snowflake]", "Unset"],
-                "mute": ["bool", "Unset"],
-                "deaf": ["bool", "Unset"]
+                "nick": [
+                    "UnsetOr[str]",
+                    "Unset"
+                ],
+                "roles": [
+                    "UnsetOr[list[Snowflake]]",
+                    "Unset"
+                ],
+                "mute": [
+                    "UnsetOr[bool]",
+                    "Unset"
+                ],
+                "deaf": [
+                    "UnsetOr[bool]",
+                    "Unset"
+                ]
             }
         },
         "modify_guild_member": {
@@ -337,27 +349,27 @@
             },
             "json-parameters": {
                 "nick": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "roles": [
-                    "Optional[list[Snowflake]]",
+                    "UnsetOr[Optional[list[Snowflake]]]",
                     "Unset"
                 ],
                 "mute": [
-                    "Optional[bool]",
+                    "UnsetOr[Optional[bool]]",
                     "Unset"
                 ],
                 "deaf": [
-                    "Optional[bool]",
+                    "UnsetOr[Optional[bool]]",
                     "Unset"
                 ],
                 "channel_id": [
-                    "Optional[Snowflake]",
+                    "UnsetOr[Optional[Snowflake]]",
                     "Unset"
                 ],
                 "communication_disabled_until": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ]
             },
@@ -371,7 +383,7 @@
             },
             "json-parameters": {
                 "nick": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ]
             },
@@ -418,11 +430,11 @@
                     "1000"
                 ],
                 "before": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "after": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ]
             }
@@ -444,7 +456,7 @@
             },
             "json-parameters": {
                 "delete_message_seconds": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ]
             },
@@ -474,31 +486,31 @@
             },
             "json-parameters": {
                 "name": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "permissions": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "color": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ],
                 "hoist": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ],
                 "icon": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "unicode_emoji": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "mentionable": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ]
             },
@@ -513,7 +525,7 @@
             "json-parameters": {
                 "id": "Snowflake",
                 "position": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ]
             },
@@ -528,31 +540,31 @@
             },
             "json-parameters": {
                 "name": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "permissions": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "color": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
                 "hoist": [
-                    "Optional[bool]",
+                    "UnsetOr[Optional[bool]]",
                     "Unset"
                 ],
                 "icon": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "unicode_emoji": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "mentionable": [
-                    "Optional[bool]",
+                    "UnsetOr[Optional[bool]]",
                     "Unset"
                 ]
             },
@@ -590,7 +602,7 @@
                     "7"
                 ],
                 "include_roles": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ]
             }
@@ -611,7 +623,7 @@
                     "True"
                 ],
                 "include_roles": [
-                    "list[Snowflake]",
+                    "UnsetOr[list[Snowflake]]",
                     "Unset"
                 ]
             },
@@ -662,11 +674,11 @@
             },
             "json-parameters": {
                 "enabled": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ],
                 "channel_id": [
-                    "Optional[Snowflake]",
+                    "UnsetOr[Optional[Snowflake]]",
                     "Unset"
                 ]
             },
@@ -694,7 +706,7 @@
             },
             "query-parameters": {
                 "style": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ]
             }
@@ -714,15 +726,15 @@
             },
             "json-parameters": {
                 "enabled": [
-                    "Optional[bool]",
+                    "UnsetOr[Optional[bool]]",
                     "Unset"
                 ],
                 "welcome_channels": [
-                    "Optional[list[discord_typings.WelcomeChannelData]]",
+                    "UnsetOr[Optional[list[discord_typings.WelcomeChannelData]]]",
                     "Unset"
                 ],
                 "description": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ]
             },
@@ -736,15 +748,15 @@
             },
             "json-parameters": {
                 "channel_id": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "suppress": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ],
                 "request_to_speak_timestamp": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ]
             }
@@ -759,7 +771,7 @@
             "json-parameters": {
                 "channel_id": "Snowflake",
                 "suppress": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ]
             }

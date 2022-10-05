@@ -7,7 +7,7 @@ from typing import Optional
 import discord_typings
 from discord_typings import Snowflake
 
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 from .core import EndpointMixin
 
@@ -19,16 +19,18 @@ class GuildEndpoints(EndpointMixin):
         self,
         *,
         name: str,
-        icon: str = Unset,
-        verification_level: discord_typings.VerificationLevels = Unset,
-        default_message_notifications: discord_typings.DefaultMessageNotificationLevels = Unset,
-        explicit_content_filter: discord_typings.ExplicitContentFilterLevels = Unset,
-        roles: list[discord_typings.RoleData] = Unset,
-        channels: list[discord_typings.PartialChannelData] = Unset,
-        afk_channel_id: Snowflake = Unset,
-        afk_timeout: int = Unset,
-        system_channel_id: Snowflake = Unset,
-        system_channel_flags: int = Unset,
+        icon: UnsetOr[str] = Unset,
+        verification_level: UnsetOr[discord_typings.VerificationLevels] = Unset,
+        default_message_notifications: UnsetOr[
+            discord_typings.DefaultMessageNotificationLevels
+        ] = Unset,
+        explicit_content_filter: UnsetOr[discord_typings.ExplicitContentFilterLevels] = Unset,
+        roles: UnsetOr[list[discord_typings.RoleData]] = Unset,
+        channels: UnsetOr[list[discord_typings.PartialChannelData]] = Unset,
+        afk_channel_id: UnsetOr[Snowflake] = Unset,
+        afk_timeout: UnsetOr[int] = Unset,
+        system_channel_id: UnsetOr[Snowflake] = Unset,
+        system_channel_flags: UnsetOr[int] = Unset,
     ):
         return self.request(
             Route("POST", "/guilds"),
@@ -60,27 +62,29 @@ class GuildEndpoints(EndpointMixin):
         self,
         guild_id: Snowflake,
         *,
-        name: str = Unset,
-        icon: Optional[str] = Unset,
-        verification_level: Optional[discord_typings.VerificationLevels] = Unset,
-        default_message_notifications: Optional[
-            discord_typings.DefaultMessageNotificationLevels
+        name: UnsetOr[str] = Unset,
+        icon: UnsetOr[Optional[str]] = Unset,
+        verification_level: UnsetOr[Optional[discord_typings.VerificationLevels]] = Unset,
+        default_message_notifications: UnsetOr[
+            Optional[discord_typings.DefaultMessageNotificationLevels]
         ] = Unset,
-        explicit_content_filter: Optional[discord_typings.ExplicitContentFilterLevels] = Unset,
-        afk_channel_id: Optional[Snowflake] = Unset,
-        afk_timeout: int = Unset,
-        system_channel_id: Optional[Snowflake] = Unset,
-        system_channel_flags: int = Unset,
-        owner_id: Snowflake = Unset,
-        splash: Optional[str] = Unset,
-        discovery_splash: Optional[str] = Unset,
-        banner: Optional[str] = Unset,
-        rules_channel_id: Optional[Snowflake] = Unset,
-        public_updates_channel_id: Optional[Snowflake] = Unset,
-        preferred_locale: Optional[str] = Unset,
-        features: list[str] = Unset,
-        description: Optional[str] = Unset,
-        premium_progress_bar_enabled: bool = Unset,
+        explicit_content_filter: UnsetOr[
+            Optional[discord_typings.ExplicitContentFilterLevels]
+        ] = Unset,
+        afk_channel_id: UnsetOr[Optional[Snowflake]] = Unset,
+        afk_timeout: UnsetOr[int] = Unset,
+        system_channel_id: UnsetOr[Optional[Snowflake]] = Unset,
+        system_channel_flags: UnsetOr[int] = Unset,
+        owner_id: UnsetOr[Snowflake] = Unset,
+        splash: UnsetOr[Optional[str]] = Unset,
+        discovery_splash: UnsetOr[Optional[str]] = Unset,
+        banner: UnsetOr[Optional[str]] = Unset,
+        rules_channel_id: UnsetOr[Optional[Snowflake]] = Unset,
+        public_updates_channel_id: UnsetOr[Optional[Snowflake]] = Unset,
+        preferred_locale: UnsetOr[Optional[str]] = Unset,
+        features: UnsetOr[list[str]] = Unset,
+        description: UnsetOr[Optional[str]] = Unset,
+        premium_progress_bar_enabled: UnsetOr[bool] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -120,21 +124,23 @@ class GuildEndpoints(EndpointMixin):
         guild_id: Snowflake,
         *,
         name: str,
-        type: Optional[discord_typings.ChannelTypes] = Unset,
-        topic: Optional[str] = Unset,
-        bitrate: Optional[int] = Unset,
-        user_limit: Optional[int] = Unset,
-        rate_limit_per_user: Optional[int] = Unset,
-        position: Optional[int] = Unset,
-        permission_overwrites: Optional[list[discord_typings.PermissionOverwriteData]] = Unset,
-        parent_id: Optional[Snowflake] = Unset,
-        nsfw: Optional[bool] = Unset,
-        rtc_region: Optional[str] = Unset,
-        video_quality_mode: Optional[discord_typings.VideoQualityModes] = Unset,
-        default_auto_archive_duration: Optional[int] = Unset,
-        default_reaction_emoji: Optional[discord_typings.DefaultReactionData] = Unset,
-        available_tags: Optional[list[discord_typings.ForumTagData]] = Unset,
-        default_sort_order: Optional[int] = Unset,
+        type: UnsetOr[Optional[discord_typings.ChannelTypes]] = Unset,
+        topic: UnsetOr[Optional[str]] = Unset,
+        bitrate: UnsetOr[Optional[int]] = Unset,
+        user_limit: UnsetOr[Optional[int]] = Unset,
+        rate_limit_per_user: UnsetOr[Optional[int]] = Unset,
+        position: UnsetOr[Optional[int]] = Unset,
+        permission_overwrites: UnsetOr[
+            Optional[list[discord_typings.PermissionOverwriteData]]
+        ] = Unset,
+        parent_id: UnsetOr[Optional[Snowflake]] = Unset,
+        nsfw: UnsetOr[Optional[bool]] = Unset,
+        rtc_region: UnsetOr[Optional[str]] = Unset,
+        video_quality_mode: UnsetOr[Optional[discord_typings.VideoQualityModes]] = Unset,
+        default_auto_archive_duration: UnsetOr[Optional[int]] = Unset,
+        default_reaction_emoji: UnsetOr[Optional[discord_typings.DefaultReactionData]] = Unset,
+        available_tags: UnsetOr[Optional[list[discord_typings.ForumTagData]]] = Unset,
+        default_sort_order: UnsetOr[Optional[int]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -165,9 +171,9 @@ class GuildEndpoints(EndpointMixin):
         guild_id: Snowflake,
         *,
         id: Snowflake,
-        position: Optional[int] = Unset,
-        lock_permissions: Optional[bool] = Unset,
-        parent_id: Optional[Snowflake] = Unset,
+        position: UnsetOr[Optional[int]] = Unset,
+        lock_permissions: UnsetOr[Optional[bool]] = Unset,
+        parent_id: UnsetOr[Optional[Snowflake]] = Unset,
     ):
         return self.request(
             Route("PATCH", "/guilds/{guild_id}/channels", guild_id=guild_id),
@@ -187,7 +193,9 @@ class GuildEndpoints(EndpointMixin):
             Route("GET", "/guilds/{guild_id}/members/{user_id}", guild_id=guild_id, user_id=user_id)
         )
 
-    def list_guild_members(self, guild_id: Snowflake, *, limit: int = 1, after: Snowflake = Unset):
+    def list_guild_members(
+        self, guild_id: Snowflake, *, limit: int = 1, after: UnsetOr[Snowflake] = Unset
+    ):
         return self.request(
             Route("GET", "/guilds/{guild_id}/members", guild_id=guild_id),
             query_params={"limit": limit, "after": after},
@@ -205,10 +213,10 @@ class GuildEndpoints(EndpointMixin):
         user_id: Snowflake,
         *,
         access_token: str,
-        nick: str = Unset,
-        roles: list[Snowflake] = Unset,
-        mute: bool = Unset,
-        deaf: bool = Unset,
+        nick: UnsetOr[str] = Unset,
+        roles: UnsetOr[list[Snowflake]] = Unset,
+        mute: UnsetOr[bool] = Unset,
+        deaf: UnsetOr[bool] = Unset,
     ):
         return self.request(
             Route(
@@ -228,12 +236,12 @@ class GuildEndpoints(EndpointMixin):
         guild_id: Snowflake,
         user_id: Snowflake,
         *,
-        nick: Optional[str] = Unset,
-        roles: Optional[list[Snowflake]] = Unset,
-        mute: Optional[bool] = Unset,
-        deaf: Optional[bool] = Unset,
-        channel_id: Optional[Snowflake] = Unset,
-        communication_disabled_until: Optional[str] = Unset,
+        nick: UnsetOr[Optional[str]] = Unset,
+        roles: UnsetOr[Optional[list[Snowflake]]] = Unset,
+        mute: UnsetOr[Optional[bool]] = Unset,
+        deaf: UnsetOr[Optional[bool]] = Unset,
+        channel_id: UnsetOr[Optional[Snowflake]] = Unset,
+        communication_disabled_until: UnsetOr[Optional[str]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -252,7 +260,11 @@ class GuildEndpoints(EndpointMixin):
         )
 
     def modify_current_member(
-        self, guild_id: Snowflake, *, nick: Optional[str] = Unset, reason: Optional[str] = None
+        self,
+        guild_id: Snowflake,
+        *,
+        nick: UnsetOr[Optional[str]] = Unset,
+        reason: Optional[str] = None,
     ):
         return self.request(
             Route("PATCH", "/guilds/{guild_id}/members/@me", guild_id=guild_id),
@@ -311,8 +323,8 @@ class GuildEndpoints(EndpointMixin):
         guild_id: Snowflake,
         *,
         limit: int = 1000,
-        before: Snowflake = Unset,
-        after: Snowflake = Unset,
+        before: UnsetOr[Snowflake] = Unset,
+        after: UnsetOr[Snowflake] = Unset,
     ):
         return self.request(
             Route("GET", "/guilds/{guild_id}/bans", guild_id=guild_id),
@@ -329,7 +341,7 @@ class GuildEndpoints(EndpointMixin):
         guild_id: Snowflake,
         user_id: Snowflake,
         *,
-        delete_message_seconds: int = Unset,
+        delete_message_seconds: UnsetOr[int] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -355,13 +367,13 @@ class GuildEndpoints(EndpointMixin):
         self,
         guild_id: Snowflake,
         *,
-        name: str = Unset,
-        permissions: str = Unset,
-        color: int = Unset,
-        hoist: bool = Unset,
-        icon: Optional[str] = Unset,
-        unicode_emoji: Optional[str] = Unset,
-        mentionable: bool = Unset,
+        name: UnsetOr[str] = Unset,
+        permissions: UnsetOr[str] = Unset,
+        color: UnsetOr[int] = Unset,
+        hoist: UnsetOr[bool] = Unset,
+        icon: UnsetOr[Optional[str]] = Unset,
+        unicode_emoji: UnsetOr[Optional[str]] = Unset,
+        mentionable: UnsetOr[bool] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -383,7 +395,7 @@ class GuildEndpoints(EndpointMixin):
         guild_id: Snowflake,
         *,
         id: Snowflake,
-        position: Optional[int] = Unset,
+        position: UnsetOr[Optional[int]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -397,13 +409,13 @@ class GuildEndpoints(EndpointMixin):
         guild_id: Snowflake,
         role_id: Snowflake,
         *,
-        name: Optional[str] = Unset,
-        permissions: Optional[str] = Unset,
-        color: Optional[int] = Unset,
-        hoist: Optional[bool] = Unset,
-        icon: Optional[str] = Unset,
-        unicode_emoji: Optional[str] = Unset,
-        mentionable: Optional[bool] = Unset,
+        name: UnsetOr[Optional[str]] = Unset,
+        permissions: UnsetOr[Optional[str]] = Unset,
+        color: UnsetOr[Optional[int]] = Unset,
+        hoist: UnsetOr[Optional[bool]] = Unset,
+        icon: UnsetOr[Optional[str]] = Unset,
+        unicode_emoji: UnsetOr[Optional[str]] = Unset,
+        mentionable: UnsetOr[Optional[bool]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -442,7 +454,7 @@ class GuildEndpoints(EndpointMixin):
         )
 
     def get_guild_prune_count(
-        self, guild_id: Snowflake, *, days: int = 7, include_roles: str = Unset
+        self, guild_id: Snowflake, *, days: int = 7, include_roles: UnsetOr[str] = Unset
     ):
         return self.request(
             Route("GET", "/guilds/{guild_id}/prune", guild_id=guild_id),
@@ -455,7 +467,7 @@ class GuildEndpoints(EndpointMixin):
         *,
         days: int = 7,
         compute_prune_count: bool = True,
-        include_roles: list[Snowflake] = Unset,
+        include_roles: UnsetOr[list[Snowflake]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -497,8 +509,8 @@ class GuildEndpoints(EndpointMixin):
         self,
         guild_id: Snowflake,
         *,
-        enabled: bool = Unset,
-        channel_id: Optional[Snowflake] = Unset,
+        enabled: UnsetOr[bool] = Unset,
+        channel_id: UnsetOr[Optional[Snowflake]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -513,7 +525,7 @@ class GuildEndpoints(EndpointMixin):
     def get_guild_vanity_url(self, guild_id: Snowflake):
         return self.request(Route("GET", "/guilds/{guild_id}/vanity-url", guild_id=guild_id))
 
-    def get_guild_widget_image(self, guild_id: Snowflake, *, style: str = Unset):
+    def get_guild_widget_image(self, guild_id: Snowflake, *, style: UnsetOr[str] = Unset):
         return self.request(
             Route("GET", "/guilds/{guild_id}/widget.png", guild_id=guild_id),
             query_params={"style": style},
@@ -526,9 +538,9 @@ class GuildEndpoints(EndpointMixin):
         self,
         guild_id: Snowflake,
         *,
-        enabled: Optional[bool] = Unset,
-        welcome_channels: Optional[list[discord_typings.WelcomeChannelData]] = Unset,
-        description: Optional[str] = Unset,
+        enabled: UnsetOr[Optional[bool]] = Unset,
+        welcome_channels: UnsetOr[Optional[list[discord_typings.WelcomeChannelData]]] = Unset,
+        description: UnsetOr[Optional[str]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -545,9 +557,9 @@ class GuildEndpoints(EndpointMixin):
         self,
         guild_id: Snowflake,
         *,
-        channel_id: Snowflake = Unset,
-        suppress: bool = Unset,
-        request_to_speak_timestamp: Optional[str] = Unset,
+        channel_id: UnsetOr[Snowflake] = Unset,
+        suppress: UnsetOr[bool] = Unset,
+        request_to_speak_timestamp: UnsetOr[Optional[str]] = Unset,
     ):
         return self.request(
             Route("PATCH", "/guilds/{guild_id}/voice-states/@me", guild_id=guild_id),
@@ -564,7 +576,7 @@ class GuildEndpoints(EndpointMixin):
         user_id: Snowflake,
         *,
         channel_id: Snowflake,
-        suppress: bool = Unset,
+        suppress: UnsetOr[bool] = Unset,
     ):
         return self.request(
             Route(

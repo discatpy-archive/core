@@ -6,7 +6,7 @@ from typing import Optional
 
 from discord_typings import Snowflake
 
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 from .core import EndpointMixin
 
@@ -44,8 +44,8 @@ class EmojiEndpoints(EndpointMixin):
         guild_id: Snowflake,
         emoji_id: Snowflake,
         *,
-        name: str = Unset,
-        roles: list[Snowflake] = Unset,
+        name: UnsetOr[str] = Unset,
+        roles: UnsetOr[list[Snowflake]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(

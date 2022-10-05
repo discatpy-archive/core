@@ -8,7 +8,7 @@ import discord_typings
 from discord_typings import Snowflake
 
 from ...file import BasicFile
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 from .core import EndpointMixin
 
@@ -22,8 +22,8 @@ class InteractionEndpoints(EndpointMixin):
         interaction_token: str,
         *,
         type: discord_typings.InteractionCallbackTypes,
-        data: discord_typings.InteractionCallbackData = Unset,
-        files: list[BasicFile] = Unset,
+        data: UnsetOr[discord_typings.InteractionCallbackData] = Unset,
+        files: UnsetOr[list[BasicFile]] = Unset,
     ):
         return self.request(
             Route(
@@ -51,12 +51,12 @@ class InteractionEndpoints(EndpointMixin):
         application_id: Snowflake,
         interaction_token: str,
         *,
-        content: Optional[str] = Unset,
-        embeds: Optional[list[discord_typings.EmbedData]] = Unset,
-        allowed_mentions: Optional[discord_typings.AllowedMentionsData] = Unset,
-        components: Optional[list[discord_typings.ComponentData]] = Unset,
-        attachments: Optional[list[discord_typings.PartialAttachmentData]] = Unset,
-        files: list[BasicFile] = Unset,
+        content: UnsetOr[Optional[str]] = Unset,
+        embeds: UnsetOr[Optional[list[discord_typings.EmbedData]]] = Unset,
+        allowed_mentions: UnsetOr[Optional[discord_typings.AllowedMentionsData]] = Unset,
+        components: UnsetOr[Optional[list[discord_typings.ComponentData]]] = Unset,
+        attachments: UnsetOr[Optional[list[discord_typings.PartialAttachmentData]]] = Unset,
+        files: UnsetOr[list[BasicFile]] = Unset,
     ):
         return self.request(
             Route(
@@ -92,15 +92,15 @@ class InteractionEndpoints(EndpointMixin):
         application_id: Snowflake,
         interaction_token: str,
         *,
-        content: str = Unset,
-        tts: bool = Unset,
-        embeds: list[discord_typings.EmbedData] = Unset,
-        allowed_mentions: discord_typings.AllowedMentionsData = Unset,
-        components: list[discord_typings.ComponentData] = Unset,
-        attachments: list[discord_typings.PartialAttachmentData] = Unset,
-        flags: int = Unset,
-        thread_name: str = Unset,
-        files: list[BasicFile] = Unset,
+        content: UnsetOr[str] = Unset,
+        tts: UnsetOr[bool] = Unset,
+        embeds: UnsetOr[list[discord_typings.EmbedData]] = Unset,
+        allowed_mentions: UnsetOr[discord_typings.AllowedMentionsData] = Unset,
+        components: UnsetOr[list[discord_typings.ComponentData]] = Unset,
+        attachments: UnsetOr[list[discord_typings.PartialAttachmentData]] = Unset,
+        flags: UnsetOr[int] = Unset,
+        thread_name: UnsetOr[str] = Unset,
+        files: UnsetOr[list[BasicFile]] = Unset,
     ):
         return self.request(
             Route(
@@ -141,12 +141,12 @@ class InteractionEndpoints(EndpointMixin):
         interaction_token: str,
         message_id: Snowflake,
         *,
-        content: Optional[str] = Unset,
-        embeds: Optional[list[discord_typings.EmbedData]] = Unset,
-        allowed_mentions: Optional[discord_typings.AllowedMentionsData] = Unset,
-        components: Optional[list[discord_typings.ComponentData]] = Unset,
-        attachments: Optional[list[discord_typings.PartialAttachmentData]] = Unset,
-        files: list[BasicFile] = Unset,
+        content: UnsetOr[Optional[str]] = Unset,
+        embeds: UnsetOr[Optional[list[discord_typings.EmbedData]]] = Unset,
+        allowed_mentions: UnsetOr[Optional[discord_typings.AllowedMentionsData]] = Unset,
+        components: UnsetOr[Optional[list[discord_typings.ComponentData]]] = Unset,
+        attachments: UnsetOr[Optional[list[discord_typings.PartialAttachmentData]]] = Unset,
+        files: UnsetOr[list[BasicFile]] = Unset,
     ):
         return self.request(
             Route(

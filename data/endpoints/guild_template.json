@@ -22,7 +22,7 @@
             "json-parameters": {
                 "name": "str",
                 "icon": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ]
             }
@@ -43,7 +43,7 @@
             "json-parameters": {
                 "name": "str",
                 "description": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ]
             }
@@ -65,11 +65,11 @@
             },
             "json-parameters": {
                 "name": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "description": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ]
             }

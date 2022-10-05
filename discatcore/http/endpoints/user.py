@@ -6,7 +6,7 @@ from typing import Optional
 
 from discord_typings import Snowflake
 
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 from .core import EndpointMixin
 
@@ -20,13 +20,19 @@ class UserEndpoints(EndpointMixin):
     def get_user(self, user_id: Snowflake):
         return self.request(Route("GET", "/users/{user_id}", user_id=user_id))
 
-    def modify_current_user(self, *, username: str = Unset, avatar: Optional[str] = Unset):
+    def modify_current_user(
+        self, *, username: UnsetOr[str] = Unset, avatar: UnsetOr[Optional[str]] = Unset
+    ):
         return self.request(
             Route("PATCH", "/users/@me"), json_params={"username": username, "avatar": avatar}
         )
 
     def get_current_user_guilds(
-        self, *, before: Snowflake = Unset, after: Snowflake = Unset, limit: int = 200
+        self,
+        *,
+        before: UnsetOr[Snowflake] = Unset,
+        after: UnsetOr[Snowflake] = Unset,
+        limit: int = 200,
     ):
         return self.request(
             Route("GET", "/users/@me/guilds"),

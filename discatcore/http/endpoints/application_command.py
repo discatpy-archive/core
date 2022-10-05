@@ -7,7 +7,7 @@ from typing import Optional
 import discord_typings
 from discord_typings import Snowflake
 
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 from .core import EndpointMixin
 
@@ -16,7 +16,7 @@ __all__ = ("ApplicationCommandEndpoints",)
 
 class ApplicationCommandEndpoints(EndpointMixin):
     def get_global_application_commands(
-        self, application_id: Snowflake, *, with_localizations: bool = Unset
+        self, application_id: Snowflake, *, with_localizations: UnsetOr[bool] = Unset
     ):
         return self.request(
             Route("GET", "/applications/{application_id}/commands", application_id=application_id),
@@ -28,12 +28,12 @@ class ApplicationCommandEndpoints(EndpointMixin):
         application_id: Snowflake,
         *,
         name: str,
-        name_localizations: Optional[dict[discord_typings.Locales, str]] = Unset,
+        name_localizations: UnsetOr[Optional[dict[discord_typings.Locales, str]]] = Unset,
         description: str,
-        description_localizations: Optional[dict[discord_typings.Locales, str]] = Unset,
-        options: list[discord_typings.ApplicationCommandOptionData] = Unset,
-        default_member_permissions: Optional[str] = Unset,
-        dm_permission: Optional[bool] = Unset,
+        description_localizations: UnsetOr[Optional[dict[discord_typings.Locales, str]]] = Unset,
+        options: UnsetOr[list[discord_typings.ApplicationCommandOptionData]] = Unset,
+        default_member_permissions: UnsetOr[Optional[str]] = Unset,
+        dm_permission: UnsetOr[Optional[bool]] = Unset,
         type: discord_typings.ApplicationCommandTypes = 1,
     ):
         return self.request(
@@ -65,13 +65,13 @@ class ApplicationCommandEndpoints(EndpointMixin):
         application_id: Snowflake,
         command_id: Snowflake,
         *,
-        name: str = Unset,
-        name_localizations: Optional[dict[discord_typings.Locales, str]] = Unset,
-        description: str = Unset,
-        description_localizations: Optional[dict[discord_typings.Locales, str]] = Unset,
-        options: list[discord_typings.ApplicationCommandOptionData] = Unset,
-        default_member_permissions: Optional[str] = Unset,
-        dm_permission: Optional[bool] = Unset,
+        name: UnsetOr[str] = Unset,
+        name_localizations: UnsetOr[Optional[dict[discord_typings.Locales, str]]] = Unset,
+        description: UnsetOr[str] = Unset,
+        description_localizations: UnsetOr[Optional[dict[discord_typings.Locales, str]]] = Unset,
+        options: UnsetOr[list[discord_typings.ApplicationCommandOptionData]] = Unset,
+        default_member_permissions: UnsetOr[Optional[str]] = Unset,
+        dm_permission: UnsetOr[Optional[bool]] = Unset,
     ):
         return self.request(
             Route(
@@ -110,7 +110,11 @@ class ApplicationCommandEndpoints(EndpointMixin):
         )
 
     def get_guild_application_commands(
-        self, application_id: Snowflake, guild_id: Snowflake, *, with_localizations: bool = Unset
+        self,
+        application_id: Snowflake,
+        guild_id: Snowflake,
+        *,
+        with_localizations: UnsetOr[bool] = Unset,
     ):
         return self.request(
             Route(
@@ -128,12 +132,12 @@ class ApplicationCommandEndpoints(EndpointMixin):
         guild_id: Snowflake,
         *,
         name: str,
-        name_localizations: Optional[dict[discord_typings.Locales, str]] = Unset,
+        name_localizations: UnsetOr[Optional[dict[discord_typings.Locales, str]]] = Unset,
         description: str,
-        description_localizations: Optional[dict[discord_typings.Locales, str]] = Unset,
-        options: list[discord_typings.ApplicationCommandOptionData] = Unset,
-        default_member_permissions: Optional[str] = Unset,
-        dm_permission: Optional[bool] = Unset,
+        description_localizations: UnsetOr[Optional[dict[discord_typings.Locales, str]]] = Unset,
+        options: UnsetOr[list[discord_typings.ApplicationCommandOptionData]] = Unset,
+        default_member_permissions: UnsetOr[Optional[str]] = Unset,
+        dm_permission: UnsetOr[Optional[bool]] = Unset,
         type: discord_typings.ApplicationCommandTypes = 1,
     ):
         return self.request(
@@ -174,13 +178,13 @@ class ApplicationCommandEndpoints(EndpointMixin):
         guild_id: Snowflake,
         command_id: Snowflake,
         *,
-        name: str = Unset,
-        name_localizations: Optional[dict[discord_typings.Locales, str]] = Unset,
-        description: str = Unset,
-        description_localizations: Optional[dict[discord_typings.Locales, str]] = Unset,
-        options: list[discord_typings.ApplicationCommandOptionData] = Unset,
-        default_member_permissions: Optional[str] = Unset,
-        dm_permission: Optional[bool] = Unset,
+        name: UnsetOr[str] = Unset,
+        name_localizations: UnsetOr[Optional[dict[discord_typings.Locales, str]]] = Unset,
+        description: UnsetOr[str] = Unset,
+        description_localizations: UnsetOr[Optional[dict[discord_typings.Locales, str]]] = Unset,
+        options: UnsetOr[list[discord_typings.ApplicationCommandOptionData]] = Unset,
+        default_member_permissions: UnsetOr[Optional[str]] = Unset,
+        dm_permission: UnsetOr[Optional[bool]] = Unset,
     ):
         return self.request(
             Route(

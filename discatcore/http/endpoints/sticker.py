@@ -7,7 +7,7 @@ from typing import Optional
 from discord_typings import Snowflake
 
 from ...file import BasicFile
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 from .core import EndpointMixin
 
@@ -53,9 +53,9 @@ class StickerEndpoints(EndpointMixin):
         guild_id: Snowflake,
         sticker_id: Snowflake,
         *,
-        name: str = Unset,
-        description: Optional[str] = Unset,
-        tags: str = Unset,
+        name: UnsetOr[str] = Unset,
+        description: UnsetOr[Optional[str]] = Unset,
+        tags: UnsetOr[str] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(

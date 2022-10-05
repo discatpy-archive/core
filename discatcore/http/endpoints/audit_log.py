@@ -5,7 +5,7 @@
 import discord_typings
 from discord_typings import Snowflake
 
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 from .core import EndpointMixin
 
@@ -17,10 +17,10 @@ class AuditLogEndpoints(EndpointMixin):
         self,
         guild_id: Snowflake,
         *,
-        user_id: Snowflake = Unset,
-        action_type: discord_typings.AuditLogEvents = Unset,
-        before: Snowflake = Unset,
-        limit: int = Unset,
+        user_id: UnsetOr[Snowflake] = Unset,
+        action_type: UnsetOr[discord_typings.AuditLogEvents] = Unset,
+        before: UnsetOr[Snowflake] = Unset,
+        limit: UnsetOr[int] = Unset,
     ):
         return self.request(
             Route("GET", "/guilds/{guild_id}/audit-logs", guild_id=guild_id),

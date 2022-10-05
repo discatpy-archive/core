@@ -14,15 +14,15 @@
             },
             "query-parameters": {
                 "with_counts": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ],
                 "with_expiration": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ],
                 "guild_scheduled_event_id": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ]
             }

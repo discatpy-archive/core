@@ -43,11 +43,11 @@
             },
             "json-parameters": {
                 "name": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "roles": [
-                    "list[Snowflake]",
+                    "UnsetOr[list[Snowflake]]",
                     "Unset"
                 ]
             },

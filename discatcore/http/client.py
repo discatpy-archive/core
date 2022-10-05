@@ -14,7 +14,7 @@ from discord_typings import GetGatewayBotData
 from .. import __version__
 from ..errors import BucketMigrated, HTTPException, UnsupportedAPIVersionWarning
 from ..file import BasicFile
-from ..types import Unset
+from ..types import Unset, UnsetOr
 from ..utils import dumps, loads
 from .endpoints import (
     ApplicationCommandEndpoints,
@@ -47,8 +47,8 @@ _log = logging.getLogger(__name__)
 
 @dataclass
 class _PreparedData:
-    json: Any = Unset
-    multipart_content: aiohttp.FormData = Unset
+    json: UnsetOr[Any] = Unset
+    multipart_content: UnsetOr[aiohttp.FormData] = Unset
 
 
 def _filter_dict_for_unset(d: dict[Any, Any]):
@@ -163,7 +163,9 @@ class HTTPClient(
             await self._session.close()
 
     @staticmethod
-    def _prepare_data(json: Union[dict[str, Any], list[Any]], files: list[BasicFile]):
+    def _prepare_data(
+        json: UnsetOr[Union[dict[str, Any], list[Any]]], files: UnsetOr[list[BasicFile]]
+    ):
         pd = _PreparedData()
 
         if json is not Unset and files is Unset:
@@ -200,9 +202,9 @@ class HTTPClient(
         route: Route,
         *,
         query_params: Optional[dict[str, Any]] = None,
-        json_params: Union[dict[str, Any], list[Any]] = Unset,
+        json_params: UnsetOr[Union[dict[str, Any], list[Any]]] = Unset,
         reason: Optional[str] = None,
-        files: list[BasicFile] = Unset,
+        files: UnsetOr[list[BasicFile]] = Unset,
         **extras: Any,
     ) -> Union[Any, str]:
         """Sends a request to the Discord API. This automatically handles ratelimiting and data processing.
@@ -211,12 +213,12 @@ class HTTPClient(
             route (Route): The route to send a request to.
             query_params (Optional[dict[str, Any]]): The query parameters to include in the url of this request.
                 Any Unset values detected will be filtered out automatically. Defaults to None.
-            json_params (Union[dict[str, Any], list[Any]]): The json parameters to include in the request.
+            json_params (UnsetOr[Union[dict[str, Any], list[Any]]]): The json parameters to include in the request.
                 Any Unset values detected will be filtered out automatically. Defaults to Unset.
             reason (Optional[str]): If this route supports reasons, the reason for the action caused by the
                 route being performed. This will be included in the headers under "X-Audit-Log-Reason".
                 Defaults to None.
-            files (list[BasicFile]): The files to include in the request.
+            files (UnsetOr[list[BasicFile]]): The files to include in the request.
                 This will be processed along with the json paramters to generate multipart content.
                 Attachments are not automatically calculated in the json parameters.
                 Defaults to Unset.

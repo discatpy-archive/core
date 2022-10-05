@@ -3,7 +3,7 @@
 from typing import Any, Optional, Union
 
 from ...file import BasicFile
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 
 __all__ = ("EndpointMixin",)
@@ -15,9 +15,9 @@ class EndpointMixin:
         route: Route,
         *,
         query_params: Optional[dict[str, Any]] = None,
-        json_params: Union[dict[str, Any], list[Any]] = Unset,
+        json_params: UnsetOr[Union[dict[str, Any], list[Any]]] = Unset,
         reason: Optional[str] = None,
-        files: list[BasicFile] = Unset,
+        files: UnsetOr[list[BasicFile]] = Unset,
         **extras: Any,
     ) -> Union[Any, str]:
         pass

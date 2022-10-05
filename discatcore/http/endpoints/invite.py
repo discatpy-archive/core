@@ -6,7 +6,7 @@ from typing import Optional
 
 from discord_typings import Snowflake
 
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 from .core import EndpointMixin
 
@@ -18,9 +18,9 @@ class InviteEndpoints(EndpointMixin):
         self,
         invite_code: Snowflake,
         *,
-        with_counts: bool = Unset,
-        with_expiration: bool = Unset,
-        guild_scheduled_event_id: Snowflake = Unset,
+        with_counts: UnsetOr[bool] = Unset,
+        with_expiration: UnsetOr[bool] = Unset,
+        guild_scheduled_event_id: UnsetOr[Snowflake] = Unset,
     ):
         return self.request(
             Route("GET", "/invites/{invite_code}", invite_code=invite_code),

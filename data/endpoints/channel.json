@@ -24,75 +24,75 @@
             },
             "json-parameters": {
                 "name": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "type": [
-                    "discord_typings.ChannelTypes",
+                    "UnsetOr[discord_typings.ChannelTypes]",
                     "Unset"
                 ],
                 "position": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
                 "topic": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "nsfw": [
-                    "Optional[bool]",
+                    "UnsetOr[Optional[bool]]",
                     "Unset"
                 ],
                 "rate_limit_per_user": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
                 "bitrate": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
                 "user_limit": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
                 "permission_overwrites": [
-                    "Optional[list[discord_typings.PermissionOverwriteData]]",
+                    "UnsetOr[Optional[list[discord_typings.PermissionOverwriteData]]]",
                     "Unset"
                 ],
                 "parent_id": [
-                    "Optional[Snowflake]",
+                    "UnsetOr[Optional[Snowflake]]",
                     "Unset"
                 ],
                 "rtc_region": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "video_quality_mode": [
-                    "Optional[discord_typings.VideoQualityModes]",
+                    "UnsetOr[Optional[discord_typings.VideoQualityModes]]",
                     "Unset"
                 ],
                 "default_auto_archive_duration": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
                 "flags": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ],
                 "available_tags": [
-                    "list[discord_typings.ForumTagData]",
+                    "UnsetOr[list[discord_typings.ForumTagData]]",
                     "Unset"
                 ],
                 "default_reaction_emoji": [
-                    "Optional[discord_typings.DefaultReactionData]",
+                    "UnsetOr[Optional[discord_typings.DefaultReactionData]]",
                     "Unset"
                 ],
                 "default_thread_rate_limit_per_user": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ],
                 "default_sort_order": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ]
             },
@@ -106,31 +106,37 @@
             },
             "json-parameters": {
                 "name": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "archived": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ],
                 "auto_archive_duration": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ],
                 "locked": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ],
                 "invitable": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ],
                 "rate_limit_per_user": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
-                "flags": ["int", "Unset"],
-                "applied_tags": ["list[Snowflake]", "Unset"]
+                "flags": [
+                    "UnsetOr[int]",
+                    "Unset"
+                ],
+                "applied_tags": [
+                    "UnsetOr[list[Snowflake]]",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },
@@ -150,15 +156,15 @@
             },
             "query-parameters": {
                 "around": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "before": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "after": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "limit": [
@@ -183,43 +189,43 @@
             },
             "json-parameters": {
                 "content": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "nonce": [
-                    "Union[str, int]",
+                    "UnsetOr[Union[str, int]]",
                     "Unset"
                 ],
                 "tts": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ],
                 "embeds": [
-                    "list[discord_typings.EmbedData]",
+                    "UnsetOr[list[discord_typings.EmbedData]]",
                     "Unset"
                 ],
                 "allowed_mentions": [
-                    "discord_typings.AllowedMentionsData",
+                    "UnsetOr[discord_typings.AllowedMentionsData]",
                     "Unset"
                 ],
                 "message_reference": [
-                    "discord_typings.MessageReferenceData",
+                    "UnsetOr[discord_typings.MessageReferenceData]",
                     "Unset"
                 ],
                 "components": [
-                    "list[discord_typings.ComponentData]",
+                    "UnsetOr[list[discord_typings.ComponentData]]",
                     "Unset"
                 ],
                 "sticker_ids": [
-                    "list[Snowflake]",
+                    "UnsetOr[list[Snowflake]]",
                     "Unset"
                 ],
                 "attachments": [
-                    "list[discord_typings.PartialAttachmentData]",
+                    "UnsetOr[list[discord_typings.PartialAttachmentData]]",
                     "Unset"
                 ],
                 "flags": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ]
             },
@@ -271,7 +277,7 @@
             },
             "query-parameters": {
                 "after": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "limit": [
@@ -306,27 +312,27 @@
             },
             "json-parameters": {
                 "content": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "embeds": [
-                    "Optional[list[discord_typings.EmbedData]]",
+                    "UnsetOr[Optional[list[discord_typings.EmbedData]]]",
                     "Unset"
                 ],
                 "flags": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ],
                 "allowed_mentions": [
-                    "Optional[discord_typings.AllowedMentionsData]",
+                    "UnsetOr[Optional[discord_typings.AllowedMentionsData]]",
                     "Unset"
                 ],
                 "components": [
-                    "Optional[list[discord_typings.ComponentData]]",
+                    "UnsetOr[Optional[list[discord_typings.ComponentData]]]",
                     "Unset"
                 ],
                 "attachments": [
-                    "Optional[list[discord_typings.PartialAttachmentData]]",
+                    "UnsetOr[Optional[list[discord_typings.PartialAttachmentData]]]",
                     "Unset"
                 ]
             },
@@ -361,11 +367,11 @@
             },
             "json-parameters": {
                 "allow": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "deny": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "type": "int"
@@ -404,11 +410,11 @@
                 ],
                 "target_type": "discord_typings.InviteTargetTypes",
                 "target_user_id": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "target_application_id": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ]
             },
@@ -475,11 +481,11 @@
             "json-parameters": {
                 "name": "str",
                 "auto_archive_duration": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ],
                 "rate_limit_per_user": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ]
             },
@@ -494,19 +500,19 @@
             "json-parameters": {
                 "name": "str",
                 "auto_archive_duration": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ],
                 "type": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ],
                 "invitable": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ],
                 "rate_limit_per_user": [
-                    "Optional[int]",
+                    "UnsetOr[Optional[int]]",
                     "Unset"
                 ]
             },
@@ -520,34 +526,46 @@
             },
             "json-parameters": {
                 "name": "str",
-                "auto_archive_duration": ["int", "Unset"],
-                "rate_limit_per_user": ["Optional[int]", "Unset"],
-                "content": ["str", "Unset"],
+                "auto_archive_duration": [
+                    "UnsetOr[int]",
+                    "Unset"
+                ],
+                "rate_limit_per_user": [
+                    "UnsetOr[Optional[int]]",
+                    "Unset"
+                ],
+                "content": [
+                    "UnsetOr[str]",
+                    "Unset"
+                ],
                 "embeds": [
-                    "list[discord_typings.EmbedData]",
+                    "UnsetOr[list[discord_typings.EmbedData]]",
                     "Unset"
                 ],
                 "allowed_mentions": [
-                    "discord_typings.AllowedMentionsData",
+                    "UnsetOr[discord_typings.AllowedMentionsData]",
                     "Unset"
                 ],
                 "components": [
-                    "list[discord_typings.ComponentData]",
+                    "UnsetOr[list[discord_typings.ComponentData]]",
                     "Unset"
                 ],
                 "sticker_ids": [
-                    "list[Snowflake]",
+                    "UnsetOr[list[Snowflake]]",
                     "Unset"
                 ],
                 "attachments": [
-                    "list[discord_typings.PartialAttachmentData]",
+                    "UnsetOr[list[discord_typings.PartialAttachmentData]]",
                     "Unset"
                 ],
                 "flags": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ],
-                "applied_tags": ["list[Snowflake]", "Unset"]
+                "applied_tags": [
+                    "UnsetOr[list[Snowflake]]",
+                    "Unset"
+                ]
             },
             "supports-reason": true,
             "supports-files": true
@@ -605,11 +623,11 @@
             },
             "query-parameters": {
                 "before": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "limit": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ]
             }
@@ -622,11 +640,11 @@
             },
             "query-parameters": {
                 "before": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "limit": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ]
             }
@@ -639,11 +657,11 @@
             },
             "query-parameters": {
                 "before": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "limit": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ]
             }

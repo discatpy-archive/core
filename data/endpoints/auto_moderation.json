@@ -33,20 +33,20 @@
                 "event_type": "discord_typings.AutoModerationEventTypes",
                 "trigger_type": "discord_typings.AutoModerationTriggerTypes",
                 "trigger_metadata": [
-                    "discord_typings.AutoModerationTriggerMetadataData",
+                    "UnsetOr[discord_typings.AutoModerationTriggerMetadataData]",
                     "Unset"
                 ],
                 "actions": "list[discord_typings.AutoModerationActionData]",
                 "enabled": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ],
                 "exempt_roles": [
-                    "list[Snowflake]",
+                    "UnsetOr[list[Snowflake]]",
                     "Unset"
                 ],
                 "exempt_channels": [
-                    "list[Snowflake]",
+                    "UnsetOr[list[Snowflake]]",
                     "Unset"
                 ]
             },
@@ -61,31 +61,31 @@
             },
             "json-parameters": {
                 "name": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "event_type": [
-                    "discord_typings.AutoModerationEventTypes",
+                    "UnsetOr[discord_typings.AutoModerationEventTypes]",
                     "Unset"
                 ],
                 "trigger_metadata": [
-                    "discord_typings.AutoModerationTriggerMetadataData",
+                    "UnsetOr[discord_typings.AutoModerationTriggerMetadataData]",
                     "Unset"
                 ],
                 "actions": [
-                    "list[discord_typings.AutoModerationActionData]",
+                    "UnsetOr[list[discord_typings.AutoModerationActionData]]",
                     "Unset"
                 ],
                 "enabled": [
-                    "bool",
+                    "UnsetOr[bool]",
                     "Unset"
                 ],
                 "exempt_roles": [
-                    "list[Snowflake]",
+                    "UnsetOr[list[Snowflake]]",
                     "Unset"
                 ],
                 "exempt_channels": [
-                    "list[Snowflake]",
+                    "UnsetOr[list[Snowflake]]",
                     "Unset"
                 ]
             },

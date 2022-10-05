@@ -8,7 +8,7 @@ import discord_typings
 from discord_typings import Snowflake
 
 from ...file import BasicFile
-from ...types import Unset
+from ...types import Unset, UnsetOr
 from ..route import Route
 from .core import EndpointMixin
 
@@ -23,24 +23,26 @@ class ChannelEndpoints(EndpointMixin):
         self,
         channel_id: Snowflake,
         *,
-        name: str = Unset,
-        type: discord_typings.ChannelTypes = Unset,
-        position: Optional[int] = Unset,
-        topic: Optional[str] = Unset,
-        nsfw: Optional[bool] = Unset,
-        rate_limit_per_user: Optional[int] = Unset,
-        bitrate: Optional[int] = Unset,
-        user_limit: Optional[int] = Unset,
-        permission_overwrites: Optional[list[discord_typings.PermissionOverwriteData]] = Unset,
-        parent_id: Optional[Snowflake] = Unset,
-        rtc_region: Optional[str] = Unset,
-        video_quality_mode: Optional[discord_typings.VideoQualityModes] = Unset,
-        default_auto_archive_duration: Optional[int] = Unset,
-        flags: int = Unset,
-        available_tags: list[discord_typings.ForumTagData] = Unset,
-        default_reaction_emoji: Optional[discord_typings.DefaultReactionData] = Unset,
-        default_thread_rate_limit_per_user: int = Unset,
-        default_sort_order: Optional[int] = Unset,
+        name: UnsetOr[str] = Unset,
+        type: UnsetOr[discord_typings.ChannelTypes] = Unset,
+        position: UnsetOr[Optional[int]] = Unset,
+        topic: UnsetOr[Optional[str]] = Unset,
+        nsfw: UnsetOr[Optional[bool]] = Unset,
+        rate_limit_per_user: UnsetOr[Optional[int]] = Unset,
+        bitrate: UnsetOr[Optional[int]] = Unset,
+        user_limit: UnsetOr[Optional[int]] = Unset,
+        permission_overwrites: UnsetOr[
+            Optional[list[discord_typings.PermissionOverwriteData]]
+        ] = Unset,
+        parent_id: UnsetOr[Optional[Snowflake]] = Unset,
+        rtc_region: UnsetOr[Optional[str]] = Unset,
+        video_quality_mode: UnsetOr[Optional[discord_typings.VideoQualityModes]] = Unset,
+        default_auto_archive_duration: UnsetOr[Optional[int]] = Unset,
+        flags: UnsetOr[int] = Unset,
+        available_tags: UnsetOr[list[discord_typings.ForumTagData]] = Unset,
+        default_reaction_emoji: UnsetOr[Optional[discord_typings.DefaultReactionData]] = Unset,
+        default_thread_rate_limit_per_user: UnsetOr[int] = Unset,
+        default_sort_order: UnsetOr[Optional[int]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -72,14 +74,14 @@ class ChannelEndpoints(EndpointMixin):
         self,
         channel_id: Snowflake,
         *,
-        name: str = Unset,
-        archived: bool = Unset,
-        auto_archive_duration: int = Unset,
-        locked: bool = Unset,
-        invitable: bool = Unset,
-        rate_limit_per_user: Optional[int] = Unset,
-        flags: int = Unset,
-        applied_tags: list[Snowflake] = Unset,
+        name: UnsetOr[str] = Unset,
+        archived: UnsetOr[bool] = Unset,
+        auto_archive_duration: UnsetOr[int] = Unset,
+        locked: UnsetOr[bool] = Unset,
+        invitable: UnsetOr[bool] = Unset,
+        rate_limit_per_user: UnsetOr[Optional[int]] = Unset,
+        flags: UnsetOr[int] = Unset,
+        applied_tags: UnsetOr[list[Snowflake]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -106,9 +108,9 @@ class ChannelEndpoints(EndpointMixin):
         self,
         channel_id: Snowflake,
         *,
-        around: Snowflake = Unset,
-        before: Snowflake = Unset,
-        after: Snowflake = Unset,
+        around: UnsetOr[Snowflake] = Unset,
+        before: UnsetOr[Snowflake] = Unset,
+        after: UnsetOr[Snowflake] = Unset,
         limit: int = 50,
     ):
         return self.request(
@@ -130,17 +132,17 @@ class ChannelEndpoints(EndpointMixin):
         self,
         channel_id: Snowflake,
         *,
-        content: str = Unset,
-        nonce: Union[str, int] = Unset,
-        tts: bool = Unset,
-        embeds: list[discord_typings.EmbedData] = Unset,
-        allowed_mentions: discord_typings.AllowedMentionsData = Unset,
-        message_reference: discord_typings.MessageReferenceData = Unset,
-        components: list[discord_typings.ComponentData] = Unset,
-        sticker_ids: list[Snowflake] = Unset,
-        attachments: list[discord_typings.PartialAttachmentData] = Unset,
-        flags: int = Unset,
-        files: list[BasicFile] = Unset,
+        content: UnsetOr[str] = Unset,
+        nonce: UnsetOr[Union[str, int]] = Unset,
+        tts: UnsetOr[bool] = Unset,
+        embeds: UnsetOr[list[discord_typings.EmbedData]] = Unset,
+        allowed_mentions: UnsetOr[discord_typings.AllowedMentionsData] = Unset,
+        message_reference: UnsetOr[discord_typings.MessageReferenceData] = Unset,
+        components: UnsetOr[list[discord_typings.ComponentData]] = Unset,
+        sticker_ids: UnsetOr[list[Snowflake]] = Unset,
+        attachments: UnsetOr[list[discord_typings.PartialAttachmentData]] = Unset,
+        flags: UnsetOr[int] = Unset,
+        files: UnsetOr[list[BasicFile]] = Unset,
     ):
         return self.request(
             Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id),
@@ -211,7 +213,7 @@ class ChannelEndpoints(EndpointMixin):
         message_id: Snowflake,
         emoji: str,
         *,
-        after: Snowflake = Unset,
+        after: UnsetOr[Snowflake] = Unset,
         limit: int = 25,
     ):
         return self.request(
@@ -253,13 +255,13 @@ class ChannelEndpoints(EndpointMixin):
         channel_id: Snowflake,
         message_id: Snowflake,
         *,
-        content: Optional[str] = Unset,
-        embeds: Optional[list[discord_typings.EmbedData]] = Unset,
-        flags: Optional[int] = Unset,
-        allowed_mentions: Optional[discord_typings.AllowedMentionsData] = Unset,
-        components: Optional[list[discord_typings.ComponentData]] = Unset,
-        attachments: Optional[list[discord_typings.PartialAttachmentData]] = Unset,
-        files: list[BasicFile] = Unset,
+        content: UnsetOr[Optional[str]] = Unset,
+        embeds: UnsetOr[Optional[list[discord_typings.EmbedData]]] = Unset,
+        flags: UnsetOr[Optional[int]] = Unset,
+        allowed_mentions: UnsetOr[Optional[discord_typings.AllowedMentionsData]] = Unset,
+        components: UnsetOr[Optional[list[discord_typings.ComponentData]]] = Unset,
+        attachments: UnsetOr[Optional[list[discord_typings.PartialAttachmentData]]] = Unset,
+        files: UnsetOr[list[BasicFile]] = Unset,
     ):
         return self.request(
             Route(
@@ -310,8 +312,8 @@ class ChannelEndpoints(EndpointMixin):
         channel_id: Snowflake,
         overwrite_id: Snowflake,
         *,
-        allow: Optional[str] = Unset,
-        deny: Optional[str] = Unset,
+        allow: UnsetOr[Optional[str]] = Unset,
+        deny: UnsetOr[Optional[str]] = Unset,
         type: int,
         reason: Optional[str] = None,
     ):
@@ -338,8 +340,8 @@ class ChannelEndpoints(EndpointMixin):
         temporary: bool = False,
         unique: bool = False,
         target_type: discord_typings.InviteTargetTypes,
-        target_user_id: Snowflake = Unset,
-        target_application_id: Snowflake = Unset,
+        target_user_id: UnsetOr[Snowflake] = Unset,
+        target_application_id: UnsetOr[Snowflake] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -413,8 +415,8 @@ class ChannelEndpoints(EndpointMixin):
         message_id: Snowflake,
         *,
         name: str,
-        auto_archive_duration: int = Unset,
-        rate_limit_per_user: Optional[int] = Unset,
+        auto_archive_duration: UnsetOr[int] = Unset,
+        rate_limit_per_user: UnsetOr[Optional[int]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -437,10 +439,10 @@ class ChannelEndpoints(EndpointMixin):
         channel_id: Snowflake,
         *,
         name: str,
-        auto_archive_duration: int = Unset,
-        type: int = Unset,
-        invitable: bool = Unset,
-        rate_limit_per_user: Optional[int] = Unset,
+        auto_archive_duration: UnsetOr[int] = Unset,
+        type: UnsetOr[int] = Unset,
+        invitable: UnsetOr[bool] = Unset,
+        rate_limit_per_user: UnsetOr[Optional[int]] = Unset,
         reason: Optional[str] = None,
     ):
         return self.request(
@@ -460,18 +462,18 @@ class ChannelEndpoints(EndpointMixin):
         channel_id: Snowflake,
         *,
         name: str,
-        auto_archive_duration: int = Unset,
-        rate_limit_per_user: Optional[int] = Unset,
-        content: str = Unset,
-        embeds: list[discord_typings.EmbedData] = Unset,
-        allowed_mentions: discord_typings.AllowedMentionsData = Unset,
-        components: list[discord_typings.ComponentData] = Unset,
-        sticker_ids: list[Snowflake] = Unset,
-        attachments: list[discord_typings.PartialAttachmentData] = Unset,
-        flags: int = Unset,
-        applied_tags: list[Snowflake] = Unset,
+        auto_archive_duration: UnsetOr[int] = Unset,
+        rate_limit_per_user: UnsetOr[Optional[int]] = Unset,
+        content: UnsetOr[str] = Unset,
+        embeds: UnsetOr[list[discord_typings.EmbedData]] = Unset,
+        allowed_mentions: UnsetOr[discord_typings.AllowedMentionsData] = Unset,
+        components: UnsetOr[list[discord_typings.ComponentData]] = Unset,
+        sticker_ids: UnsetOr[list[Snowflake]] = Unset,
+        attachments: UnsetOr[list[discord_typings.PartialAttachmentData]] = Unset,
+        flags: UnsetOr[int] = Unset,
+        applied_tags: UnsetOr[list[Snowflake]] = Unset,
         reason: Optional[str] = None,
-        files: list[BasicFile] = Unset,
+        files: UnsetOr[list[BasicFile]] = Unset,
     ):
         return self.request(
             Route("POST", "/channels/{channel_id}/threads", channel_id=channel_id),
@@ -538,7 +540,7 @@ class ChannelEndpoints(EndpointMixin):
         )
 
     def list_public_archived_threads(
-        self, channel_id: Snowflake, *, before: str = Unset, limit: int = Unset
+        self, channel_id: Snowflake, *, before: UnsetOr[str] = Unset, limit: UnsetOr[int] = Unset
     ):
         return self.request(
             Route("GET", "/channels/{channel_id}/threads/archived/public", channel_id=channel_id),
@@ -546,7 +548,7 @@ class ChannelEndpoints(EndpointMixin):
         )
 
     def list_private_archived_threads(
-        self, channel_id: Snowflake, *, before: str = Unset, limit: int = Unset
+        self, channel_id: Snowflake, *, before: UnsetOr[str] = Unset, limit: UnsetOr[int] = Unset
     ):
         return self.request(
             Route("GET", "/channels/{channel_id}/threads/archived/private", channel_id=channel_id),
@@ -554,7 +556,7 @@ class ChannelEndpoints(EndpointMixin):
         )
 
     def list_joined_private_archived_threads(
-        self, channel_id: Snowflake, *, before: str = Unset, limit: int = Unset
+        self, channel_id: Snowflake, *, before: UnsetOr[str] = Unset, limit: UnsetOr[int] = Unset
     ):
         return self.request(
             Route(

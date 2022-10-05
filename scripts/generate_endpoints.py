@@ -21,7 +21,7 @@ IMPORTS = {
     "Snowflake": "from discord_typings import Snowflake",
     "discord_typings": "import discord_typings",
     "BasicFile": "from ...file import BasicFile",
-    "Unset": "from ...types import Unset",
+    "Unset": "from ...types import Unset, UnsetOr",
 }
 FILE_TEMPLATE = f"""# SPDX-License-Identifier: MIT
 
@@ -340,7 +340,7 @@ def parse_endpoint_func(name: str, func: dict[str, Any]):
         func_generator.append_arg(FunctionArg("reason", annotation="Optional[str]", default="None"))
     if supports_files:
         func_generator.append_arg(
-            FunctionArg("files", annotation="list[BasicFile]", default="Unset")
+            FunctionArg("files", annotation="UnsetOr[list[BasicFile]]", default="Unset")
         )
 
     # generate body

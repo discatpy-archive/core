@@ -14,7 +14,10 @@
                 "application_id": "Snowflake"
             },
             "query-parameters": {
-                "with_localizations": ["bool", "Unset"]
+                "with_localizations": [
+                    "UnsetOr[bool]",
+                    "Unset"
+                ]
             }
         },
         "create_global_application_command": {
@@ -25,13 +28,31 @@
             },
             "json-parameters": {
                 "name": "str",
-                "name_localizations": ["Optional[dict[discord_typings.Locales, str]]", "Unset"],
+                "name_localizations": [
+                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "Unset"
+                ],
                 "description": "str",
-                "description_localizations": ["Optional[dict[discord_typings.Locales, str]]", "Unset"],
-                "options": ["list[discord_typings.ApplicationCommandOptionData]", "Unset"],
-                "default_member_permissions": ["Optional[str]", "Unset"],
-                "dm_permission": ["Optional[bool]", "Unset"],
-                "type": ["discord_typings.ApplicationCommandTypes", "1"]
+                "description_localizations": [
+                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "Unset"
+                ],
+                "options": [
+                    "UnsetOr[list[discord_typings.ApplicationCommandOptionData]]",
+                    "Unset"
+                ],
+                "default_member_permissions": [
+                    "UnsetOr[Optional[str]]",
+                    "Unset"
+                ],
+                "dm_permission": [
+                    "UnsetOr[Optional[bool]]",
+                    "Unset"
+                ],
+                "type": [
+                    "discord_typings.ApplicationCommandTypes",
+                    "1"
+                ]
             }
         },
         "get_global_application_command": {
@@ -50,13 +71,34 @@
                 "command_id": "Snowflake"
             },
             "json-parameters": {
-                "name": ["str", "Unset"],
-                "name_localizations": ["Optional[dict[discord_typings.Locales, str]]", "Unset"],
-                "description": ["str", "Unset"],
-                "description_localizations": ["Optional[dict[discord_typings.Locales, str]]", "Unset"],
-                "options": ["list[discord_typings.ApplicationCommandOptionData]", "Unset"],
-                "default_member_permissions": ["Optional[str]", "Unset"],
-                "dm_permission": ["Optional[bool]", "Unset"]
+                "name": [
+                    "UnsetOr[str]",
+                    "Unset"
+                ],
+                "name_localizations": [
+                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "Unset"
+                ],
+                "description": [
+                    "UnsetOr[str]",
+                    "Unset"
+                ],
+                "description_localizations": [
+                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "Unset"
+                ],
+                "options": [
+                    "UnsetOr[list[discord_typings.ApplicationCommandOptionData]]",
+                    "Unset"
+                ],
+                "default_member_permissions": [
+                    "UnsetOr[Optional[str]]",
+                    "Unset"
+                ],
+                "dm_permission": [
+                    "UnsetOr[Optional[bool]]",
+                    "Unset"
+                ]
             }
         },
         "delete_global_application_command": {
@@ -88,7 +130,10 @@
                 "guild_id": "Snowflake"
             },
             "query-parameters": {
-                "with_localizations": ["bool", "Unset"]
+                "with_localizations": [
+                    "UnsetOr[bool]",
+                    "Unset"
+                ]
             }
         },
         "create_guild_application_command": {
@@ -100,13 +145,31 @@
             },
             "json-parameters": {
                 "name": "str",
-                "name_localizations": ["Optional[dict[discord_typings.Locales, str]]", "Unset"],
+                "name_localizations": [
+                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "Unset"
+                ],
                 "description": "str",
-                "description_localizations": ["Optional[dict[discord_typings.Locales, str]]", "Unset"],
-                "options": ["list[discord_typings.ApplicationCommandOptionData]", "Unset"],
-                "default_member_permissions": ["Optional[str]", "Unset"],
-                "dm_permission": ["Optional[bool]", "Unset"],
-                "type": ["discord_typings.ApplicationCommandTypes", "1"]
+                "description_localizations": [
+                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "Unset"
+                ],
+                "options": [
+                    "UnsetOr[list[discord_typings.ApplicationCommandOptionData]]",
+                    "Unset"
+                ],
+                "default_member_permissions": [
+                    "UnsetOr[Optional[str]]",
+                    "Unset"
+                ],
+                "dm_permission": [
+                    "UnsetOr[Optional[bool]]",
+                    "Unset"
+                ],
+                "type": [
+                    "discord_typings.ApplicationCommandTypes",
+                    "1"
+                ]
             }
         },
         "get_guild_application_command": {
@@ -127,13 +190,34 @@
                 "command_id": "Snowflake"
             },
             "json-parameters": {
-                "name": ["str", "Unset"],
-                "name_localizations": ["Optional[dict[discord_typings.Locales, str]]", "Unset"],
-                "description": ["str", "Unset"],
-                "description_localizations": ["Optional[dict[discord_typings.Locales, str]]", "Unset"],
-                "options": ["list[discord_typings.ApplicationCommandOptionData]", "Unset"],
-                "default_member_permissions": ["Optional[str]", "Unset"],
-                "dm_permission": ["Optional[bool]", "Unset"]
+                "name": [
+                    "UnsetOr[str]",
+                    "Unset"
+                ],
+                "name_localizations": [
+                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "Unset"
+                ],
+                "description": [
+                    "UnsetOr[str]",
+                    "Unset"
+                ],
+                "description_localizations": [
+                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "Unset"
+                ],
+                "options": [
+                    "UnsetOr[list[discord_typings.ApplicationCommandOptionData]]",
+                    "Unset"
+                ],
+                "default_member_permissions": [
+                    "UnsetOr[Optional[str]]",
+                    "Unset"
+                ],
+                "dm_permission": [
+                    "UnsetOr[Optional[bool]]",
+                    "Unset"
+                ]
             }
         },
         "delete_guild_application_command": {

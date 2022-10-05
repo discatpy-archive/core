@@ -41,7 +41,10 @@
             },
             "extra-parameters": {
                 "name": "str",
-                "description": ["str", "\"\""],
+                "description": [
+                    "str",
+                    "\"\""
+                ],
                 "tags": "str",
                 "file": "BasicFile"
             },
@@ -67,15 +70,15 @@
             },
             "json-parameters": {
                 "name": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ],
                 "description": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ],
                 "tags": [
-                    "str",
+                    "UnsetOr[str]",
                     "Unset"
                 ]
             },

@@ -14,19 +14,19 @@
             },
             "query-parameters": {
                 "user_id": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "action_type": [
-                    "discord_typings.AuditLogEvents",
+                    "UnsetOr[discord_typings.AuditLogEvents]",
                     "Unset"
                 ],
                 "before": [
-                    "Snowflake",
+                    "UnsetOr[Snowflake]",
                     "Unset"
                 ],
                 "limit": [
-                    "int",
+                    "UnsetOr[int]",
                     "Unset"
                 ]
             }

@@ -17,7 +17,7 @@
             "json-parameters": {
                 "name": "str",
                 "avatar": [
-                    "Optional[str]",
+                    "UnsetOr[Optional[str]]",
                     "Unset"
                 ]
             },
@@ -59,9 +59,18 @@
                 "webhook_id": "Snowflake"
             },
             "json-parameters": {
-                "name": ["str", "Unset"],
-                "avatar": ["Optional[str]", "Unset"],
-                "channel_id": ["Snowflake", "Unset"]
+                "name": [
+                    "UnsetOr[str]",
+                    "Unset"
+                ],
+                "avatar": [
+                    "UnsetOr[Optional[str]]",
+                    "Unset"
+                ],
+                "channel_id": [
+                    "UnsetOr[Snowflake]",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },
@@ -73,8 +82,14 @@
                 "webhook_token": "str"
             },
             "json-parameters": {
-                "name": ["str", "Unset"],
-                "avatar": ["Optional[str]", "Unset"]
+                "name": [
+                    "UnsetOr[str]",
+                    "Unset"
+                ],
+                "avatar": [
+                    "UnsetOr[Optional[str]]",
+                    "Unset"
+                ]
             },
             "supports-reason": true
         },
@@ -103,20 +118,56 @@
                 "webhook_token": "str"
             },
             "query-parameters": {
-                "wait": ["bool", "False"],
-                "thread_id": ["Snowflake", "Unset"]
+                "wait": [
+                    "bool",
+                    "False"
+                ],
+                "thread_id": [
+                    "UnsetOr[Snowflake]",
+                    "Unset"
+                ]
             },
             "json-parameters": {
-                "content": ["str", "Unset"],
-                "username": ["str", "Unset"],
-                "avatar_url": ["str", "Unset"],
-                "tts": ["bool", "Unset"],
-                "embeds": ["list[discord_typings.EmbedData]", "Unset"],
-                "allowed_mentions": ["discord_typings.AllowedMentionsData", "Unset"],
-                "components": ["list[discord_typings.ComponentData]", "Unset"],
-                "attachments": ["list[discord_typings.PartialAttachmentData]", "Unset"],
-                "flags": ["int", "Unset"],
-                "thread_name": ["str", "Unset"]
+                "content": [
+                    "UnsetOr[str]",
+                    "Unset"
+                ],
+                "username": [
+                    "UnsetOr[str]",
+                    "Unset"
+                ],
+                "avatar_url": [
+                    "UnsetOr[str]",
+                    "Unset"
+                ],
+                "tts": [
+                    "UnsetOr[bool]",
+                    "Unset"
+                ],
+                "embeds": [
+                    "UnsetOr[list[discord_typings.EmbedData]]",
+                    "Unset"
+                ],
+                "allowed_mentions": [
+                    "UnsetOr[discord_typings.AllowedMentionsData]",
+                    "Unset"
+                ],
+                "components": [
+                    "UnsetOr[list[discord_typings.ComponentData]]",
+                    "Unset"
+                ],
+                "attachments": [
+                    "UnsetOr[list[discord_typings.PartialAttachmentData]]",
+                    "Unset"
+                ],
+                "flags": [
+                    "UnsetOr[int]",
+                    "Unset"
+                ],
+                "thread_name": [
+                    "UnsetOr[str]",
+                    "Unset"
+                ]
             },
             "supports-files": true
         },
@@ -129,7 +180,10 @@
                 "message_id": "Snowflake"
             },
             "query-parameters": {
-                "thread_id": ["Snowflake", "Unset"]
+                "thread_id": [
+                    "UnsetOr[Snowflake]",
+                    "Unset"
+                ]
             }
         },
         "edit_webhook_message": {
@@ -141,14 +195,32 @@
                 "message_id": "Snowflake"
             },
             "query-parameters": {
-                "thread_id": ["Snowflake", "Unset"]
+                "thread_id": [
+                    "UnsetOr[Snowflake]",
+                    "Unset"
+                ]
             },
             "json-parameters": {
-                "content": ["Optional[str]", "Unset"],
-                "embeds": ["Optional[list[discord_typings.EmbedData]]", "Unset"],
-                "allowed_mentions": ["Optional[discord_typings.AllowedMentionsData]", "Unset"],
-                "components": ["Optional[list[discord_typings.ComponentData]]", "Unset"],
-                "attachments": ["Optional[list[discord_typings.PartialAttachmentData]]", "Unset"]
+                "content": [
+                    "UnsetOr[Optional[str]]",
+                    "Unset"
+                ],
+                "embeds": [
+                    "UnsetOr[Optional[list[discord_typings.EmbedData]]]",
+                    "Unset"
+                ],
+                "allowed_mentions": [
+                    "UnsetOr[Optional[discord_typings.AllowedMentionsData]]",
+                    "Unset"
+                ],
+                "components": [
+                    "UnsetOr[Optional[list[discord_typings.ComponentData]]]",
+                    "Unset"
+                ],
+                "attachments": [
+                    "UnsetOr[Optional[list[discord_typings.PartialAttachmentData]]]",
+                    "Unset"
+                ]
             },
             "supports-files": true
         },
@@ -161,7 +233,10 @@
                 "message_id": "Snowflake"
             },
             "query-parameters": {
-                "thread_id": ["Snowflake", "Unset"]
+                "thread_id": [
+                    "UnsetOr[Snowflake]",
+                    "Unset"
+                ]
             }
         }
     }
