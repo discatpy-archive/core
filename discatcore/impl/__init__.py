@@ -9,13 +9,7 @@ from .dispatcher import *
 from .event import *
 from .ratelimit import *
 
-__all__ = (
-    # dispatcher.py
-    "Dispatcher",
-    # event.py
-    "Event",
-    # ratelimit.py
-    "BaseRatelimiter",
-    "ManualRatelimiter",
-    "BurstRatelimiter",
-)
+__all__ = ()
+__all__ += dispatcher.__all__
+__all__ += event.__all__
+__all__ += ratelimit.__all__

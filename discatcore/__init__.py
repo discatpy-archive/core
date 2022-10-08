@@ -8,22 +8,14 @@ __license__ = "MIT"
 from . import gateway, http, types, utils
 from .errors import *
 from .file import *
-from .impl import Dispatcher, Event
+from .impl import *
 
 __all__ = (
-    # errors.py
-    "DisCatCoreException",
-    "HTTPException",
-    "BucketMigrated",
-    "UnsupportedAPIVersionWarning",
-    "GatewayReconnect",
-    # file.py
-    "BasicFile",
-    # misc
     "gateway",
     "http",
     "types",
     "utils",
-    "Dispatcher",
-    "Event",
 )
+__all__ += errors.__all__
+__all__ += file.__all__
+__all__ += impl.__all__

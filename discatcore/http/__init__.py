@@ -9,12 +9,7 @@ from .client import *
 from .ratelimiter import *
 from .route import *
 
-__all__ = (
-    # client.py
-    "HTTPClient",
-    # ratelimiter.py
-    "Bucket",
-    "Ratelimiter",
-    # route.py
-    "Route",
-)
+__all__ = ()
+__all__ += client.__all__
+__all__ += ratelimiter.__all__
+__all__ += route.__all__
