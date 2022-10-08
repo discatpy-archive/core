@@ -49,17 +49,11 @@ class Route:
     @property
     def bucket(self) -> str:
         """The pseudo-bucket that represents this route. This is generated via the method, raw url and top level parameters."""
-        available_top_level_params = [
-            k
+        top_level_params = {
+            k: getattr(self, k)
             for k in ("guild_id", "channel_id", "webhook_id", "webhook_token")
-            if getattr(self, k, ...) is not ...
-        ]
-        top_level_params = {k: getattr(self, k) for k in available_top_level_params}
+            if getattr(self, k) is not None
+        }
+        other_params = {k: None for k in self.params.keys() if k not in top_level_params.keys()}
 
-        # we can't use format_map here because that expects EVERYTHING to be
-        # formatted in the string
-        url = self.url
-        for param_name, param in top_level_params.items():
-            url = url.replace(f"{{{param_name}}}", str(param))
-
-        return f"{self.method}:{url}"
+        return f"{self.method}:{self.url.format_map({**top_level_params, **other_params})}"
