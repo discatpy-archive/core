@@ -32,13 +32,13 @@ import discord_typings
 http = discatcore.HTTPClient("token")
 dispatcher = discatcore.Dispatcher()
 # Every intent except the GUILD_MEMBERS, GUILD_PRESENCES, and MESSAGE_CONTENT intents
-intents = discatcore.Intents.DEFAULT()
+# calculated via https://discord-intents-calculator.vercel.app
+intents = 3243773
+gateway = discatcore.GatewayClient(http, dispatcher, intents=intents.value)
 
 @dispatcher.new_event("ready").callback
 async def ready(event: discord_typings.ReadyData):
     print(event)
-
-gateway = discatcore.GatewayClient(http, dispatcher, intents=intents.value)
 
 async def main():
     url: str | None = None
