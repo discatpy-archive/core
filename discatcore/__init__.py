@@ -22,7 +22,7 @@ class VersionInfo(NamedTuple):
 
 
 version_info: VersionInfo = VersionInfo(
-    major=0, minor=1, patch=0, release_level="final", build_metadata=0
+    major=0, minor=2, patch=0, release_level="alpha", build_metadata=0
 )
 
 __all__ = (
