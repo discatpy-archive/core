@@ -17,12 +17,12 @@ class VersionInfo(NamedTuple):
     major: int
     minor: int
     patch: int
-    release_level: Literal["alpha", "beta", "release candidate", "final"]
+    release_level: Literal["alpha", "beta", "candidate", "final"]
     build_metadata: int
 
 
 version_info: VersionInfo = VersionInfo(
-    major=0, minor=1, patch=0, release_level="alpha", build_metadata=0
+    major=0, minor=1, patch=0, release_level="final", build_metadata=0
 )
 
 __all__ = (
