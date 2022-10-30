@@ -49,7 +49,6 @@ The implementations for Discord API endpoints. These are for internal use only, 
 T = t.TypeVar("T")
 
 
-# Unset: t.Final[t.Any] = object()
 class UnsetType(Enum):
     Unset = auto()
 
@@ -280,9 +279,11 @@ def _generate_func_args_json_query(
         default = Unset
         if isinstance(param, str):
             anno = param
+        # fmt: off
         elif (
-            isinstance(param, list) and len(param) == 2
-        ):  # pyright: ignore[reportUnnecessaryIsInstance]
+            isinstance(param, list) and len(param) == 2  # pyright: ignore[reportUnnecessaryIsInstance]
+        ):
+        # fmt: on
             anno, default = param
         else:
             raise TypeError(f"Invalid type {_type_repr(param)} for JSON/Query parameter values")
