@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT
 
 import typing as t
+from dataclasses import dataclass
 
 import aiohttp
 
@@ -16,7 +17,8 @@ __all__ = (
 )
 
 
-class BaseTypedWSMessage(t.NamedTuple, t.Generic[DT]):
+@dataclass
+class BaseTypedWSMessage(t.Generic[DT]):
     type: aiohttp.WSMsgType
     data: DT
     extra: str
