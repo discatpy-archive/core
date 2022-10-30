@@ -1,9 +1,7 @@
 {
     "name": "AutoModerationEndpoints",
     "requires": [
-        "Optional",
         "discord_typings",
-        "Snowflake",
         "Unset"
     ],
     "methods": {
@@ -11,42 +9,42 @@
             "method": "GET",
             "url": "/guilds/{guild_id}/auto-moderation/rules",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             }
         },
         "get_auto_moderation_rule": {
             "method": "GET",
             "url": "/guilds/{guild_id}/auto-moderation/rules/{auto_moderation_rule_id}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "auto_moderation_rule_id": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "auto_moderation_rule_id": "dt.Snowflake"
             }
         },
         "create_auto_moderation_rule": {
             "method": "POST",
             "url": "/guilds/{guild_id}/auto-moderation/rules",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": "str",
-                "event_type": "discord_typings.AutoModerationEventTypes",
-                "trigger_type": "discord_typings.AutoModerationTriggerTypes",
+                "event_type": "dt.AutoModerationEventTypes",
+                "trigger_type": "dt.AutoModerationTriggerTypes",
                 "trigger_metadata": [
-                    "UnsetOr[discord_typings.AutoModerationTriggerMetadataData]",
+                    "UnsetOr[dt.AutoModerationTriggerMetadataData]",
                     "Unset"
                 ],
-                "actions": "list[discord_typings.AutoModerationActionData]",
+                "actions": "list[dt.AutoModerationActionData]",
                 "enabled": [
                     "UnsetOr[bool]",
                     "Unset"
                 ],
                 "exempt_roles": [
-                    "UnsetOr[list[Snowflake]]",
+                    "UnsetOr[list[dt.Snowflake]]",
                     "Unset"
                 ],
                 "exempt_channels": [
-                    "UnsetOr[list[Snowflake]]",
+                    "UnsetOr[list[dt.Snowflake]]",
                     "Unset"
                 ]
             },
@@ -56,8 +54,8 @@
             "method": "PATCH",
             "url": "/guilds/{guild_id}/auto-moderation/rules/{auto_moderation_rule_id}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "auto_moderation_rule_id": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "auto_moderation_rule_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": [
@@ -65,15 +63,15 @@
                     "Unset"
                 ],
                 "event_type": [
-                    "UnsetOr[discord_typings.AutoModerationEventTypes]",
+                    "UnsetOr[dt.AutoModerationEventTypes]",
                     "Unset"
                 ],
                 "trigger_metadata": [
-                    "UnsetOr[discord_typings.AutoModerationTriggerMetadataData]",
+                    "UnsetOr[dt.AutoModerationTriggerMetadataData]",
                     "Unset"
                 ],
                 "actions": [
-                    "UnsetOr[list[discord_typings.AutoModerationActionData]]",
+                    "UnsetOr[list[dt.AutoModerationActionData]]",
                     "Unset"
                 ],
                 "enabled": [
@@ -81,11 +79,11 @@
                     "Unset"
                 ],
                 "exempt_roles": [
-                    "UnsetOr[list[Snowflake]]",
+                    "UnsetOr[list[dt.Snowflake]]",
                     "Unset"
                 ],
                 "exempt_channels": [
-                    "UnsetOr[list[Snowflake]]",
+                    "UnsetOr[list[dt.Snowflake]]",
                     "Unset"
                 ]
             },
@@ -95,8 +93,8 @@
             "method": "DELETE",
             "url": "/guilds/{guild_id}/auto-moderation/rules/{auto_moderation_rule_id}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "auto_moderation_rule_id": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "auto_moderation_rule_id": "dt.Snowflake"
             },
             "supports-reason": true
         }

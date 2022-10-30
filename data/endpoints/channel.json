@@ -1,11 +1,8 @@
 {
     "name": "ChannelEndpoints",
     "requires": [
-        "Optional",
-        "Union",
+        "typing",
         "discord_typings",
-        "Snowflake",
-        "BasicFile",
         "Unset"
     ],
     "methods": {
@@ -13,14 +10,14 @@
             "method": "GET",
             "url": "/channels/{channel_id}",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             }
         },
         "modify_channel": {
             "method": "PATCH",
             "url": "/channels/{channel_id}",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": [
@@ -28,51 +25,51 @@
                     "Unset"
                 ],
                 "type": [
-                    "UnsetOr[discord_typings.ChannelTypes]",
+                    "UnsetOr[dt.ChannelTypes]",
                     "Unset"
                 ],
                 "position": [
-                    "UnsetOr[Optional[int]]",
+                    "UnsetOr[t.Optional[int]]",
                     "Unset"
                 ],
                 "topic": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "nsfw": [
-                    "UnsetOr[Optional[bool]]",
+                    "UnsetOr[t.Optional[bool]]",
                     "Unset"
                 ],
                 "rate_limit_per_user": [
-                    "UnsetOr[Optional[int]]",
+                    "UnsetOr[t.Optional[int]]",
                     "Unset"
                 ],
                 "bitrate": [
-                    "UnsetOr[Optional[int]]",
+                    "UnsetOr[t.Optional[int]]",
                     "Unset"
                 ],
                 "user_limit": [
-                    "UnsetOr[Optional[int]]",
+                    "UnsetOr[t.Optional[int]]",
                     "Unset"
                 ],
                 "permission_overwrites": [
-                    "UnsetOr[Optional[list[discord_typings.PermissionOverwriteData]]]",
+                    "UnsetOr[t.Optional[list[dt.PermissionOverwriteData]]]",
                     "Unset"
                 ],
                 "parent_id": [
-                    "UnsetOr[Optional[Snowflake]]",
+                    "UnsetOr[t.Optional[dt.Snowflake]]",
                     "Unset"
                 ],
                 "rtc_region": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "video_quality_mode": [
-                    "UnsetOr[Optional[discord_typings.VideoQualityModes]]",
+                    "UnsetOr[t.Optional[dt.VideoQualityModes]]",
                     "Unset"
                 ],
                 "default_auto_archive_duration": [
-                    "UnsetOr[Optional[int]]",
+                    "UnsetOr[t.Optional[int]]",
                     "Unset"
                 ],
                 "flags": [
@@ -80,11 +77,11 @@
                     "Unset"
                 ],
                 "available_tags": [
-                    "UnsetOr[list[discord_typings.ForumTagData]]",
+                    "UnsetOr[list[dt.ForumTagData]]",
                     "Unset"
                 ],
                 "default_reaction_emoji": [
-                    "UnsetOr[Optional[discord_typings.DefaultReactionData]]",
+                    "UnsetOr[t.Optional[dt.DefaultReactionData]]",
                     "Unset"
                 ],
                 "default_thread_rate_limit_per_user": [
@@ -92,7 +89,7 @@
                     "Unset"
                 ],
                 "default_sort_order": [
-                    "UnsetOr[Optional[int]]",
+                    "UnsetOr[t.Optional[int]]",
                     "Unset"
                 ]
             },
@@ -102,7 +99,7 @@
             "method": "PATCH",
             "url": "/channels/{channel_id}",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": [
@@ -126,7 +123,7 @@
                     "Unset"
                 ],
                 "rate_limit_per_user": [
-                    "UnsetOr[Optional[int]]",
+                    "UnsetOr[t.Optional[int]]",
                     "Unset"
                 ],
                 "flags": [
@@ -134,7 +131,7 @@
                     "Unset"
                 ],
                 "applied_tags": [
-                    "UnsetOr[list[Snowflake]]",
+                    "UnsetOr[list[dt.Snowflake]]",
                     "Unset"
                 ]
             },
@@ -144,7 +141,7 @@
             "method": "DELETE",
             "url": "/channels/{channel_id}",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "supports-reason": true
         },
@@ -152,19 +149,19 @@
             "method": "GET",
             "url": "/channels/{channel_id}/messages",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "query-parameters": {
                 "around": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ],
                 "before": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ],
                 "after": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ],
                 "limit": [
@@ -177,15 +174,15 @@
             "method": "GET",
             "url": "/channels/{channel_id}/messages/{message_id}",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "message_id": "Snowflake"
+                "channel_id": "dt.Snowflake",
+                "message_id": "dt.Snowflake"
             }
         },
         "create_message": {
             "method": "POST",
             "url": "/channels/{channel_id}/messages",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "content": [
@@ -193,7 +190,7 @@
                     "Unset"
                 ],
                 "nonce": [
-                    "UnsetOr[Union[str, int]]",
+                    "UnsetOr[t.Union[str, int]]",
                     "Unset"
                 ],
                 "tts": [
@@ -201,27 +198,27 @@
                     "Unset"
                 ],
                 "embeds": [
-                    "UnsetOr[list[discord_typings.EmbedData]]",
+                    "UnsetOr[list[dt.EmbedData]]",
                     "Unset"
                 ],
                 "allowed_mentions": [
-                    "UnsetOr[discord_typings.AllowedMentionsData]",
+                    "UnsetOr[dt.AllowedMentionsData]",
                     "Unset"
                 ],
                 "message_reference": [
-                    "UnsetOr[discord_typings.MessageReferenceData]",
+                    "UnsetOr[dt.MessageReferenceData]",
                     "Unset"
                 ],
                 "components": [
-                    "UnsetOr[list[discord_typings.ComponentData]]",
+                    "UnsetOr[list[dt.ComponentData]]",
                     "Unset"
                 ],
                 "sticker_ids": [
-                    "UnsetOr[list[Snowflake]]",
+                    "UnsetOr[list[dt.Snowflake]]",
                     "Unset"
                 ],
                 "attachments": [
-                    "UnsetOr[list[discord_typings.PartialAttachmentData]]",
+                    "UnsetOr[list[dt.PartialAttachmentData]]",
                     "Unset"
                 ],
                 "flags": [
@@ -235,16 +232,16 @@
             "method": "POST",
             "url": "/channels/{channel_id}/messages/{message_id}/crosspost",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "message_id": "Snowflake"
+                "channel_id": "dt.Snowflake",
+                "message_id": "dt.Snowflake"
             }
         },
         "create_reaction": {
             "method": "PUT",
             "url": "/channels/{channel_id}/messages/{message_id}/reactions/{emoji}/@me",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "message_id": "Snowflake",
+                "channel_id": "dt.Snowflake",
+                "message_id": "dt.Snowflake",
                 "emoji": "str"
             }
         },
@@ -252,8 +249,8 @@
             "method": "DELETE",
             "url": "/channels/{channel_id}/messages/{message_id}/reactions/{emoji}/@me",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "message_id": "Snowflake",
+                "channel_id": "dt.Snowflake",
+                "message_id": "dt.Snowflake",
                 "emoji": "str"
             }
         },
@@ -261,23 +258,23 @@
             "method": "DELETE",
             "url": "/channels/{channel_id}/messages/{message_id}/reactions/{emoji}/{user_id}",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "message_id": "Snowflake",
+                "channel_id": "dt.Snowflake",
+                "message_id": "dt.Snowflake",
                 "emoji": "str",
-                "user_id": "Snowflake"
+                "user_id": "dt.Snowflake"
             }
         },
         "get_reactions": {
             "method": "GET",
             "url": "/channels/{channel_id}/messages/{message_id}/reactions/{emoji}",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "message_id": "Snowflake",
+                "channel_id": "dt.Snowflake",
+                "message_id": "dt.Snowflake",
                 "emoji": "str"
             },
             "query-parameters": {
                 "after": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ],
                 "limit": [
@@ -290,16 +287,16 @@
             "method": "DELETE",
             "url": "/channels/{channel_id}/messages/{message_id}/reactions",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "message_id": "Snowflake"
+                "channel_id": "dt.Snowflake",
+                "message_id": "dt.Snowflake"
             }
         },
         "delete_all_reactions_for_emoji": {
             "method": "DELETE",
             "url": "/channels/{channel_id}/messages/{message_id}/reactions/{emoji}",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "message_id": "Snowflake",
+                "channel_id": "dt.Snowflake",
+                "message_id": "dt.Snowflake",
                 "emoji": "str"
             }
         },
@@ -307,32 +304,32 @@
             "method": "PATCH",
             "url": "/channels/{channel_id}/messages/{message_id}",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "message_id": "Snowflake"
+                "channel_id": "dt.Snowflake",
+                "message_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "content": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "embeds": [
-                    "UnsetOr[Optional[list[discord_typings.EmbedData]]]",
+                    "UnsetOr[t.Optional[list[dt.EmbedData]]]",
                     "Unset"
                 ],
                 "flags": [
-                    "UnsetOr[Optional[int]]",
+                    "UnsetOr[t.Optional[int]]",
                     "Unset"
                 ],
                 "allowed_mentions": [
-                    "UnsetOr[Optional[discord_typings.AllowedMentionsData]]",
+                    "UnsetOr[t.Optional[dt.AllowedMentionsData]]",
                     "Unset"
                 ],
                 "components": [
-                    "UnsetOr[Optional[list[discord_typings.ComponentData]]]",
+                    "UnsetOr[t.Optional[list[dt.ComponentData]]]",
                     "Unset"
                 ],
                 "attachments": [
-                    "UnsetOr[Optional[list[discord_typings.PartialAttachmentData]]]",
+                    "UnsetOr[t.Optional[list[dt.PartialAttachmentData]]]",
                     "Unset"
                 ]
             },
@@ -342,8 +339,8 @@
             "method": "DELETE",
             "url": "/channels/{channel_id}/messages/{message_id}",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "message_id": "Snowflake"
+                "channel_id": "dt.Snowflake",
+                "message_id": "dt.Snowflake"
             },
             "supports-reason": true
         },
@@ -351,10 +348,10 @@
             "method": "POST",
             "url": "/channels/{channel_id}/messages/bulk-delete",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "json-parameters": {
-                "messages": "list[discord_typings.MessageData]"
+                "messages": "list[dt.MessageData]"
             },
             "supports-reason": true
         },
@@ -362,16 +359,16 @@
             "method": "PUT",
             "url": "/channels/{channel_id}/permissions/{overwrite_id}",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "overwrite_id": "Snowflake"
+                "channel_id": "dt.Snowflake",
+                "overwrite_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "allow": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "deny": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "type": "int"
@@ -382,14 +379,14 @@
             "method": "GET",
             "url": "/channels/{channel_id}/invites",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             }
         },
         "create_channel_invite": {
             "method": "POST",
             "url": "/channels/{channel_id}/invites",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "max_age": [
@@ -408,13 +405,13 @@
                     "bool",
                     "False"
                 ],
-                "target_type": "discord_typings.InviteTargetTypes",
+                "target_type": "dt.InviteTargetTypes",
                 "target_user_id": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ],
                 "target_application_id": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ]
             },
@@ -424,8 +421,8 @@
             "method": "DELETE",
             "url": "/channels/{channel_id}/permissions/{overwrite_id}",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "overwrite_id": "Snowflake"
+                "channel_id": "dt.Snowflake",
+                "overwrite_id": "dt.Snowflake"
             },
             "supports-reason": true
         },
@@ -433,32 +430,32 @@
             "method": "POST",
             "url": "/channels/{channel_id}/followers",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "json-parameters": {
-                "webhook_channel_id": "Snowflake"
+                "webhook_channel_id": "dt.Snowflake"
             }
         },
         "trigger_typing_indicator": {
             "method": "POST",
             "url": "/channels/{channel_id}/typing",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             }
         },
         "get_pinned_messages": {
             "method": "GET",
             "url": "/channels/{channel_id}/pins",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             }
         },
         "pin_message": {
             "method": "PUT",
             "url": "/channels/{channel_id}/pins/{message_id}",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "message_id": "Snowflake"
+                "channel_id": "dt.Snowflake",
+                "message_id": "dt.Snowflake"
             },
             "supports-reason": true
         },
@@ -466,8 +463,8 @@
             "method": "DELETE",
             "url": "/channels/{channel_id}/pins/{message_id}",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "message_id": "Snowflake"
+                "channel_id": "dt.Snowflake",
+                "message_id": "dt.Snowflake"
             },
             "supports-reason": true
         },
@@ -475,8 +472,8 @@
             "method": "POST",
             "url": "/channels/{channel_id}/messages/{message_id}/threads",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "message_id": "Snowflake"
+                "channel_id": "dt.Snowflake",
+                "message_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": "str",
@@ -485,7 +482,7 @@
                     "Unset"
                 ],
                 "rate_limit_per_user": [
-                    "UnsetOr[Optional[int]]",
+                    "UnsetOr[t.Optional[int]]",
                     "Unset"
                 ]
             },
@@ -495,7 +492,7 @@
             "method": "POST",
             "url": "/channels/{channel_id}/threads",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": "str",
@@ -512,7 +509,7 @@
                     "Unset"
                 ],
                 "rate_limit_per_user": [
-                    "UnsetOr[Optional[int]]",
+                    "UnsetOr[t.Optional[int]]",
                     "Unset"
                 ]
             },
@@ -522,7 +519,7 @@
             "method": "POST",
             "url": "/channels/{channel_id}/threads",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": "str",
@@ -531,7 +528,7 @@
                     "Unset"
                 ],
                 "rate_limit_per_user": [
-                    "UnsetOr[Optional[int]]",
+                    "UnsetOr[t.Optional[int]]",
                     "Unset"
                 ],
                 "content": [
@@ -539,23 +536,23 @@
                     "Unset"
                 ],
                 "embeds": [
-                    "UnsetOr[list[discord_typings.EmbedData]]",
+                    "UnsetOr[list[dt.EmbedData]]",
                     "Unset"
                 ],
                 "allowed_mentions": [
-                    "UnsetOr[discord_typings.AllowedMentionsData]",
+                    "UnsetOr[dt.AllowedMentionsData]",
                     "Unset"
                 ],
                 "components": [
-                    "UnsetOr[list[discord_typings.ComponentData]]",
+                    "UnsetOr[list[dt.ComponentData]]",
                     "Unset"
                 ],
                 "sticker_ids": [
-                    "UnsetOr[list[Snowflake]]",
+                    "UnsetOr[list[dt.Snowflake]]",
                     "Unset"
                 ],
                 "attachments": [
-                    "UnsetOr[list[discord_typings.PartialAttachmentData]]",
+                    "UnsetOr[list[dt.PartialAttachmentData]]",
                     "Unset"
                 ],
                 "flags": [
@@ -563,7 +560,7 @@
                     "Unset"
                 ],
                 "applied_tags": [
-                    "UnsetOr[list[Snowflake]]",
+                    "UnsetOr[list[dt.Snowflake]]",
                     "Unset"
                 ]
             },
@@ -574,52 +571,52 @@
             "method": "PUT",
             "url": "/channels/{channel_id}/thread-members/@me",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             }
         },
         "add_thread_member": {
             "method": "PUT",
             "url": "/channels/{channel_id}/thread-members/{user_id}",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "user_id": "Snowflake"
+                "channel_id": "dt.Snowflake",
+                "user_id": "dt.Snowflake"
             }
         },
         "leave_thread": {
             "method": "DELETE",
             "url": "/channels/{channel_id}/thread-members/@me",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             }
         },
         "remove_thread_member": {
             "method": "DELETE",
             "url": "/channels/{channel_id}/thread-members/{user_id}",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "user_id": "Snowflake"
+                "channel_id": "dt.Snowflake",
+                "user_id": "dt.Snowflake"
             }
         },
         "get_thread_member": {
             "method": "GET",
             "url": "/channels/{channel_id}/thread-members/{user_id}",
             "url-parameters": {
-                "channel_id": "Snowflake",
-                "user_id": "Snowflake"
+                "channel_id": "dt.Snowflake",
+                "user_id": "dt.Snowflake"
             }
         },
         "list_thread_members": {
             "method": "GET",
             "url": "/channels/{channel_id}/thread-members",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             }
         },
         "list_public_archived_threads": {
             "method": "GET",
             "url": "/channels/{channel_id}/threads/archived/public",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "query-parameters": {
                 "before": [
@@ -636,7 +633,7 @@
             "method": "GET",
             "url": "/channels/{channel_id}/threads/archived/private",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "query-parameters": {
                 "before": [
@@ -653,7 +650,7 @@
             "method": "GET",
             "url": "/channels/{channel_id}/users/@me/threads/archived/private",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "query-parameters": {
                 "before": [

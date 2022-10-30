@@ -1,10 +1,8 @@
 {
     "name": "InteractionEndpoints",
     "requires": [
-        "Optional",
+        "typing",
         "discord_typings",
-        "Snowflake",
-        "BasicFile",
         "Unset"
     ],
     "methods": {
@@ -12,13 +10,13 @@
             "method": "POST",
             "url": "/interactions/{interaction_id}/{interaction_token}/callback",
             "url-parameters": {
-                "interaction_id": "Snowflake",
+                "interaction_id": "dt.Snowflake",
                 "interaction_token": "str"
             },
             "json-parameters": {
-                "type": "discord_typings.InteractionCallbackTypes",
+                "type": "dt.InteractionCallbackTypes",
                 "data": [
-                    "UnsetOr[discord_typings.InteractionCallbackData]",
+                    "UnsetOr[dt.InteractionCallbackData]",
                     "Unset"
                 ]
             },
@@ -28,7 +26,7 @@
             "method": "GET",
             "url": "/webhooks/{application_id}/{interaction_token}/messages/@original",
             "url-parameters": {
-                "application_id": "Snowflake",
+                "application_id": "dt.Snowflake",
                 "interaction_token": "str"
             }
         },
@@ -36,28 +34,28 @@
             "method": "PATCH",
             "url": "/webhooks/{application_id}/{interaction_token}/messages/@original",
             "url-parameters": {
-                "application_id": "Snowflake",
+                "application_id": "dt.Snowflake",
                 "interaction_token": "str"
             },
             "json-parameters": {
                 "content": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "embeds": [
-                    "UnsetOr[Optional[list[discord_typings.EmbedData]]]",
+                    "UnsetOr[t.Optional[list[dt.EmbedData]]]",
                     "Unset"
                 ],
                 "allowed_mentions": [
-                    "UnsetOr[Optional[discord_typings.AllowedMentionsData]]",
+                    "UnsetOr[t.Optional[dt.AllowedMentionsData]]",
                     "Unset"
                 ],
                 "components": [
-                    "UnsetOr[Optional[list[discord_typings.ComponentData]]]",
+                    "UnsetOr[t.Optional[list[dt.ComponentData]]]",
                     "Unset"
                 ],
                 "attachments": [
-                    "UnsetOr[Optional[list[discord_typings.PartialAttachmentData]]]",
+                    "UnsetOr[t.Optional[list[dt.PartialAttachmentData]]]",
                     "Unset"
                 ]
             },
@@ -67,7 +65,7 @@
             "method": "DELETE",
             "url": "/webhooks/{application_id}/{interaction_token}/messages/@original",
             "url-parameters": {
-                "application_id": "Snowflake",
+                "application_id": "dt.Snowflake",
                 "interaction_token": "str"
             }
         },
@@ -75,7 +73,7 @@
             "method": "POST",
             "url": "/webhooks/{application_id}/{interaction_token}",
             "url-parameters": {
-                "application_id": "Snowflake",
+                "application_id": "dt.Snowflake",
                 "interaction_token": "str"
             },
             "json-parameters": {
@@ -88,19 +86,19 @@
                     "Unset"
                 ],
                 "embeds": [
-                    "UnsetOr[list[discord_typings.EmbedData]]",
+                    "UnsetOr[list[dt.EmbedData]]",
                     "Unset"
                 ],
                 "allowed_mentions": [
-                    "UnsetOr[discord_typings.AllowedMentionsData]",
+                    "UnsetOr[dt.AllowedMentionsData]",
                     "Unset"
                 ],
                 "components": [
-                    "UnsetOr[list[discord_typings.ComponentData]]",
+                    "UnsetOr[list[dt.ComponentData]]",
                     "Unset"
                 ],
                 "attachments": [
-                    "UnsetOr[list[discord_typings.PartialAttachmentData]]",
+                    "UnsetOr[list[dt.PartialAttachmentData]]",
                     "Unset"
                 ],
                 "flags": [
@@ -118,38 +116,38 @@
             "method": "GET",
             "url": "/webhooks/{application_id}/{interaction_token}/messages/{message_id}",
             "url-parameters": {
-                "application_id": "Snowflake",
+                "application_id": "dt.Snowflake",
                 "interaction_token": "str",
-                "message_id": "Snowflake"
+                "message_id": "dt.Snowflake"
             }
         },
         "edit_followup_message": {
             "method": "PATCH",
             "url": "/webhooks/{application_id}/{interaction_token}/messages/{message_id}",
             "url-parameters": {
-                "application_id": "Snowflake",
+                "application_id": "dt.Snowflake",
                 "interaction_token": "str",
-                "message_id": "Snowflake"
+                "message_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "content": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "embeds": [
-                    "UnsetOr[Optional[list[discord_typings.EmbedData]]]",
+                    "UnsetOr[t.Optional[list[dt.EmbedData]]]",
                     "Unset"
                 ],
                 "allowed_mentions": [
-                    "UnsetOr[Optional[discord_typings.AllowedMentionsData]]",
+                    "UnsetOr[t.Optional[dt.AllowedMentionsData]]",
                     "Unset"
                 ],
                 "components": [
-                    "UnsetOr[Optional[list[discord_typings.ComponentData]]]",
+                    "UnsetOr[t.Optional[list[dt.ComponentData]]]",
                     "Unset"
                 ],
                 "attachments": [
-                    "UnsetOr[Optional[list[discord_typings.PartialAttachmentData]]]",
+                    "UnsetOr[t.Optional[list[dt.PartialAttachmentData]]]",
                     "Unset"
                 ]
             },
@@ -159,9 +157,9 @@
             "method": "DELETE",
             "url": "/webhooks/{application_id}/{interaction_token}/messages/{message_id}",
             "url-parameters": {
-                "application_id": "Snowflake",
+                "application_id": "dt.Snowflake",
                 "interaction_token": "str",
-                "message_id": "Snowflake"
+                "message_id": "dt.Snowflake"
             }
         }
     }

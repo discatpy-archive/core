@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: MIT
 
-from typing import Any, Optional
+import typing as t
 from urllib.parse import quote as _urlquote
 
-from ..types import Snowflake
+import discord_typings as dt
 
 __all__ = ("Route",)
 
@@ -14,32 +14,32 @@ class Route:
     Args:
         method (str): The method of this REST API route.
         url (str): The raw, unformatted url of this REST API route.
-        **params (Any): The parameters for the raw, unformatted url.
+        **params (t.Any): The parameters for the raw, unformatted url.
 
     Attributes:
-        params (dict[str, Any]): The parameters for the raw, unformatted url.
+        params (dict[str, t.Any]): The parameters for the raw, unformatted url.
         method (str): The method of this REST API route.
         url (str): The raw, unformatted url of this REST API route.
-        guild_id (Optional[Snowflake]): If included, the guild id parameter.
+        guild_id (t.Optional[dt.Snowflake]): If included, the guild id parameter.
             This is a top-level parameter, which influences the pseudo-bucket generated.
-        channel_id (Optional[Snowflake]): If included, the channel id parameter.
+        channel_id (t.Optional[dt.Snowflake]): If included, the channel id parameter.
             This is a top-level parameter, which influences the pseudo-bucket generated.
-        webhook_id (Optional[Snowflake]): If included, the webhook id parameter.
+        webhook_id (t.Optional[dt.Snowflake]): If included, the webhook id parameter.
             This is a top-level parameter, which influences the pseudo-bucket generated.
-        webhook_token (Optional[str]): If included, the webhook token parameter.
+        webhook_token (t.Optional[str]): If included, the webhook token parameter.
             This is a top-level parameter, which influences the pseudo-bucket generated.
     """
 
-    def __init__(self, method: str, url: str, **params: Any):
+    def __init__(self, method: str, url: str, **params: t.Any):
         self.params = params
         self.method = method
         self.url = url
 
         # top-level resource parameters
-        self.guild_id: Optional[Snowflake] = params.get("guild_id")
-        self.channel_id: Optional[Snowflake] = params.get("channel_id")
-        self.webhook_id: Optional[Snowflake] = params.get("webhook_id")
-        self.webhook_token: Optional[str] = params.get("webhook_token")
+        self.guild_id: t.Optional[dt.Snowflake] = params.get("guild_id")
+        self.channel_id: t.Optional[dt.Snowflake] = params.get("channel_id")
+        self.webhook_id: t.Optional[dt.Snowflake] = params.get("webhook_id")
+        self.webhook_token: t.Optional[str] = params.get("webhook_token")
 
     @property
     def endpoint(self) -> str:

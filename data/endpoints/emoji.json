@@ -1,8 +1,7 @@
 {
     "name": "EmojiEndpoints",
     "requires": [
-        "Optional",
-        "Snowflake",
+        "discord_typings",
         "Unset"
     ],
     "methods": {
@@ -10,27 +9,27 @@
             "method": "GET",
             "url": "/guilds/{guild_id}/emojis",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             }
         },
         "get_guild_emoji": {
             "method": "GET",
             "url": "/guilds/{guild_id}/emojis/{emoji_id}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "emoji_id": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "emoji_id": "dt.Snowflake"
             }
         },
         "create_guild_emoji": {
             "method": "POST",
             "url": "/guilds/{guild_id}/emojis",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": "str",
                 "image": "str",
-                "roles": "list[Snowflake]"
+                "roles": "list[dt.Snowflake]"
             },
             "supports-reason": true
         },
@@ -38,8 +37,8 @@
             "method": "PATCH",
             "url": "/guilds/{guild_id}/emojis/{emoji_id}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "emoji_id": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "emoji_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": [
@@ -47,7 +46,7 @@
                     "Unset"
                 ],
                 "roles": [
-                    "UnsetOr[list[Snowflake]]",
+                    "UnsetOr[list[dt.Snowflake]]",
                     "Unset"
                 ]
             },
@@ -57,8 +56,8 @@
             "method": "DELETE",
             "url": "/guilds/{guild_id}/emojis/{emoji_id}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "emoji_id": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "emoji_id": "dt.Snowflake"
             },
             "supports-reason": true
         }

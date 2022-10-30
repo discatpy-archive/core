@@ -1,9 +1,8 @@
 {
     "name": "GuildScheduledEventEndpoints",
     "requires": [
-        "Optional",
+        "typing",
         "discord_typings",
-        "Snowflake",
         "Unset"
     ],
     "methods": {
@@ -11,7 +10,7 @@
             "method": "GET",
             "url": "/guilds/{guild_id}/scheduled-events",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             },
             "query-parameters": {
                 "with_user_count": [
@@ -24,19 +23,19 @@
             "method": "POST",
             "url": "/guilds/{guild_id}/scheduled-events",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "channel_id": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ],
                 "entity_metadata": [
-                    "UnsetOr[discord_typings.GuildScheduledEventEntityMetadata]",
+                    "UnsetOr[dt.GuildScheduledEventEntityMetadata]",
                     "Unset"
                 ],
                 "name": "str",
-                "privacy_level": "discord_typings.GuildScheduledEventPrivacyLevels",
+                "privacy_level": "dt.GuildScheduledEventPrivacyLevels",
                 "scheduled_start_time": "str",
                 "scheduled_end_time": [
                     "UnsetOr[str]",
@@ -46,7 +45,7 @@
                     "UnsetOr[str]",
                     "Unset"
                 ],
-                "entity_type": "discord_typings.GuildScheduledEventEntityTypes",
+                "entity_type": "dt.GuildScheduledEventEntityTypes",
                 "image": [
                     "UnsetOr[str]",
                     "Unset"
@@ -58,8 +57,8 @@
             "method": "GET",
             "url": "/guilds/{guild_id}/scheduled-events/{guild_scheduled_event_id}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "guild_scheduled_event_id": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "guild_scheduled_event_id": "dt.Snowflake"
             },
             "query-parameters": {
                 "with_user_count": [
@@ -72,16 +71,16 @@
             "method": "PATCH",
             "url": "/guilds/{guild_id}/scheduled-events/{guild_scheduled_event_id}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "guild_scheduled_event_id": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "guild_scheduled_event_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "channel_id": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ],
                 "entity_metadata": [
-                    "UnsetOr[Optional[discord_typings.GuildScheduledEventEntityMetadata]]",
+                    "UnsetOr[t.Optional[dt.GuildScheduledEventEntityMetadata]]",
                     "Unset"
                 ],
                 "name": [
@@ -89,7 +88,7 @@
                     "Unset"
                 ],
                 "privacy_level": [
-                    "UnsetOr[discord_typings.GuildScheduledEventPrivacyLevels]",
+                    "UnsetOr[dt.GuildScheduledEventPrivacyLevels]",
                     "Unset"
                 ],
                 "scheduled_start_time": [
@@ -101,11 +100,11 @@
                     "Unset"
                 ],
                 "description": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "entity_type": [
-                    "UnsetOr[discord_typings.GuildScheduledEventEntityTypes]",
+                    "UnsetOr[dt.GuildScheduledEventEntityTypes]",
                     "Unset"
                 ],
                 "image": [
@@ -113,7 +112,7 @@
                     "Unset"
                 ],
                 "status": [
-                    "UnsetOr[discord_typings.GuildScheduledEventStatus]",
+                    "UnsetOr[dt.GuildScheduledEventStatus]",
                     "Unset"
                 ]
             },
@@ -123,16 +122,16 @@
             "method": "DELETE",
             "url": "/guilds/{guild_id}/scheduled-events/{guild_scheduled_event_id}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "guild_scheduled_event_id": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "guild_scheduled_event_id": "dt.Snowflake"
             }
         },
         "get_guild_scheduled_event_users": {
             "method": "GET",
             "url": "/guilds/{guild_id}/scheduled-events/{guild_scheduled_event_id}/users",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "guild_scheduled_event_id": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "guild_scheduled_event_id": "dt.Snowflake"
             },
             "query-parameters": {
                 "limit": [
@@ -144,11 +143,11 @@
                     "False"
                 ],
                 "before": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ],
                 "after": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ]
             }

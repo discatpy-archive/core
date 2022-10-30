@@ -3,13 +3,13 @@
 import asyncio
 import logging
 import sys
+import typing as t
 import warnings
 from dataclasses import dataclass
-from typing import Any, Optional, Union, cast
 from urllib.parse import quote as _urlquote
 
 import aiohttp
-from discord_typings import GetGatewayBotData
+import discord_typings as dt
 
 from .. import __version__
 from ..errors import BucketMigrated, HTTPException, UnsupportedAPIVersionWarning
@@ -47,11 +47,11 @@ _log = logging.getLogger(__name__)
 
 @dataclass
 class _PreparedData:
-    json: UnsetOr[Any] = Unset
+    json: UnsetOr[t.Any] = Unset
     multipart_content: UnsetOr[aiohttp.FormData] = Unset
 
 
-def _filter_dict_for_unset(d: dict[Any, Any]):
+def _filter_dict_for_unset(d: dict[t.Any, t.Any]):
     return dict(filter(lambda item: item[1] is not Unset, d.items()))
 
 
@@ -78,7 +78,7 @@ class HTTPClient(
     Args:
         token (str): The bot token to use when sending a request to the Discord API.
             Normal user tokens WILL NOT WORK intentionally.
-        api_version (Optional[int]): The Discord API version to use.
+        api_version (t.Optional[int]): The Discord API version to use.
             It's not recommended to set this argument because this library will only
             be able to handle one API version at a time. Defaults to None.
 
@@ -101,7 +101,7 @@ class HTTPClient(
         "_request_id",
     )
 
-    def __init__(self, token: str, *, api_version: Optional[int] = None):
+    def __init__(self, token: str, *, api_version: t.Optional[int] = None):
         self.token = token
         self._ratelimiter = Ratelimiter()
         self._api_version = DEFAULT_API_VERSION
@@ -116,7 +116,7 @@ class HTTPClient(
 
         self._api_url = BASE_API_URL.format(self._api_version)
 
-        self.__session: Optional[aiohttp.ClientSession] = None
+        self.__session: t.Optional[aiohttp.ClientSession] = None
         self.user_agent = "DiscordBot (https://github.com/discatpy-dev/core, {0}) Python/{1.major}.{1.minor}.{1.micro}".format(
             __version__, sys.version_info
         )
@@ -164,7 +164,7 @@ class HTTPClient(
 
     @staticmethod
     def _prepare_data(
-        json: UnsetOr[Union[dict[str, Any], list[Any]]], files: UnsetOr[list[BasicFile]]
+        json: UnsetOr[t.Union[dict[str, t.Any], list[t.Any]]], files: UnsetOr[list[BasicFile]]
     ):
         pd = _PreparedData()
 
@@ -201,33 +201,33 @@ class HTTPClient(
         self,
         route: Route,
         *,
-        query_params: Optional[dict[str, Any]] = None,
-        json_params: UnsetOr[Union[dict[str, Any], list[Any]]] = Unset,
-        reason: Optional[str] = None,
+        query_params: t.Optional[dict[str, t.Any]] = None,
+        json_params: UnsetOr[t.Union[dict[str, t.Any], list[t.Any]]] = Unset,
+        reason: t.Optional[str] = None,
         files: UnsetOr[list[BasicFile]] = Unset,
-        **extras: Any,
-    ) -> Union[Any, str]:
+        **extras: t.Any,
+    ) -> t.Union[t.Any, str]:
         """Sends a request to the Discord API. This automatically handles ratelimiting and data processing.
 
         Args:
             route (Route): The route to send a request to.
-            query_params (Optional[dict[str, Any]]): The query parameters to include in the url of this request.
-                Any Unset values detected will be filtered out automatically. Defaults to None.
-            json_params (UnsetOr[Union[dict[str, Any], list[Any]]]): The json parameters to include in the request.
-                Any Unset values detected will be filtered out automatically. Defaults to Unset.
-            reason (Optional[str]): If this route supports reasons, the reason for the action caused by the
+            query_params (t.Optional[dict[str, t.Any]]): The query parameters to include in the url of this request.
+                t.Any Unset values detected will be filtered out automatically. Defaults to None.
+            json_params (UnsetOr[t.Union[dict[str, t.Any], list[t.Any]]]): The json parameters to include in the request.
+                t.Any Unset values detected will be filtered out automatically. Defaults to Unset.
+            reason (t.Optional[str]): If this route supports reasons, the reason for the action caused by the
                 route being performed. This will be included in the headers under "X-Audit-Log-Reason".
                 Defaults to None.
             files (UnsetOr[list[BasicFile]]): The files to include in the request.
                 This will be processed along with the json paramters to generate multipart content.
                 Attachments are not automatically calculated in the json parameters.
                 Defaults to Unset.
-            **extras (Any): Any extra parameters to include in the underlying aiohttp request function.
+            **extras (t.Any): t.Any extra parameters to include in the underlying aiohttp request function.
                 This SHOULD NOT be used by users, this is a internal parameter for special routes
                 (like Create Guild Sticker).
 
         Returns:
-            If this route returns any content, it will be processed and returned.
+            If this route returns t.Any content, it will be processed and returned.
         """
         self._request_id += 1
         rid = self._request_id
@@ -242,7 +242,7 @@ class HTTPClient(
             headers["X-Audit-Log-Reason"] = _urlquote(reason, safe="/ ")
 
         data = self._prepare_data(json_params, files)
-        kwargs: dict[str, Any] = extras or {}
+        kwargs: dict[str, t.Any] = extras or {}
 
         if data.json is not Unset:
             kwargs["json"] = data.json
@@ -322,14 +322,14 @@ class HTTPClient(
             f'REQUEST:{rid} Tried sending request to "{url}" with method {route.method} {max_tries} times.'
         )
 
-    async def get_gateway_bot(self) -> GetGatewayBotData:
+    async def get_gateway_bot(self) -> dt.GetGatewayBotData:
         """Fetches the gateway information from the Discord API.
 
         Returns:
             A dict containing bot-specific gateway information (like shard_count, max_concurrency, etc).
         """
         gb_info = await self.request(Route("GET", "/gateway/bot"))
-        return cast(GetGatewayBotData, gb_info)
+        return t.cast(dt.GetGatewayBotData, gb_info)
 
     async def get_from_cdn(self, url: str) -> bytes:
         """Fetches an asset from the Discord CDN.

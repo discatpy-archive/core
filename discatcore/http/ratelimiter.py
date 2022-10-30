@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MIT
 
 import logging
+import typing as t
 from datetime import datetime, timezone
-from typing import Optional
 
 from aiohttp import ClientResponse
 
@@ -21,9 +21,9 @@ class Bucket(BurstRatelimiter):
     """Represents a bucket in the Discord API.
 
     Attributes:
-        reset (Optional[datetime.datetime]): The raw timestamp (processed into a datetime) when the bucket will reset.
+        reset (t.Optional[datetime.datetime]): The raw timestamp (processed into a datetime) when the bucket will reset.
             Defaults to None.
-        bucket (Optional[str]): The hash denoting this bucket. This value is straight from the Discord API.
+        bucket (t.Optional[str]): The hash denoting this bucket. This value is straight from the Discord API.
             Defaults to None.
     """
 
@@ -37,8 +37,8 @@ class Bucket(BurstRatelimiter):
     def __init__(self):
         BurstRatelimiter.__init__(self)
 
-        self.reset: Optional[datetime] = None
-        self.bucket: Optional[str] = None
+        self.reset: t.Optional[datetime] = None
+        self.bucket: t.Optional[str] = None
         self._first_update: bool = True
         self._migrated: bool = False
 

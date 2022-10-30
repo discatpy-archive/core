@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 
 import asyncio
-from typing import Any, Optional
+import typing as t
 
 __all__ = (
     "BaseRatelimiter",
@@ -30,12 +30,12 @@ class BaseRatelimiter:
         await self.acquire()
         return None
 
-    async def __aexit__(self, *args: Any):
+    async def __aexit__(self, *args: t.Any):
         pass
 
 
 class ManualRatelimiter(BaseRatelimiter):
-    """A simple ratelimiter that simply locks at the command of anything."""
+    """A simple ratelimiter that simply locks at the command of t.Anything."""
 
     async def _unlock(self, delay: float):
         await asyncio.sleep(delay)
@@ -58,9 +58,9 @@ class BurstRatelimiter(ManualRatelimiter):
     """A ratelimiter that automatically locks when acquired based on its information.
 
     Attributes:
-        limit (Optional[int]): The amount of times this ratelimiter can be acquired before being locked.
-        remaining (Optional[int]): The remaining amount of times this ratelimiter can be acquired before locking.
-        reset_after (Optional[float]): How long the ratelimiter has to wait before it has been renewed.
+        limit (t.Optional[int]): The amount of times this ratelimiter can be acquired before being locked.
+        remaining (t.Optional[int]): The remaining amount of times this ratelimiter can be acquired before locking.
+        reset_after (t.Optional[float]): How long the ratelimiter has to wait before it has been renewed.
     """
 
     __slots__ = ("limit", "remaining", "reset_after")
@@ -68,9 +68,9 @@ class BurstRatelimiter(ManualRatelimiter):
     def __init__(self):
         BaseRatelimiter.__init__(self)
 
-        self.limit: Optional[int] = None
-        self.remaining: Optional[int] = None
-        self.reset_after: Optional[float] = None
+        self.limit: t.Optional[int] = None
+        self.remaining: t.Optional[int] = None
+        self.reset_after: t.Optional[float] = None
 
     async def acquire(self):
         if self.reset_after is not None and self.remaining == 0 and not self.is_locked():

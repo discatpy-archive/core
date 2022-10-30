@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MIT
 
 import io
+import typing as t
 from os import path
-from typing import Optional, Union
 
 __all__ = ("BasicFile",)
 
@@ -32,10 +32,10 @@ class BasicFile:
 
     def __init__(
         self,
-        fp: Union[io.IOBase, str, bytes],
+        fp: t.Union[io.IOBase, str, bytes],
         content_type: str,
         *,
-        filename: Optional[str] = None,
+        filename: t.Optional[str] = None,
         spoiler: bool = False,
     ):
         if isinstance(fp, io.IOBase):

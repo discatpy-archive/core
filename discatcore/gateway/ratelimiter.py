@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import TYPE_CHECKING, Any, Optional
+import typing as t
 
 from ..impl.ratelimit import BaseRatelimiter
 
-if TYPE_CHECKING:
+if t.TYPE_CHECKING:
     from .client import GatewayClient
 
 __all__ = ("Ratelimiter",)
@@ -35,7 +35,7 @@ class Ratelimiter(BaseRatelimiter):
         self.limit: int = limit
         self.reset_after: float = reset_after
         self.parent: GatewayClient = parent
-        self._task: Optional[asyncio.Task[Any]] = None
+        self._task: t.Optional[asyncio.Task[t.Any]] = None
 
     async def ratelimit_loop(self):
         """Updates the amount of commands used per minute."""

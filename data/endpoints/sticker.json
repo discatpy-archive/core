@@ -1,8 +1,8 @@
 {
     "name": "StickerEndpoints",
     "requires": [
-        "Optional",
-        "Snowflake",
+        "typing",
+        "discord_typings",
         "BasicFile",
         "Unset"
     ],
@@ -11,7 +11,7 @@
             "method": "GET",
             "url": "/stickers/{sticker_id}",
             "url-parameters": {
-                "sticker_id": "Snowflake"
+                "sticker_id": "dt.Snowflake"
             }
         },
         "list_nitro_sticker_packs": {
@@ -22,22 +22,22 @@
             "method": "GET",
             "url": "/guilds/{guild_id}/stickers",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             }
         },
         "get_guild_sticker": {
             "method": "GET",
             "url": "/guilds/{guild_id}/stickers/{sticker_id}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "sticker_id": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "sticker_id": "dt.Snowflake"
             }
         },
         "create_guild_sticker": {
             "method": "POST",
             "url": "/guilds/{guild_id}/stickers",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             },
             "extra-parameters": {
                 "name": "str",
@@ -65,8 +65,8 @@
             "method": "PATCH",
             "url": "/guilds/{guild_id}/stickers/{sticker_id}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "sticker_id": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "sticker_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": [
@@ -74,7 +74,7 @@
                     "Unset"
                 ],
                 "description": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "tags": [
@@ -88,8 +88,8 @@
             "method": "DELETE",
             "url": "/guilds/{guild_id}/stickers/{sticker_id}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "sticker_id": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "sticker_id": "dt.Snowflake"
             },
             "supports-reason": true
         }

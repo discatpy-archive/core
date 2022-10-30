@@ -4,8 +4,8 @@ import asyncio
 import inspect
 import logging
 import traceback
+import typing as t
 from collections.abc import Callable, Coroutine
-from typing import Any, Optional, TypeVar
 
 from .event import Event
 
@@ -13,9 +13,9 @@ _log = logging.getLogger(__name__)
 
 __all__ = ("Dispatcher",)
 
-T = TypeVar("T")
+T = t.TypeVar("T")
 Func = Callable[..., T]
-CoroFunc = Func[Coroutine[Any, Any, Any]]
+CoroFunc = Func[Coroutine[t.Any, t.Any, t.Any]]
 
 
 class Dispatcher:
@@ -30,7 +30,7 @@ class Dispatcher:
     def __init__(self) -> None:
         self.events: dict[str, Event] = {}
 
-    def get_event(self, name: str) -> Optional[Event]:
+    def get_event(self, name: str) -> t.Optional[Event]:
         """Returns an event with the name provided.
 
         Args:
@@ -120,14 +120,14 @@ class Dispatcher:
 
     # dispatch
 
-    def dispatch(self, name: str, *args: Any, **kwargs: Any) -> None:
+    def dispatch(self, name: str, *args: t.Any, **kwargs: t.Any) -> None:
         """Dispatches a event. This will trigger the all of the event's
         callbacks.
 
         Args:
             name (str): The name of the event to dispatch.
-            *args (Any): Arguments to pass into the event.
-            **kwargs (Any): Keyword arguments to pass into the event.
+            *args (t.Any): Arguments to pass into the event.
+            **kwargs (t.Any): Keyword arguments to pass into the event.
         """
         _log.debug("Dispatching event %s", name)
         event = self.events.get(name)

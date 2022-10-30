@@ -1,9 +1,8 @@
 {
     "name": "ApplicationCommandEndpoints",
     "requires": [
-        "Optional",
+        "typing",
         "discord_typings",
-        "Snowflake",
         "Unset"
     ],
     "methods": {
@@ -11,7 +10,7 @@
             "method": "GET",
             "url": "/applications/{application_id}/commands",
             "url-parameters": {
-                "application_id": "Snowflake"
+                "application_id": "dt.Snowflake"
             },
             "query-parameters": {
                 "with_localizations": [
@@ -24,33 +23,33 @@
             "method": "POST",
             "url": "/applications/{application_id}/commands",
             "url-parameters": {
-                "application_id": "Snowflake"
+                "application_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": "str",
                 "name_localizations": [
-                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "UnsetOr[t.Optional[dict[dt.Locales, str]]]",
                     "Unset"
                 ],
                 "description": "str",
                 "description_localizations": [
-                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "UnsetOr[t.Optional[dict[dt.Locales, str]]]",
                     "Unset"
                 ],
                 "options": [
-                    "UnsetOr[list[discord_typings.ApplicationCommandOptionData]]",
+                    "UnsetOr[list[dt.ApplicationCommandOptionData]]",
                     "Unset"
                 ],
                 "default_member_permissions": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "dm_permission": [
-                    "UnsetOr[Optional[bool]]",
+                    "UnsetOr[t.Optional[bool]]",
                     "Unset"
                 ],
                 "type": [
-                    "discord_typings.ApplicationCommandTypes",
+                    "dt.ApplicationCommandTypes",
                     "1"
                 ]
             }
@@ -59,16 +58,16 @@
             "method": "GET",
             "url": "/applications/{application_id}/commands/{command_id}",
             "url-parameters": {
-                "application_id": "Snowflake",
-                "command_id": "Snowflake"
+                "application_id": "dt.Snowflake",
+                "command_id": "dt.Snowflake"
             }
         },
         "edit_global_application_command": {
             "method": "PATCH",
             "url": "/applications/{application_id}/commands/{command_id}",
             "url-parameters": {
-                "application_id": "Snowflake",
-                "command_id": "Snowflake"
+                "application_id": "dt.Snowflake",
+                "command_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": [
@@ -76,7 +75,7 @@
                     "Unset"
                 ],
                 "name_localizations": [
-                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "UnsetOr[t.Optional[dict[dt.Locales, str]]]",
                     "Unset"
                 ],
                 "description": [
@@ -84,19 +83,19 @@
                     "Unset"
                 ],
                 "description_localizations": [
-                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "UnsetOr[t.Optional[dict[dt.Locales, str]]]",
                     "Unset"
                 ],
                 "options": [
-                    "UnsetOr[list[discord_typings.ApplicationCommandOptionData]]",
+                    "UnsetOr[list[dt.ApplicationCommandOptionData]]",
                     "Unset"
                 ],
                 "default_member_permissions": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "dm_permission": [
-                    "UnsetOr[Optional[bool]]",
+                    "UnsetOr[t.Optional[bool]]",
                     "Unset"
                 ]
             }
@@ -105,18 +104,18 @@
             "method": "DELETE",
             "url": "/applications/{application_id}/commands/{command_id}",
             "url-parameters": {
-                "application_id": "Snowflake",
-                "command_id": "Snowflake"
+                "application_id": "dt.Snowflake",
+                "command_id": "dt.Snowflake"
             }
         },
         "bulk_overwrite_global_application_commands": {
             "method": "PUT",
             "url": "/applications/{application_id}/commands",
             "url-parameters": {
-                "application_id": "Snowflake"
+                "application_id": "dt.Snowflake"
             },
             "extra-parameters": {
-                "commands": "list[discord_typings.ApplicationCommandData]"
+                "commands": "list[dt.ApplicationCommandData]"
             },
             "extra-request-parameters": {
                 "json_params": "commands"
@@ -126,8 +125,8 @@
             "method": "GET",
             "url": "/applications/{application_id}/guilds/{guild_id}/commands",
             "url-parameters": {
-                "application_id": "Snowflake",
-                "guild_id": "Snowflake"
+                "application_id": "dt.Snowflake",
+                "guild_id": "dt.Snowflake"
             },
             "query-parameters": {
                 "with_localizations": [
@@ -140,34 +139,34 @@
             "method": "POST",
             "url": "/applications/{application_id}/guilds/{guild_id}/commands",
             "url-parameters": {
-                "application_id": "Snowflake",
-                "guild_id": "Snowflake"
+                "application_id": "dt.Snowflake",
+                "guild_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": "str",
                 "name_localizations": [
-                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "UnsetOr[t.Optional[dict[dt.Locales, str]]]",
                     "Unset"
                 ],
                 "description": "str",
                 "description_localizations": [
-                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "UnsetOr[t.Optional[dict[dt.Locales, str]]]",
                     "Unset"
                 ],
                 "options": [
-                    "UnsetOr[list[discord_typings.ApplicationCommandOptionData]]",
+                    "UnsetOr[list[dt.ApplicationCommandOptionData]]",
                     "Unset"
                 ],
                 "default_member_permissions": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "dm_permission": [
-                    "UnsetOr[Optional[bool]]",
+                    "UnsetOr[t.Optional[bool]]",
                     "Unset"
                 ],
                 "type": [
-                    "discord_typings.ApplicationCommandTypes",
+                    "dt.ApplicationCommandTypes",
                     "1"
                 ]
             }
@@ -176,18 +175,18 @@
             "method": "GET",
             "url": "/applications/{application_id}/guilds/{guild_id}/commands/{command_id}",
             "url-parameters": {
-                "application_id": "Snowflake",
-                "guild_id": "Snowflake",
-                "command_id": "Snowflake"
+                "application_id": "dt.Snowflake",
+                "guild_id": "dt.Snowflake",
+                "command_id": "dt.Snowflake"
             }
         },
         "edit_guild_application_command": {
             "method": "PATCH",
             "url": "/applications/{application_id}/guilds/{guild_id}/commands/{command_id}",
             "url-parameters": {
-                "application_id": "Snowflake",
-                "guild_id": "Snowflake",
-                "command_id": "Snowflake"
+                "application_id": "dt.Snowflake",
+                "guild_id": "dt.Snowflake",
+                "command_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": [
@@ -195,7 +194,7 @@
                     "Unset"
                 ],
                 "name_localizations": [
-                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "UnsetOr[t.Optional[dict[dt.Locales, str]]]",
                     "Unset"
                 ],
                 "description": [
@@ -203,19 +202,19 @@
                     "Unset"
                 ],
                 "description_localizations": [
-                    "UnsetOr[Optional[dict[discord_typings.Locales, str]]]",
+                    "UnsetOr[t.Optional[dict[dt.Locales, str]]]",
                     "Unset"
                 ],
                 "options": [
-                    "UnsetOr[list[discord_typings.ApplicationCommandOptionData]]",
+                    "UnsetOr[list[dt.ApplicationCommandOptionData]]",
                     "Unset"
                 ],
                 "default_member_permissions": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "dm_permission": [
-                    "UnsetOr[Optional[bool]]",
+                    "UnsetOr[t.Optional[bool]]",
                     "Unset"
                 ]
             }
@@ -224,20 +223,20 @@
             "method": "DELETE",
             "url": "/applications/{application_id}/guilds/{guild_id}/commands/{command_id}",
             "url-parameters": {
-                "application_id": "Snowflake",
-                "guild_id": "Snowflake",
-                "command_id": "Snowflake"
+                "application_id": "dt.Snowflake",
+                "guild_id": "dt.Snowflake",
+                "command_id": "dt.Snowflake"
             }
         },
         "bulk_overwrite_guild_application_commands": {
             "method": "PUT",
             "url": "/applications/{application_id}/guilds/{guild_id}/commands",
             "url-parameters": {
-                "application_id": "Snowflake",
-                "guild_id": "Snowflake"
+                "application_id": "dt.Snowflake",
+                "guild_id": "dt.Snowflake"
             },
             "extra-parameters": {
-                "commands": "list[discord_typings.ApplicationCommandData]"
+                "commands": "list[dt.ApplicationCommandData]"
             },
             "extra-request-parameters": {
                 "json_params": "commands"
@@ -247,17 +246,17 @@
             "method": "GET",
             "url": "/applications/{application_id}/guilds/{guild_id}/commands/permissions",
             "url-parameters": {
-                "application_id": "Snowflake",
-                "guild_id": "Snowflake"
+                "application_id": "dt.Snowflake",
+                "guild_id": "dt.Snowflake"
             }
         },
         "get_application_command_permissions": {
             "method": "GET",
             "url": "/applications/{application_id}/guilds/{guild_id}/commands/{command_id}/permissions",
             "url-parameters": {
-                "application_id": "Snowflake",
-                "guild_id": "Snowflake",
-                "command_id": "Snowflake"
+                "application_id": "dt.Snowflake",
+                "guild_id": "dt.Snowflake",
+                "command_id": "dt.Snowflake"
             }
         }
     }

@@ -7,16 +7,15 @@ import datetime
 import logging
 import platform
 import random
+import typing as t
 import zlib
-from typing import Any, Optional, Union, cast
 
 import aiohttp
-from discord_typings import GatewayEvent, ReadyData
+import discord_typings as dt
 
 from ..errors import GatewayReconnect
 from ..http import HTTPClient
 from ..impl.dispatcher import Dispatcher
-from ..types import Snowflake
 from ..utils import dumps, loads
 from .ratelimiter import Ratelimiter
 
@@ -94,12 +93,12 @@ class GatewayClient:
             This is used for messages that are compressed, which is enabled by default.
         heartbeat_interval (float): The interval to heartbeat given by Discord. This is used with the heartbeat handler.
         session_id (str): The session id of this Gateway connection. This is also used when we resume connection.
-        recent_payload (discord_typings.GatewayEvent): The newest Gateway Payload.
+        recent_payload (discord_typings.dt.GatewayEvent): The newest Gateway Payload.
         heartbeat_timeout (int): The amount of time (in seconds) to wait for a heartbeat ack to come in.
         ratelimiter (Ratelimiter): The ratelimiter for the Gateway connection.
             This is used to limit the number of commands (except for heartbeats) so we don't get kicked off of the
             gateway connection with opcode 9.
-        heartbeat_handler (Optional[HeartbeatHandler]): The heartbeat handler for the Gateway connection.
+        heartbeat_handler (t.Optional[HeartbeatHandler]): The heartbeat handler for the Gateway connection.
             This is used to keep the connection alive via Discord's guidelines.
     """
 
@@ -130,7 +129,7 @@ class GatewayClient:
         intents: int = 0,
     ):
         # Internal attribs
-        self._ws: Optional[aiohttp.ClientWebSocketResponse] = None
+        self._ws: t.Optional[aiohttp.ClientWebSocketResponse] = None
         self._inflator = zlib.decompressobj()
         self._http: HTTPClient = http
         self._dispatcher: Dispatcher = dispatcher
@@ -140,9 +139,9 @@ class GatewayClient:
 
         # Values from the Gateway
         self.heartbeat_interval: float = 0.0
-        self.sequence: Optional[int] = None
+        self.sequence: t.Optional[int] = None
         self.session_id: str = ""
-        self.recent_payload: Optional[GatewayEvent] = None
+        self.recent_payload: t.Optional[dt.GatewayEvent] = None
         self.can_resume: bool = False
         self.resume_url: str = "wss://gateway.discord.gg"
 
@@ -151,12 +150,12 @@ class GatewayClient:
         self.ratelimiter: Ratelimiter = Ratelimiter(self)
 
         # Misc
-        self._last_heartbeat_ack: Optional[datetime.datetime] = None
+        self._last_heartbeat_ack: t.Optional[datetime.datetime] = None
         self.heartbeat_timeout: float = heartbeat_timeout
 
     # Events
 
-    async def handle_ready(self, data: ReadyData):
+    async def handle_ready(self, data: dt.ReadyData):
         self.session_id = data["session_id"]
         self.resume_url = data["resume_gateway_url"]
 
@@ -175,11 +174,11 @@ class GatewayClient:
         out_str = buff.decode("utf-8")
         return out_str
 
-    async def send(self, data: dict[str, Any]):
+    async def send(self, data: dict[str, t.Any]):
         """Sends a dict payload to the websocket connection.
 
         Args:
-            data (dict[str, Any]): The data to send to the websocket connection.
+            data (dict[str, t.Any]): The data to send to the websocket connection.
         """
         if not self._ws:
             return
@@ -188,7 +187,7 @@ class GatewayClient:
         await self._ws.send_json(data, dumps=dumps)
         _log.debug("Sent JSON payload %s to the Gateway.", data)
 
-    async def receive(self) -> Optional[bool]:
+    async def receive(self) -> t.Optional[bool]:
         """Receives a message from the websocket connection and decompresses the message.
 
         Returns:
@@ -211,13 +210,13 @@ class GatewayClient:
         _log.debug("Received WS message from Gateway with type %s", msg.type.name)  # type: ignore
 
         if msg.type in (aiohttp.WSMsgType.BINARY, aiohttp.WSMsgType.TEXT):  # type: ignore
-            received_msg: Union[Any, str] = None
+            received_msg: t.Union[t.Any, str] = None
             if msg.type == aiohttp.WSMsgType.BINARY:  # type: ignore
                 received_msg = self._decompress_msg(msg.data)  # type: ignore
             elif msg.type == aiohttp.WSMsgType.TEXT:  # type: ignore
                 received_msg = msg.data  # type: ignore
 
-            self.recent_payload = cast(GatewayEvent, loads(received_msg))  # type: ignore
+            self.recent_payload = t.cast(dt.GatewayEvent, loads(received_msg))  # type: ignore
             _log.debug("Received payload from the Gateway: %s", self.recent_payload)
             self.sequence = self.recent_payload.get("s")
             return True
@@ -227,11 +226,11 @@ class GatewayClient:
 
     # Connection management
 
-    async def connect(self, url: Optional[str] = None):
+    async def connect(self, url: t.Optional[str] = None):
         """Starts a connection with the Gateway.
 
         Args:
-            url (Optional[str]): The url to connect to the Gateway with. This should only be used if we are resuming.
+            url (t.Optional[str]): The url to connect to the Gateway with. This should only be used if we are resuming.
                 If this is not provided, then the url will be fetched via the Get Gateway Bot endpoint. Defaults to None.
 
         Returns:
@@ -290,7 +289,7 @@ class GatewayClient:
                     data = self.recent_payload.get("d")
 
                     if event_name == "ready":
-                        await self.handle_ready(cast(ReadyData, data))
+                        await self.handle_ready(t.cast(dt.ReadyData, data))
 
                     self._dispatcher.dispatch(event_name, data)
 
@@ -341,7 +340,7 @@ class GatewayClient:
     # Payloads
 
     @property
-    def identify_payload(self) -> dict[str, Any]:
+    def identify_payload(self) -> dict[str, t.Any]:
         """Returns the identifcation payload."""
         identify_dict = {
             "op": IDENTIFY,
@@ -362,7 +361,7 @@ class GatewayClient:
         return identify_dict
 
     @property
-    def resume_payload(self) -> dict[str, Any]:
+    def resume_payload(self) -> dict[str, t.Any]:
         """Returns the resume payload."""
         return {
             "op": RESUME,
@@ -374,7 +373,7 @@ class GatewayClient:
         }
 
     @property
-    def heartbeat_payload(self) -> dict[str, Any]:
+    def heartbeat_payload(self) -> dict[str, t.Any]:
         """Returns the heartbeat payload."""
         return {"op": HEARTBEAT, "d": self.sequence}
 
@@ -394,9 +393,9 @@ class GatewayClient:
 
     async def request_guild_members(
         self,
-        guild_id: Snowflake,
+        guild_id: dt.Snowflake,
         *,
-        user_ids: Optional[Union[Snowflake, list[Snowflake]]] = None,
+        user_ids: t.Optional[t.Union[dt.Snowflake, list[dt.Snowflake]]] = None,
         limit: int = 0,
         query: str = "",
         presences: bool = False,
@@ -405,13 +404,13 @@ class GatewayClient:
 
         Args:
             guild_id (int): The guild ID we are requesting members from.
-            user_ids (Optional[Union[int, List[int]]]): The user id(s) to request. Defaults to None.
+            user_ids (t.Optional[t.Union[int, List[int]]]): The user id(s) to request. Defaults to None.
             limit (int): The maximum amount of members to grab. Defaults to 0.
             query (str): The string the username starts with. Defaults to "".
             presences (bool): Whether or not Discord should give us the presences of the members.
                 Defaults to False.
         """
-        payload: dict[str, Any] = {
+        payload: dict[str, t.Any] = {
             "op": REQUEST_GUILD_MEMBERS,
             "d": {
                 "guild_id": str(guild_id),
@@ -434,7 +433,7 @@ class GatewayClient:
             status (str): The new status of the presence.
             afk (bool): Whether or not the bot is AFK or not.
         """
-        payload: dict[str, Any] = {
+        payload: dict[str, t.Any] = {
             "op": PRESENCE_UPDATE,
             "d": {
                 "since": since,
@@ -451,16 +450,16 @@ class GatewayClient:
     async def update_voice_state(
         self,
         *,
-        guild_id: Snowflake,
-        channel_id: Optional[Snowflake],
+        guild_id: dt.Snowflake,
+        channel_id: t.Optional[dt.Snowflake],
         self_mute: bool,
         self_deaf: bool,
     ):
         """Sends the update voice state payload to the Gateway.
 
         Args:
-            guild_id (Snowflake): The id of the guild where the voice channel is in.
-            channel_id (Optional[Snowflake]): The id of the voice channel. Set this to None if you want to disconnect.
+            guild_id (dt.Snowflake): The id of the guild where the voice channel is in.
+            channel_id (t.Optional[dt.Snowflake]): The id of the voice channel. Set this to None if you want to disconnect.
             self_mute (bool): Whether the bot is muted or not.
             self_deaf (bool): Whether the bot is deafened or not.
         """

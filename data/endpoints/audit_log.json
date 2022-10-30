@@ -2,7 +2,6 @@
     "name": "AuditLogEndpoints",
     "requires": [
         "discord_typings",
-        "Snowflake",
         "Unset"
     ],
     "methods": {
@@ -10,19 +9,19 @@
             "method": "GET",
             "url": "/guilds/{guild_id}/audit-logs",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             },
             "query-parameters": {
                 "user_id": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ],
                 "action_type": [
-                    "UnsetOr[discord_typings.AuditLogEvents]",
+                    "UnsetOr[dt.AuditLogEvents]",
                     "Unset"
                 ],
                 "before": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ],
                 "limit": [

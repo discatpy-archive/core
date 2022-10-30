@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: MIT
 
-from typing import Optional, Union
+import typing as t
 
+import discord_typings as dt
 from aiohttp import ClientResponse
-from discord_typings import HTTPErrorResponseData, NestedHTTPErrorsData
 
 __all__ = (
     "DisCatCoreException",
@@ -22,7 +22,7 @@ class DisCatCoreException(Exception):
     pass
 
 
-def _shorten_error_dict(d: NestedHTTPErrorsData, parent_key: str = ""):
+def _shorten_error_dict(d: dt.NestedHTTPErrorsData, parent_key: str = ""):
     ret_items: dict[str, str] = {}
 
     _errors = d.get("_errors")
@@ -52,8 +52,9 @@ class HTTPException(DisCatCoreException):
 
     __slots__ = ("text", "code")
 
-    def __init__(self, response: ClientResponse, data: Optional[Union[HTTPErrorResponseData, str]]):
-
+    def __init__(
+        self, response: ClientResponse, data: t.Optional[t.Union[dt.HTTPErrorResponseData, str]]
+    ):
         if isinstance(data, dict):
             self.code = data.get("code", 0)
             base = data.get("message", "")

@@ -1,9 +1,7 @@
 {
     "name": "StageInstanceEndpoints",
     "requires": [
-        "Optional",
         "discord_typings",
-        "Snowflake",
         "Unset"
     ],
     "methods": {
@@ -11,10 +9,10 @@
             "method": "POST",
             "url": "/stage-instances",
             "json-parameters": {
-                "channel_id": "Snowflake",
+                "channel_id": "dt.Snowflake",
                 "topic": "str",
                 "privacy_level": [
-                    "UnsetOr[discord_typings.StageInstancePrivacyLevels]",
+                    "UnsetOr[dt.StageInstancePrivacyLevels]",
                     "Unset"
                 ],
                 "send_start_notification": [
@@ -28,14 +26,14 @@
             "method": "GET",
             "url": "/stage-instances/{channel_id}",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             }
         },
         "modify_stage_instance": {
             "method": "PATCH",
             "url": "/stage-instances/{channel_id}",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "topic": [
@@ -43,7 +41,7 @@
                     "Unset"
                 ],
                 "privacy_level": [
-                    "UnsetOr[discord_typings.StageInstancePrivacyLevels]",
+                    "UnsetOr[dt.StageInstancePrivacyLevels]",
                     "Unset"
                 ]
             },
@@ -53,7 +51,7 @@
             "method": "DELETE",
             "url": "/stage-instances/{channel_id}",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "supports-reason": true
         }

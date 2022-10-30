@@ -5,20 +5,20 @@ from __future__ import annotations
 import asyncio
 import inspect
 import logging
+import typing as t
 from collections.abc import Callable, Coroutine
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Optional, TypeVar, Union
 
-if TYPE_CHECKING:
+if t.TYPE_CHECKING:
     from .dispatcher import Dispatcher
 
 _log = logging.getLogger(__name__)
 
 __all__ = ("Event",)
 
-T = TypeVar("T")
+T = t.TypeVar("T")
 Func = Callable[..., T]
-CoroFunc = Func[Coroutine[Any, Any, Any]]
+CoroFunc = Func[Coroutine[t.Any, t.Any, t.Any]]
 
 
 @dataclass
@@ -37,11 +37,11 @@ class Event:
     Attributes:
         name (str): The name of this event.
         parent (Dispatcher): The parent dispatcher of this event.
-        callbacks (list[Callable[..., Coroutine[Any, Any, Any]]]): The callbacks for this event.
-        metadata (dict[Callable[..., Coroutine[Any, Any, Any]], _EventCallbackMetadata]): The metadata for the callbacks for this event.
-        _proto (Optional[inspect.Signature]): The prototype of this event.
+        callbacks (list[Callable[..., Coroutine[t.Any, t.Any, t.Any]]]): The callbacks for this event.
+        metadata (dict[Callable[..., Coroutine[t.Any, t.Any, t.Any]], _EventCallbackMetadata]): The metadata for the callbacks for this event.
+        _proto (t.Optional[inspect.Signature]): The prototype of this event.
             This will define what signature all of the callbacks will have.
-        _error_handler (Callable[..., Coroutine[Any, Any, Any]]): The error handler of this event.
+        _error_handler (Callable[..., Coroutine[t.Any, t.Any, t.Any]]): The error handler of this event.
             The error handler will be run whenever an event dispatched raises an error.
             Defaults to the error handler from the parent dispatcher.
     """
@@ -51,16 +51,16 @@ class Event:
         self.parent = parent
         self.callbacks: list[CoroFunc] = []
         self.metadata: dict[CoroFunc, _EventCallbackMetadata] = {}
-        self._proto: Optional[inspect.Signature] = None
+        self._proto: t.Optional[inspect.Signature] = None
         self._error_handler: CoroFunc = self.parent.error_handler
 
     # setters/decorators
 
-    def set_proto(self, proto_func: Func[Any], *, parent: bool = False):
+    def set_proto(self, proto_func: Func[t.Any], *, parent: bool = False):
         """Sets the prototype for this event.
 
         Args:
-            proto_func (Callable[..., Any]): The prototype for this event.
+            proto_func (Callable[..., t.Any]): The prototype for this event.
             parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
         """
         is_static = isinstance(proto_func, staticmethod)
@@ -80,12 +80,12 @@ class Event:
             raise ValueError(f"Event prototype for event {self.name} has already been set!")
 
     def proto(
-        self, func: Optional[Func[Any]] = None, *, parent: bool = False
-    ) -> Union["Event", Callable[[Func[Any]], "Event"]]:
+        self, func: t.Optional[Func[t.Any]] = None, *, parent: bool = False
+    ) -> t.Union["Event", Callable[[Func[t.Any]], "Event"]]:
         """A decorator to set the prototype of this event.
 
         Args:
-            func (Optional[Callable[..., Any]]): The prototype to pass into this decorator. Defaults to None.
+            func (t.Optional[Callable[..., t.Any]]): The prototype to pass into this decorator. Defaults to None.
             parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
 
         Returns:
@@ -93,7 +93,7 @@ class Event:
             This depends on if the ``func`` arg was passed in.
         """
 
-        def wrapper(func: Func[Any]):
+        def wrapper(func: Func[t.Any]):
             self.set_proto(func, parent=parent)
             return self
 
@@ -105,7 +105,7 @@ class Event:
         """Overrides the error handler of this event.
 
         Args:
-            func (Callable[..., Coroutine[Any, Any, Any]]): The new error handler for this event.
+            func (Callable[..., Coroutine[t.Any, t.Any, t.Any]]): The new error handler for this event.
         """
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback provided is not a coroutine.")
@@ -121,7 +121,7 @@ class Event:
         self._error_handler = func
         _log.debug("Registered new error handler under event %s", self.name)
 
-    def error_handler(self) -> Callable[[Func[Any]], "Event"]:
+    def error_handler(self) -> Callable[[Func[t.Any]], "Event"]:
         """A decorator to override the error handler of this event.
 
         Returns:
@@ -138,7 +138,7 @@ class Event:
         """Adds a new callback to this event.
 
         Args:
-            func (Callable[..., Coroutine[Any, Any, Any]]): The callback to add to this event.
+            func (Callable[..., Coroutine[t.Any, t.Any, t.Any]]): The callback to add to this event.
             one_shot (bool): Whether or not the callback should be a one shot (which means the callback will be removed after running). Defaults to False.
             parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
         """
@@ -147,7 +147,7 @@ class Event:
             # this is to prevent static type checkers from inferring that self._proto is
             # still None after setting it indirectly via a different function
             # (it should never go here tho because exceptions stop the flow of this code
-            # and it should be set if we don't reach any exceptions)
+            # and it should be set if we don't reach t.Any exceptions)
             if not self._proto:
                 return
 
@@ -184,12 +184,12 @@ class Event:
         _log.debug("Removed event callback with index %d under event %s", index, self.name)
 
     def callback(
-        self, func: Optional[CoroFunc] = None, *, one_shot: bool = False, parent: bool = False
-    ) -> Union["Event", Callable[[Func[Any]], "Event"]]:
+        self, func: t.Optional[CoroFunc] = None, *, one_shot: bool = False, parent: bool = False
+    ) -> t.Union["Event", Callable[[Func[t.Any]], "Event"]]:
         """A decorator to add a callback to this event.
 
         Args:
-            func (Optional[Callable[..., Coroutine[Any, Any, Any]]]): The function to pass into this decorator. Defaults to None.
+            func (t.Optional[Callable[..., Coroutine[t.Any, t.Any, t.Any]]]): The function to pass into this decorator. Defaults to None.
             one_shot (bool): Whether or not the callback should be a one shot (which means the callback will be removed after running). Defaults to False.
             parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
 
@@ -208,7 +208,7 @@ class Event:
 
     # dispatch
 
-    async def _run(self, coro: CoroFunc, *args: Any, **kwargs: Any):
+    async def _run(self, coro: CoroFunc, *args: t.Any, **kwargs: t.Any):
         try:
             await coro(*args, **kwargs)
         except asyncio.CancelledError:
@@ -222,9 +222,9 @@ class Event:
     def _schedule_task(
         self,
         coro: CoroFunc,
-        index: Optional[int],
-        *args: Any,
-        **kwargs: Any,
+        index: t.Optional[int],
+        *args: t.Any,
+        **kwargs: t.Any,
     ):
         task_name = f"DisCatCore Event:{self.name}"
         if index:
@@ -234,12 +234,12 @@ class Event:
         wrapped = self._run(coro, *args, **kwargs)
         return asyncio.create_task(wrapped, name=task_name)
 
-    def dispatch(self, *args: Any, **kwargs: Any):
+    def dispatch(self, *args: t.Any, **kwargs: t.Any):
         """Runs all event callbacks with arguments.
 
         Args:
-            *args (Any): Arguments to pass into the event callbacks.
-            **kwargs (Any): Keyword arguments to pass into the event callbacks.
+            *args (t.Any): Arguments to pass into the event callbacks.
+            **kwargs (t.Any): Keyword arguments to pass into the event callbacks.
         """
         for i, callback in enumerate(self.callbacks):
             metadata = self.metadata.get(callback, _EventCallbackMetadata())

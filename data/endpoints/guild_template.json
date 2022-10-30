@@ -1,8 +1,8 @@
 {
     "name": "GuildTemplateEndpoints",
     "requires": [
-        "Optional",
-        "Snowflake",
+        "typing",
+        "discord_typings",
         "Unset"
     ],
     "methods": {
@@ -10,14 +10,14 @@
             "method": "GET",
             "url": "/guilds/templates/{template_code}",
             "url-parameters": {
-                "template_code": "Snowflake"
+                "template_code": "dt.Snowflake"
             }
         },
         "create_guild_from_guild_template": {
             "method": "POST",
             "url": "/guilds/templates/{template_code}",
             "url-parameters": {
-                "template_code": "Snowflake"
+                "template_code": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": "str",
@@ -31,19 +31,19 @@
             "method": "GET",
             "url": "/guilds/{guild_id}/templates",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             }
         },
         "create_guild_template": {
             "method": "POST",
             "url": "/guilds/{guild_id}/templates",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": "str",
                 "description": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ]
             }
@@ -52,16 +52,16 @@
             "method": "PUT",
             "url": "/guilds/{guild_id}/templates/{template_code}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "template_code": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "template_code": "dt.Snowflake"
             }
         },
         "modify_guild_template": {
             "method": "PATCH",
             "url": "/guilds/{guild_id}/templates/{template_code}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "template_code": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "template_code": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": [
@@ -69,7 +69,7 @@
                     "Unset"
                 ],
                 "description": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ]
             }
@@ -78,8 +78,8 @@
             "method": "DELETE",
             "url": "/guilds/{guild_id}/templates/{template_code}",
             "url-parameters": {
-                "guild_id": "Snowflake",
-                "template_code": "Snowflake"
+                "guild_id": "dt.Snowflake",
+                "template_code": "dt.Snowflake"
             }
         }
     }

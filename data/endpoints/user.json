@@ -1,8 +1,8 @@
 {
     "name": "UserEndpoints",
     "requires": [
-        "Optional",
-        "Snowflake",
+        "typing",
+        "discord_typings",
         "Unset"
     ],
     "methods": {
@@ -14,7 +14,7 @@
             "method": "GET",
             "url": "/users/{user_id}",
             "url-parameters": {
-                "user_id": "Snowflake"
+                "user_id": "dt.Snowflake"
             }
         },
         "modify_current_user": {
@@ -26,7 +26,7 @@
                     "Unset"
                 ],
                 "avatar": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ]
             }
@@ -36,11 +36,11 @@
             "url": "/users/@me/guilds",
             "query-parameters": {
                 "before": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ],
                 "after": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ],
                 "limit": [
@@ -53,21 +53,21 @@
             "method": "GET",
             "url": "/users/@me/guilds/{guild_id}/member",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             }
         },
         "leave_guild": {
             "method": "DELETE",
             "url": "/users/@me/guilds/{guild_id}",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             }
         },
         "create_dm": {
             "method": "POST",
             "url": "/users/@me/channels",
             "json-parameters": {
-                "recipient_id": "Snowflake"
+                "recipient_id": "dt.Snowflake"
             }
         },
         "get_user_connections": {

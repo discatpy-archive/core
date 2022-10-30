@@ -1,10 +1,8 @@
 {
     "name": "WebhookEndpoints",
     "requires": [
-        "Optional",
+        "typing",
         "discord_typings",
-        "Snowflake",
-        "BasicFile",
         "Unset"
     ],
     "methods": {
@@ -12,12 +10,12 @@
             "method": "POST",
             "url": "/channels/{channel_id}/webhooks",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": "str",
                 "avatar": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ]
             },
@@ -27,28 +25,28 @@
             "method": "GET",
             "url": "/channels/{channel_id}/webhooks",
             "url-parameters": {
-                "channel_id": "Snowflake"
+                "channel_id": "dt.Snowflake"
             }
         },
         "get_guild_webhooks": {
             "method": "GET",
             "url": "/guilds/{guild_id}/webhooks",
             "url-parameters": {
-                "guild_id": "Snowflake"
+                "guild_id": "dt.Snowflake"
             }
         },
         "get_webhook": {
             "method": "GET",
             "url": "/webhooks/{webhook_id}",
             "url-parameters": {
-                "webhook_id": "Snowflake"
+                "webhook_id": "dt.Snowflake"
             }
         },
         "get_webhook_with_token": {
             "method": "GET",
             "url": "/webhooks/{webhook_id}/{webhook_token}",
             "url-parameters": {
-                "webhook_id": "Snowflake",
+                "webhook_id": "dt.Snowflake",
                 "webhook_token": "str"
             }
         },
@@ -56,7 +54,7 @@
             "method": "PATCH",
             "url": "/webhooks/{webhook_id}",
             "url-parameters": {
-                "webhook_id": "Snowflake"
+                "webhook_id": "dt.Snowflake"
             },
             "json-parameters": {
                 "name": [
@@ -64,11 +62,11 @@
                     "Unset"
                 ],
                 "avatar": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "channel_id": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ]
             },
@@ -78,7 +76,7 @@
             "method": "PATCH",
             "url": "/webhooks/{webhook_id}/{webhook_token}",
             "url-parameters": {
-                "webhook_id": "Snowflake",
+                "webhook_id": "dt.Snowflake",
                 "webhook_token": "str"
             },
             "json-parameters": {
@@ -87,7 +85,7 @@
                     "Unset"
                 ],
                 "avatar": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ]
             },
@@ -97,7 +95,7 @@
             "method": "DELETE",
             "url": "/webhooks/{webhook_id}",
             "url-parameters": {
-                "webhook_id": "Snowflake"
+                "webhook_id": "dt.Snowflake"
             },
             "supports-reason": true
         },
@@ -105,7 +103,7 @@
             "method": "DELETE",
             "url": "/webhooks/{webhook_id}/{webhook_token}",
             "url-parameters": {
-                "webhook_id": "Snowflake",
+                "webhook_id": "dt.Snowflake",
                 "webhook_token": "str"
             },
             "supports-reason": true
@@ -114,7 +112,7 @@
             "method": "POST",
             "url": "/webhooks/{webhook_id}/{webhook_token}",
             "url-parameters": {
-                "webhook_id": "Snowflake",
+                "webhook_id": "dt.Snowflake",
                 "webhook_token": "str"
             },
             "query-parameters": {
@@ -123,7 +121,7 @@
                     "False"
                 ],
                 "thread_id": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ]
             },
@@ -145,19 +143,19 @@
                     "Unset"
                 ],
                 "embeds": [
-                    "UnsetOr[list[discord_typings.EmbedData]]",
+                    "UnsetOr[list[dt.EmbedData]]",
                     "Unset"
                 ],
                 "allowed_mentions": [
-                    "UnsetOr[discord_typings.AllowedMentionsData]",
+                    "UnsetOr[dt.AllowedMentionsData]",
                     "Unset"
                 ],
                 "components": [
-                    "UnsetOr[list[discord_typings.ComponentData]]",
+                    "UnsetOr[list[dt.ComponentData]]",
                     "Unset"
                 ],
                 "attachments": [
-                    "UnsetOr[list[discord_typings.PartialAttachmentData]]",
+                    "UnsetOr[list[dt.PartialAttachmentData]]",
                     "Unset"
                 ],
                 "flags": [
@@ -175,13 +173,13 @@
             "method": "GET",
             "url": "/webhooks/{webhook_id}/{webhook_token}/messages/{message_id}",
             "url-parameters": {
-                "webhook_id": "Snowflake",
+                "webhook_id": "dt.Snowflake",
                 "webhook_token": "str",
-                "message_id": "Snowflake"
+                "message_id": "dt.Snowflake"
             },
             "query-parameters": {
                 "thread_id": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ]
             }
@@ -190,35 +188,35 @@
             "method": "PATCH",
             "url": "/webhooks/{webhook_id}/{webhook_token}/messages/{message_id}",
             "url-parameters": {
-                "webhook_id": "Snowflake",
+                "webhook_id": "dt.Snowflake",
                 "webhook_token": "str",
-                "message_id": "Snowflake"
+                "message_id": "dt.Snowflake"
             },
             "query-parameters": {
                 "thread_id": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ]
             },
             "json-parameters": {
                 "content": [
-                    "UnsetOr[Optional[str]]",
+                    "UnsetOr[t.Optional[str]]",
                     "Unset"
                 ],
                 "embeds": [
-                    "UnsetOr[Optional[list[discord_typings.EmbedData]]]",
+                    "UnsetOr[t.Optional[list[dt.EmbedData]]]",
                     "Unset"
                 ],
                 "allowed_mentions": [
-                    "UnsetOr[Optional[discord_typings.AllowedMentionsData]]",
+                    "UnsetOr[t.Optional[dt.AllowedMentionsData]]",
                     "Unset"
                 ],
                 "components": [
-                    "UnsetOr[Optional[list[discord_typings.ComponentData]]]",
+                    "UnsetOr[t.Optional[list[dt.ComponentData]]]",
                     "Unset"
                 ],
                 "attachments": [
-                    "UnsetOr[Optional[list[discord_typings.PartialAttachmentData]]]",
+                    "UnsetOr[t.Optional[list[dt.PartialAttachmentData]]]",
                     "Unset"
                 ]
             },
@@ -228,13 +226,13 @@
             "method": "DELETE",
             "url": "/webhooks/{webhook_id}/{webhook_token}/messages/{message_id}",
             "url-parameters": {
-                "webhook_id": "Snowflake",
+                "webhook_id": "dt.Snowflake",
                 "webhook_token": "str",
-                "message_id": "Snowflake"
+                "message_id": "dt.Snowflake"
             },
             "query-parameters": {
                 "thread_id": [
-                    "UnsetOr[Snowflake]",
+                    "UnsetOr[dt.Snowflake]",
                     "Unset"
                 ]
             }

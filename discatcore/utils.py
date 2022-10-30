@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MIT
 
-from typing import Any
+import typing as t
 
-from .types import Snowflake
+import discord_typings as dt
 
 has_orjson = False
 try:
@@ -27,7 +27,7 @@ class SnowflakeUtils:
     """Utilities for handling Snowflakes."""
 
     @staticmethod
-    def snowflake_timestamp(id: Snowflake) -> int:
+    def snowflake_timestamp(id: dt.Snowflake) -> int:
         """The timestamp of the provided Snowflake.
 
         Args:
@@ -36,7 +36,7 @@ class SnowflakeUtils:
         return (int(id) >> 22) + DISCORD_EPOCH
 
     @staticmethod
-    def snowflake_iwid(id: Snowflake) -> int:
+    def snowflake_iwid(id: dt.Snowflake) -> int:
         """The internal worker ID of the provided Snowflake.
 
         Args:
@@ -45,7 +45,7 @@ class SnowflakeUtils:
         return (int(id) & 0x3E0000) >> 17
 
     @staticmethod
-    def snowflake_ipid(id: Snowflake) -> int:
+    def snowflake_ipid(id: dt.Snowflake) -> int:
         """The internal process ID of the provided Snowflake.
 
         Args:
@@ -54,7 +54,7 @@ class SnowflakeUtils:
         return (int(id) & 0x1F000) >> 12
 
     @staticmethod
-    def snowflake_increment(id: Snowflake) -> int:
+    def snowflake_increment(id: dt.Snowflake) -> int:
         """The increment of the provided Snowflake.
 
         Args:
@@ -63,7 +63,7 @@ class SnowflakeUtils:
         return int(id) & 0xFFF
 
 
-def dumps(obj: Any):
+def dumps(obj: t.Any):
     if has_orjson:
         return orjson.dumps(obj).decode("utf-8")
     return json.dumps(obj)
