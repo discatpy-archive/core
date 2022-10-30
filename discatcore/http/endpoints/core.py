@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 
-from typing import Any, Optional, Union
+import typing as t
 
 from ...file import BasicFile
 from ...types import Unset, UnsetOr
@@ -14,10 +14,10 @@ class EndpointMixin:
         self,
         route: Route,
         *,
-        query_params: Optional[dict[str, Any]] = None,
-        json_params: UnsetOr[Union[dict[str, Any], list[Any]]] = Unset,
-        reason: Optional[str] = None,
+        query_params: t.Optional[dict[str, t.Any]] = None,
+        json_params: UnsetOr[t.Union[dict[str, t.Any], list[t.Any]]] = Unset,
+        reason: t.Optional[str] = None,
         files: UnsetOr[list[BasicFile]] = Unset,
-        **extras: Any,
-    ) -> Union[Any, str]:
+        **extras: t.Any,
+    ) -> t.Union[t.Any, str]:
         pass

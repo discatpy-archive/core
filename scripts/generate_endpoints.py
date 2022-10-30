@@ -5,6 +5,7 @@ import json
 import pathlib
 import types
 import typing as t
+from enum import Enum, auto
 
 #
 #  Constants
@@ -48,7 +49,13 @@ The implementations for Discord API endpoints. These are for internal use only, 
 T = t.TypeVar("T")
 
 
-Unset: t.Final[t.Any] = object()
+# Unset: t.Final[t.Any] = object()
+class UnsetType(Enum):
+    Unset = auto()
+
+
+Unset: t.Literal[UnsetType.Unset] = UnsetType.Unset
+UnsetOr = t.Union[T, UnsetType]
 
 #
 #  Function Creator
@@ -78,8 +85,8 @@ def _type_repr(obj: t.Any):
 
 class FunctionArg:
     name: t.Optional[str]
-    annotation: str
-    default: str
+    annotation: UnsetOr[str]
+    default: UnsetOr[str]
     pos_and_kw: bool
     pos_modifier: bool
     kw_modifier: bool
@@ -90,8 +97,8 @@ class FunctionArg:
         self,
         name: t.Optional[str] = None,
         *,
-        annotation: str = Unset,
-        default: str = Unset,
+        annotation: UnsetOr[str] = Unset,
+        default: UnsetOr[str] = Unset,
         pos_and_kw: bool = True,
         pos_modifier: bool = False,
         kw_modifier: bool = False,
@@ -247,13 +254,13 @@ def _dict_type_check(d: dict[t.Any, t.Any], key: t.Any, expected_type: type[T]) 
 @t.overload
 def _dict_type_check(
     d: dict[t.Any, t.Any], key: t.Any, expected_type: type[T], *, is_required: bool = ...
-) -> t.Union[T, t.Any]:
+) -> UnsetOr[T]:
     ...
 
 
 def _dict_type_check(
     d: dict[t.Any, t.Any], key: t.Any, expected_type: type[T], *, is_required: bool = True
-) -> t.Union[T, t.Any]:
+) -> UnsetOr[T]:
     val = d.get(key, ...)
     if val is ... and is_required:
         raise KeyError(key)
@@ -273,7 +280,9 @@ def _generate_func_args_json_query(
         default = Unset
         if isinstance(param, str):
             anno = param
-        elif isinstance(param, list) and len(param) == 2:  # type: ignore
+        elif (
+            isinstance(param, list) and len(param) == 2
+        ):  # pyright: ignore[reportUnnecessaryIsInstance]
             anno, default = param
         else:
             raise TypeError(f"Invalid type {_type_repr(param)} for JSON/Query parameter values")
@@ -283,10 +292,10 @@ def _generate_func_args_json_query(
 
 def _generate_func_args(
     func_gen: FunctionCreator,
-    url_params: dict[t.Any, t.Any],
-    json_params: dict[t.Any, t.Any],
-    query_params: dict[t.Any, t.Any],
-    extra_params: dict[t.Any, t.Any],
+    url_params: UnsetOr[dict[t.Any, t.Any]],
+    json_params: UnsetOr[dict[t.Any, t.Any]],
+    query_params: UnsetOr[dict[t.Any, t.Any]],
+    extra_params: UnsetOr[dict[t.Any, t.Any]],
 ):
     if url_params is not Unset:
         for param_name, param_anno in url_params.items():
@@ -310,17 +319,19 @@ def parse_endpoint_func(name: str, func: dict[str, t.Any]):
     if method not in VALID_METHODS:
         raise ValueError(f"Invalid method {method}!")
     url = _dict_type_check(func, "url", str)
-    url_params: dict[str, str] = _dict_type_check(func, "url-parameters", dict, is_required=False)
-    json_params: dict[str, t.Union[str, list[str]]] = _dict_type_check(
+    url_params: UnsetOr[dict[str, str]] = _dict_type_check(
+        func, "url-parameters", dict, is_required=False
+    )
+    json_params: UnsetOr[dict[str, t.Union[str, list[str]]]] = _dict_type_check(
         func, "json-parameters", dict, is_required=False
     )
-    query_params: dict[str, t.Union[str, list[str]]] = _dict_type_check(
+    query_params: UnsetOr[dict[str, t.Union[str, list[str]]]] = _dict_type_check(
         func, "query-parameters", dict, is_required=False
     )
-    extra_params: dict[str, t.Union[str, list[str]]] = _dict_type_check(
+    extra_params: UnsetOr[dict[str, t.Union[str, list[str]]]] = _dict_type_check(
         func, "extra-parameters", dict, is_required=False
     )
-    extra_request_params: dict[str, str] = _dict_type_check(
+    extra_request_params: UnsetOr[dict[str, str]] = _dict_type_check(
         func, "extra-request-parameters", dict, is_required=False
     )
     extra_code: list[str] = list(func.get("extra-code", []))
@@ -328,7 +339,7 @@ def parse_endpoint_func(name: str, func: dict[str, t.Any]):
     supports_files = bool(func.get("supports-files"))
 
     func_generator = FunctionCreator(name, is_async=False)
-    needed_imports = []
+    needed_imports: list[str] = []
 
     # generate arguments
     func_generator.append_arg(FunctionArg("self"))
@@ -336,7 +347,7 @@ def parse_endpoint_func(name: str, func: dict[str, t.Any]):
 
     if supports_reason:
         func_generator.append_arg(
-            FunctionArg("reason", annotation="t.t.Optional[str]", default="None")
+            FunctionArg("reason", annotation="t.Optional[str]", default="None")
         )
         needed_imports.append("typing")
     if supports_files:
@@ -389,10 +400,10 @@ def parse_json_file(file: dict[str, t.Any]):
     funcs: list[str] = []
     name = _dict_type_check(file, "name", str)
     methods: dict[str, t.Any] = _dict_type_check(file, "methods", dict)
-    requires: list[str] = _dict_type_check(file, "requires", list, is_required=False)
+    requires: UnsetOr[list[str]] = _dict_type_check(file, "requires", list, is_required=False)
 
     imports = ""
-    used_imports = []
+    used_imports: list[str] = []
     if requires is not Unset:
         for requirement in requires:
             imports += f"{IMPORTS[requirement]}\n"

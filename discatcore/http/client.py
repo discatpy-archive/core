@@ -143,17 +143,16 @@ class HTTPClient(
         Args:
             url (str): The url of the websocket to connect to.
         """
-        kwargs = {
-            "max_msg_size": 0,
-            "timeout": 30.0,
-            "autoclose": False,
-            "headers": {"User-Agent": self.user_agent},
-            "compress": 0,
-        }
-
         # this function is partially unknown
         # not our fault, aiohttp's fault
-        return await self._session.ws_connect(url, **kwargs)  # type: ignore
+        return await self._session.ws_connect(  # pyright: ignore[reportUnknownMemberType]
+            url,
+            max_msg_size=0,
+            timeout=30.0,
+            autoclose=False,
+            headers={"User-Agent": self.user_agent},
+            compress=0,
+        )
 
     async def close(self):
         """Closes the HTTP session.

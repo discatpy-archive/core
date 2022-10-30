@@ -9,6 +9,7 @@ import platform
 import random
 import typing as t
 import zlib
+from collections.abc import Mapping
 
 import aiohttp
 import discord_typings as dt
@@ -18,6 +19,7 @@ from ..http import HTTPClient
 from ..impl.dispatcher import Dispatcher
 from ..utils import dumps, loads
 from .ratelimiter import Ratelimiter
+from .types import BaseTypedWSMessage, is_binary, is_text
 
 __all__ = ("GatewayClient",)
 
@@ -174,7 +176,7 @@ class GatewayClient:
         out_str = buff.decode("utf-8")
         return out_str
 
-    async def send(self, data: dict[str, t.Any]):
+    async def send(self, data: Mapping[str, t.Any]):
         """Sends a dict payload to the websocket connection.
 
         Args:
@@ -204,23 +206,26 @@ class GatewayClient:
             await self.close(code=1012)
             return False
 
-        # aiohttp.WSMessage has 0 typing
-        # great job aio-libs
+        typed_msg: BaseTypedWSMessage[t.Any] = BaseTypedWSMessage.convert_from_untyped(msg)
 
-        _log.debug("Received WS message from Gateway with type %s", msg.type.name)  # type: ignore
+        _log.debug("Received WS message from Gateway with type %s", typed_msg.type.name)
 
-        if msg.type in (aiohttp.WSMsgType.BINARY, aiohttp.WSMsgType.TEXT):  # type: ignore
-            received_msg: t.Union[t.Any, str] = None
-            if msg.type == aiohttp.WSMsgType.BINARY:  # type: ignore
-                received_msg = self._decompress_msg(msg.data)  # type: ignore
-            elif msg.type == aiohttp.WSMsgType.TEXT:  # type: ignore
-                received_msg = msg.data  # type: ignore
+        if is_text(typed_msg) or is_binary(typed_msg):
+            received_msg: str
+            if is_binary(typed_msg):
+                received_msg = self._decompress_msg(typed_msg.data)
+            elif is_text(typed_msg):
+                received_msg = typed_msg.data
+            # this should be impossible, but pyright thinks that in this else statement
+            # typed_msg.data is still str or bytes even though it has to be str
+            else:
+                return
 
-            self.recent_payload = t.cast(dt.GatewayEvent, loads(received_msg))  # type: ignore
+            self.recent_payload = t.cast(dt.GatewayEvent, loads(received_msg))
             _log.debug("Received payload from the Gateway: %s", self.recent_payload)
             self.sequence = self.recent_payload.get("s")
             return True
-        elif msg.type == aiohttp.WSMsgType.CLOSE:  # type: ignore
+        elif typed_msg.type == aiohttp.WSMsgType.CLOSE:
             await self.close(reconnect=False)
             return False
 
@@ -316,33 +321,32 @@ class GatewayClient:
             code (int): The websocket code to close with. Defaults to 1000.
             reconnect (bool): If we should reconnect or not. Defaults to True.
         """
-        if not self._ws:
+        if not self._ws or self._ws.closed:
             return
 
-        if not self._ws.closed:
-            _log.info(
-                "Closing Gateway connection with code %d that %s reconnect.",
-                code,
-                "will" if reconnect else "will not",
-            )
+        _log.info(
+            "Closing Gateway connection with code %d that %s reconnect.",
+            code,
+            "will" if reconnect else "will not",
+        )
 
-            # Close the websocket connection
-            await self._ws.close(code=code)
+        # Close the websocket connection
+        await self._ws.close(code=code)
 
-            # Clean up lingering tasks (this will throw exceptions if we get the client to do it)
-            await self.ratelimiter.stop()
-            await self.heartbeat_handler.stop()
+        # Clean up lingering tasks (this will throw exceptions if we get the client to do it)
+        await self.ratelimiter.stop()
+        await self.heartbeat_handler.stop()
 
-            # if we need to reconnect, set the event
-            if reconnect:
-                raise GatewayReconnect(self.resume_url, self.can_resume)
+        # if we need to reconnect, set the event
+        if reconnect:
+            raise GatewayReconnect(self.resume_url, self.can_resume)
 
     # Payloads
 
     @property
-    def identify_payload(self) -> dict[str, t.Any]:
+    def identify_payload(self) -> dt.IdentifyCommand:
         """Returns the identifcation payload."""
-        identify_dict = {
+        identify_dict: dt.IdentifyCommand = {
             "op": IDENTIFY,
             "d": {
                 "token": self._http.token,
@@ -361,19 +365,19 @@ class GatewayClient:
         return identify_dict
 
     @property
-    def resume_payload(self) -> dict[str, t.Any]:
+    def resume_payload(self) -> dt.ResumeCommand:
         """Returns the resume payload."""
         return {
             "op": RESUME,
             "d": {
                 "token": self._http.token,
                 "session_id": self.session_id,
-                "seq": self.sequence,
+                "seq": self.sequence or 0,
             },
         }
 
     @property
-    def heartbeat_payload(self) -> dict[str, t.Any]:
+    def heartbeat_payload(self) -> dt.HeartbeatCommand:
         """Returns the heartbeat payload."""
         return {"op": HEARTBEAT, "d": self.sequence}
 
