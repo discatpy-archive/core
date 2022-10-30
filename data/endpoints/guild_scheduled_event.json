@@ -31,7 +31,7 @@
                     "Unset"
                 ],
                 "entity_metadata": [
-                    "UnsetOr[dt.GuildScheduledEventEntityMetadata]",
+                    "UnsetOr[dt.GuildScheduledEventEntityMetadataData]",
                     "Unset"
                 ],
                 "name": "str",
@@ -80,7 +80,7 @@
                     "Unset"
                 ],
                 "entity_metadata": [
-                    "UnsetOr[t.Optional[dt.GuildScheduledEventEntityMetadata]]",
+                    "UnsetOr[t.Optional[dt.GuildScheduledEventEntityMetadataData]]",
                     "Unset"
                 ],
                 "name": [
