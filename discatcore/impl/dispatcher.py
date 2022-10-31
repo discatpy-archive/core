@@ -50,19 +50,19 @@ class Dispatcher:
         Returns:
             The new event created.
         """
-        if name in self.events:
-            return self.events[name]
-
         new_event = Event(name, self)
         self.events[name] = new_event
         return new_event
 
-    def add_event(self, event: Event) -> None:
+    def add_event(self, event: Event, *, override: bool = True) -> None:
         """Adds a new pre-existing event.
 
         Args:
             event (Event): The event to add.
         """
+        if self.has_event(event.name) and not override:
+            return
+
         self.events[event.name] = event
 
     def remove_event(self, name: str) -> None:
@@ -87,6 +87,32 @@ class Dispatcher:
             A bool correlating to if there is a event with that name or not.
         """
         return name in self.events
+
+    def callback_for(
+        self, event: str, *, one_shot: bool = False, parent: bool = False
+    ) -> Callable[[CoroFunc], Event]:
+        """A shortcut decorator to add a callback to an event.
+        If the event does not exist already, then a new one will be created.
+
+        Args:
+            event: The name of the event to get or create.
+            one_shot: Whether or not the callback should be a one shot (which means the callback will be removed after running). Defaults to False.
+            parent: Whether or not this callback contains a self parameter. Defaults to False.
+
+        Returns:
+            A wrapper function that acts as the actual decorator.
+        """
+
+        def wrapper(coro: CoroFunc):
+            if not self.has_event(event):
+                event_cls = self.new_event(event)
+            else:
+                event_cls = self.events[event]
+
+            event_cls.add_callback(coro, one_shot=one_shot, parent=parent)
+            return event_cls
+
+        return wrapper
 
     # global error handler
 
