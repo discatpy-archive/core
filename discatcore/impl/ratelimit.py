@@ -15,33 +15,33 @@ class BaseRatelimiter:
 
     __slots__ = ("_lock",)
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._lock: asyncio.Event = asyncio.Event()
         self._lock.set()
 
-    async def acquire(self):
+    async def acquire(self) -> None:
         await self._lock.wait()
 
-    def is_locked(self):
-        """:bool: Returns whether the bucket is locked or not."""
+    def is_locked(self) -> bool:
+        """Returns whether the bucket is locked or not."""
         return not self._lock.is_set()
 
-    async def __aenter__(self):
+    async def __aenter__(self) -> None:
         await self.acquire()
         return None
 
-    async def __aexit__(self, *args: t.Any):
+    async def __aexit__(self, *args: t.Any) -> None:
         pass
 
 
 class ManualRatelimiter(BaseRatelimiter):
     """A simple ratelimiter that simply locks at the command of t.Anything."""
 
-    async def _unlock(self, delay: float):
+    async def _unlock(self, delay: float) -> None:
         await asyncio.sleep(delay)
         self._lock.set()
 
-    def lock_for(self, delay: float):
+    def lock_for(self, delay: float) -> None:
         """Locks the bucket for a given amount of time.
 
         Args:
@@ -65,14 +65,14 @@ class BurstRatelimiter(ManualRatelimiter):
 
     __slots__ = ("limit", "remaining", "reset_after")
 
-    def __init__(self):
+    def __init__(self) -> None:
         BaseRatelimiter.__init__(self)
 
         self.limit: t.Optional[int] = None
         self.remaining: t.Optional[int] = None
         self.reset_after: t.Optional[float] = None
 
-    async def acquire(self):
+    async def acquire(self) -> None:
         if self.reset_after is not None and self.remaining == 0 and not self.is_locked():
             self.lock_for(self.reset_after)
 

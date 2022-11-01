@@ -22,7 +22,7 @@ class DisCatCoreException(Exception):
     pass
 
 
-def _shorten_error_dict(d: dt.NestedHTTPErrorsData, parent_key: str = ""):
+def _shorten_error_dict(d: dt.NestedHTTPErrorsData, parent_key: str = "") -> dict[str, str]:
     ret_items: dict[str, str] = {}
 
     _errors = d.get("_errors")
@@ -54,7 +54,9 @@ class HTTPException(DisCatCoreException):
 
     def __init__(
         self, response: ClientResponse, data: t.Optional[t.Union[dt.HTTPErrorResponseData, str]]
-    ):
+    ) -> None:
+        self.code: int
+        self.text: str
         if isinstance(data, dict):
             self.code = data.get("code", 0)
             base = data.get("message", "")
@@ -82,7 +84,7 @@ class HTTPException(DisCatCoreException):
 class BucketMigrated(DisCatCoreException):
     """Represents an internal exception for when a bucket migrates."""
 
-    def __init__(self, discord_hash: str):
+    def __init__(self, discord_hash: str) -> None:
         super().__init__(f"This bucket has been migrated to a bucket located at {discord_hash}")
 
 
@@ -106,8 +108,8 @@ class GatewayReconnect(DisCatCoreException):
 
     __slots__ = ("url", "resume")
 
-    def __init__(self, url: str, resume: bool):
-        self.url = url
-        self.resume = resume
+    def __init__(self, url: str, resume: bool) -> None:
+        self.url: str = url
+        self.resume: bool = resume
 
         super().__init__(f"The Gateway should be reconnected to with url {self.url}.")

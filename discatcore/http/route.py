@@ -30,10 +30,10 @@ class Route:
             This is a top-level parameter, which influences the pseudo-bucket generated.
     """
 
-    def __init__(self, method: str, url: str, **params: t.Any):
-        self.params = params
-        self.method = method
-        self.url = url
+    def __init__(self, method: str, url: str, **params: t.Any) -> None:
+        self.params: dict[str, t.Any] = params
+        self.method: str = method
+        self.url: str = url
 
         # top-level resource parameters
         self.guild_id: t.Optional[dt.Snowflake] = params.get("guild_id")

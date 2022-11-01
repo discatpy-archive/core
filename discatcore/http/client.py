@@ -51,7 +51,7 @@ class _PreparedData:
     multipart_content: UnsetOr[aiohttp.FormData] = Unset
 
 
-def _filter_dict_for_unset(d: dict[t.Any, t.Any]):
+def _filter_dict_for_unset(d: dict[t.Any, t.Any]) -> dict[t.Any, t.Any]:
     return dict(filter(lambda item: item[1] is not Unset, d.items()))
 
 
@@ -101,10 +101,10 @@ class HTTPClient(
         "_request_id",
     )
 
-    def __init__(self, token: str, *, api_version: t.Optional[int] = None):
-        self.token = token
-        self._ratelimiter = Ratelimiter()
-        self._api_version = DEFAULT_API_VERSION
+    def __init__(self, token: str, *, api_version: t.Optional[int] = None) -> None:
+        self.token: str = token
+        self._ratelimiter: Ratelimiter = Ratelimiter()
+        self._api_version: int = DEFAULT_API_VERSION
 
         if api_version is not None and api_version not in VALID_API_VERSIONS:
             warnings.warn(
@@ -114,17 +114,17 @@ class HTTPClient(
         elif api_version is not None:
             self._api_version = api_version
 
-        self._api_url = BASE_API_URL.format(self._api_version)
+        self._api_url: str = BASE_API_URL.format(self._api_version)
 
         self.__session: t.Optional[aiohttp.ClientSession] = None
-        self.user_agent = "DiscordBot (https://github.com/discatpy-dev/core, {0}) Python/{1.major}.{1.minor}.{1.micro}".format(
+        self.user_agent: str = "DiscordBot (https://github.com/discatpy-dev/core, {0}) Python/{1.major}.{1.minor}.{1.micro}".format(
             __version__, sys.version_info
         )
-        self.default_headers = {"Authorization": f"Bot {self.token}"}
-        self._request_id = 0
+        self.default_headers: dict[str, str] = {"Authorization": f"Bot {self.token}"}
+        self._request_id: int = 0
 
     @property
-    def _session(self):
+    def _session(self) -> aiohttp.ClientSession:
         if self.__session is None or self.__session.closed:
             self.__session = aiohttp.ClientSession(
                 headers={"User-Agent": self.user_agent}, json_serialize=dumps
@@ -137,7 +137,7 @@ class HTTPClient(
         """The Discord API version to use."""
         return self._api_version
 
-    async def ws_connect(self, url: str):
+    async def ws_connect(self, url: str) -> aiohttp.ClientWebSocketResponse:
         """Starts a websocket connection.
 
         Args:
@@ -154,7 +154,7 @@ class HTTPClient(
             compress=0,
         )
 
-    async def close(self):
+    async def close(self) -> None:
         """Closes the HTTP session.
         If the HTTP session is attempted to be reused again then it'll be automatically regenerated.
         """
@@ -164,7 +164,7 @@ class HTTPClient(
     @staticmethod
     def _prepare_data(
         json: UnsetOr[t.Union[dict[str, t.Any], list[t.Any]]], files: UnsetOr[list[BasicFile]]
-    ):
+    ) -> _PreparedData:
         pd = _PreparedData()
 
         if json is not Unset and files is Unset:
@@ -188,7 +188,7 @@ class HTTPClient(
         return pd
 
     @staticmethod
-    async def _text_or_json(resp: aiohttp.ClientResponse):
+    async def _text_or_json(resp: aiohttp.ClientResponse) -> t.Union[t.Any, str]:
         text = await resp.text()
 
         if resp.content_type == "application/json":

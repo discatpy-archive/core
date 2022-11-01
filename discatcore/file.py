@@ -2,6 +2,7 @@
 
 import io
 import typing as t
+from collections.abc import Callable
 from os import path
 
 __all__ = ("BasicFile",)
@@ -37,7 +38,9 @@ class BasicFile:
         *,
         filename: t.Optional[str] = None,
         spoiler: bool = False,
-    ):
+    ) -> None:
+        self.fp: io.IOBase
+        self._owner: bool
         if isinstance(fp, io.IOBase):
             if not (fp.seekable() and fp.readable()):
                 raise ValueError(f"IOBase object {fp!r} must be seekable & readable.")
@@ -48,6 +51,7 @@ class BasicFile:
             self.fp = open(fp, "rb")
             self._owner = True
 
+        self.filename: str
         if filename is None:
             if isinstance(fp, str):
                 self.filename = path.split(fp)[1]
@@ -59,22 +63,22 @@ class BasicFile:
         if spoiler and not self.filename.startswith("SPOILER_"):
             self.filename = f"SPOILER_{self.filename}"
 
-        self._orig_close = self.fp.close
+        self._orig_close: Callable[[], None] = self.fp.close
         self.fp.close = lambda: None
-        self.content_type = content_type
+        self.content_type: str = content_type
 
     @property
     def spoiler(self) -> bool:
         """Whether the file is a spoiler or not."""
         return self.filename.startswith("SPOILER_")
 
-    def close(self):
+    def close(self) -> None:
         """Closes the raw file."""
         self.fp.close = self._orig_close
         if not self._owner:
             self.fp.close()
 
-    def reset(self, hard: bool = True):
+    def reset(self, hard: bool = True) -> None:
         """Resets this file.
 
         Args:

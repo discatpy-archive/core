@@ -28,7 +28,7 @@ class Ratelimiter(BaseRatelimiter):
         "reset_after",
     )
 
-    def __init__(self, parent: GatewayClient, limit: int = 120, reset_after: float = 60.0):
+    def __init__(self, parent: GatewayClient, limit: int = 120, reset_after: float = 60.0) -> None:
         super().__init__()
 
         self.commands_used: int = 0
@@ -37,7 +37,7 @@ class Ratelimiter(BaseRatelimiter):
         self.parent: GatewayClient = parent
         self._task: t.Optional[asyncio.Task[t.Any]] = None
 
-    async def ratelimit_loop(self):
+    async def ratelimit_loop(self) -> None:
         """Updates the amount of commands used per minute."""
         while not self.parent.is_closed:
             try:
@@ -50,27 +50,27 @@ class Ratelimiter(BaseRatelimiter):
             except asyncio.CancelledError:
                 break
 
-    def start(self):
+    def start(self) -> None:
         """Starts the ratelimiter task which updates the commands used per minute."""
         if not self._task:
             self._task = asyncio.create_task(self.ratelimit_loop())
             _log.info("Started Gateway ratelimiting task.")
 
-    async def stop(self):
+    async def stop(self) -> None:
         """Stops the ratelimiter task."""
         if self._task:
             self._task.cancel()
             await self._task
             _log.info("Stopped Gateway ratelimiting task.")
 
-    def add_command_usage(self):
+    def add_command_usage(self) -> None:
         self.commands_used += 1
         _log.debug("A Gateway command has been used.")
 
-    def is_ratelimited(self):
+    def is_ratelimited(self) -> bool:
         return self.commands_used == self.limit - 1
 
-    async def acquire(self):
+    async def acquire(self) -> None:
         """Waits for the lock to be unlocked."""
         if not self.is_ratelimited():
             return

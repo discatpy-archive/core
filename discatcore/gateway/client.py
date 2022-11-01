@@ -42,11 +42,11 @@ class HeartbeatHandler:
         "_first_heartbeat",
     )
 
-    def __init__(self, parent: GatewayClient):
-        self.parent = parent
-        self._first_heartbeat = True
+    def __init__(self, parent: GatewayClient) -> None:
+        self.parent: GatewayClient = parent
+        self._first_heartbeat: bool = True
 
-    async def loop(self):
+    async def loop(self) -> None:
         while not self.parent.is_closed:
             try:
                 delta = self.parent.heartbeat_interval
@@ -59,10 +59,10 @@ class HeartbeatHandler:
             except asyncio.CancelledError:
                 break
 
-    def start(self):
+    def start(self) -> None:
         self._task = asyncio.create_task(self.loop())
 
-    async def stop(self):
+    async def stop(self) -> None:
         self._task.cancel()
         await self._task
 
@@ -129,7 +129,7 @@ class GatewayClient:
         *,
         heartbeat_timeout: float = 30.0,
         intents: int = 0,
-    ):
+    ) -> None:
         # Internal attribs
         self._ws: t.Optional[aiohttp.ClientWebSocketResponse] = None
         self._inflator = zlib.decompressobj()
@@ -157,13 +157,13 @@ class GatewayClient:
 
     # Events
 
-    async def handle_ready(self, data: dt.ReadyData):
+    async def handle_ready(self, data: dt.ReadyData) -> None:
         self.session_id = data["session_id"]
         self.resume_url = data["resume_gateway_url"]
 
     # Internal functions
 
-    def _decompress_msg(self, msg: bytes):
+    def _decompress_msg(self, msg: bytes) -> str:
         ZLIB_SUFFIX = b"\x00\x00\xff\xff"
 
         out_str: str = ""
@@ -176,7 +176,7 @@ class GatewayClient:
         out_str = buff.decode("utf-8")
         return out_str
 
-    async def send(self, data: Mapping[str, t.Any]):
+    async def send(self, data: Mapping[str, t.Any]) -> None:
         """Sends a dict payload to the websocket connection.
 
         Args:
@@ -214,12 +214,8 @@ class GatewayClient:
             received_msg: str
             if is_binary(typed_msg):
                 received_msg = self._decompress_msg(typed_msg.data)
-            elif is_text(typed_msg):
-                received_msg = typed_msg.data
-            # this should be impossible, but pyright thinks that in this else statement
-            # typed_msg.data is still str or bytes even though it has to be str
             else:
-                return
+                received_msg = t.cast(str, typed_msg.data)
 
             self.recent_payload = t.cast(dt.GatewayEvent, loads(received_msg))
             _log.debug("Received payload from the Gateway: %s", self.recent_payload)
@@ -231,15 +227,12 @@ class GatewayClient:
 
     # Connection management
 
-    async def connect(self, url: t.Optional[str] = None):
+    async def connect(self, url: t.Optional[str] = None) -> None:
         """Starts a connection with the Gateway.
 
         Args:
             url (t.Optional[str]): The url to connect to the Gateway with. This should only be used if we are resuming.
                 If this is not provided, then the url will be fetched via the Get Gateway Bot endpoint. Defaults to None.
-
-        Returns:
-            An `asyncio.Task` that is running the connection loop.
         """
         if not url:
             url = (await self._http.get_gateway_bot())["url"]
@@ -264,7 +257,7 @@ class GatewayClient:
 
         return await self.connection_loop()
 
-    async def connection_loop(self):
+    async def connection_loop(self) -> None:
         """Executes the main Gateway loop, which is the following:
 
         - compare the last time the heartbeat ack was sent from the server to current time
@@ -314,7 +307,7 @@ class GatewayClient:
                 elif op == HEARTBEAT_ACK:
                     self._last_heartbeat_ack = datetime.datetime.now()
 
-    async def close(self, *, code: int = 1000, reconnect: bool = True):
+    async def close(self, *, code: int = 1000, reconnect: bool = True) -> None:
         """Closes the connection with the websocket.
 
         Args:
@@ -383,15 +376,15 @@ class GatewayClient:
 
     # Gateway commands
 
-    async def heartbeat(self):
+    async def heartbeat(self) -> None:
         """Sends the heartbeat payload to the Gateway."""
         await self.send(self.heartbeat_payload)
 
-    async def identify(self):
+    async def identify(self) -> None:
         """Sends the identify payload to the Gateway."""
         await self.send(self.identify_payload)
 
-    async def resume(self):
+    async def resume(self) -> None:
         """Sends the resume payload to the Gateway."""
         await self.send(self.resume_payload)
 
@@ -403,7 +396,7 @@ class GatewayClient:
         limit: int = 0,
         query: str = "",
         presences: bool = False,
-    ):
+    ) -> None:
         """Sends the request guild members payload to the Gateway.
 
         Args:
@@ -429,7 +422,7 @@ class GatewayClient:
 
         await self.send(payload)
 
-    async def update_presence(self, *, since: int, status: str, afk: bool):
+    async def update_presence(self, *, since: int, status: str, afk: bool) -> None:
         """Sends the update presence payload to the Gateway.
 
         Args:
@@ -458,7 +451,7 @@ class GatewayClient:
         channel_id: t.Optional[dt.Snowflake],
         self_mute: bool,
         self_deaf: bool,
-    ):
+    ) -> None:
         """Sends the update voice state payload to the Gateway.
 
         Args:
@@ -482,7 +475,7 @@ class GatewayClient:
     # Misc
 
     @property
-    def is_closed(self):
+    def is_closed(self) -> bool:
         if not self._ws:
             return False
 

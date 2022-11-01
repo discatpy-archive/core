@@ -34,7 +34,7 @@ class Bucket(BurstRatelimiter):
         "_migrated",
     )
 
-    def __init__(self):
+    def __init__(self) -> None:
         BurstRatelimiter.__init__(self)
 
         self.reset: t.Optional[datetime] = None
@@ -42,7 +42,7 @@ class Bucket(BurstRatelimiter):
         self._first_update: bool = True
         self._migrated: bool = False
 
-    def update_info(self, response: ClientResponse):
+    def update_info(self, response: ClientResponse) -> None:
         """Updates the bucket's underlying information via the new headers.
 
         Args:
@@ -89,7 +89,7 @@ class Bucket(BurstRatelimiter):
         if self.reset_after is not None and self.remaining == 0 and not self.is_locked():
             self.lock_for(self.reset_after)
 
-    def migrate_to(self, discord_hash: str):
+    def migrate_to(self, discord_hash: str) -> t.NoReturn:
         """Migrates this bucket to a new one provided by the Discord API.
 
         Raises:
@@ -99,7 +99,7 @@ class Bucket(BurstRatelimiter):
         raise BucketMigrated(discord_hash)
 
     @property
-    def migrated(self):
+    def migrated(self) -> bool:
         return self._migrated
 
 
@@ -117,13 +117,13 @@ class Ratelimiter:
 
     __slots__ = ("discord_buckets", "url_buckets", "url_to_discord_hash", "global_bucket")
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.discord_buckets: dict[str, Bucket] = {}
         self.url_buckets: dict[str, Bucket] = {}
         self.url_to_discord_hash: dict[str, str] = {}
         self.global_bucket = ManualRatelimiter()
 
-    def get_bucket(self, url: str):
+    def get_bucket(self, url: str) -> Bucket:
         """Gets a bucket object from the providing url.
 
         Args:
@@ -140,7 +140,7 @@ class Ratelimiter:
         discord_hash = self.url_to_discord_hash[url]
         return self.discord_buckets[discord_hash]
 
-    def migrate_bucket(self, url: str, discord_hash: str):
+    def migrate_bucket(self, url: str, discord_hash: str) -> t.NoReturn:
         """Migrates a bucket object from a pseudo-bucket to a Discord hash.
         Not only will this call :meth:`Bucket.migrate_to`, but the mappings will be updated.
 

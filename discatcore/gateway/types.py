@@ -1,10 +1,11 @@
 # SPDX-License-Identifier: MIT
 
+import builtins
 import typing as t
 from dataclasses import dataclass
 
 import aiohttp
-from typing_extensions import TypeGuard
+from typing_extensions import Self, TypeGuard
 
 DT = t.TypeVar("DT")
 
@@ -25,7 +26,7 @@ class BaseTypedWSMessage(t.Generic[DT]):
     extra: str
 
     @classmethod
-    def convert_from_untyped(cls, msg: aiohttp.WSMessage):
+    def convert_from_untyped(cls: builtins.type[Self], msg: aiohttp.WSMessage) -> Self:
         return cls(
             t.cast(aiohttp.WSMsgType, msg[0]),
             t.cast(DT, msg[1]),
@@ -45,7 +46,7 @@ def is_binary(base: BaseTypedWSMessage[t.Any]) -> TypeGuard[BinaryTypedWSMessage
     return base.type is aiohttp.WSMsgType.BINARY
 
 
-def convert_from_untyped(msg: aiohttp.WSMessage):
+def convert_from_untyped(msg: aiohttp.WSMessage) -> BaseTypedWSMessage[t.Any]:
     base: BaseTypedWSMessage[t.Any] = BaseTypedWSMessage.convert_from_untyped(msg)
 
     if base.type == aiohttp.WSMsgType.TEXT:

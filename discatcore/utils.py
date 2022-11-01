@@ -4,7 +4,7 @@ import typing as t
 
 import discord_typings as dt
 
-has_orjson = False
+has_orjson: bool = False
 try:
     import orjson
 
@@ -20,7 +20,7 @@ __all__ = (
 )
 
 
-DISCORD_EPOCH = 1420070400000
+DISCORD_EPOCH: t.Final[int] = 1420070400000
 
 
 class SnowflakeUtils:
@@ -63,13 +63,13 @@ class SnowflakeUtils:
         return int(id) & 0xFFF
 
 
-def dumps(obj: t.Any):
+def dumps(obj: t.Any) -> str:
     if has_orjson:
         return orjson.dumps(obj).decode("utf-8")
     return json.dumps(obj)
 
 
-def loads(obj: str):
+def loads(obj: str) -> t.Any:
     if has_orjson:
         return orjson.loads(obj)
     return json.loads(obj)

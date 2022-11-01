@@ -46,7 +46,7 @@ class Event:
             Defaults to the error handler from the parent dispatcher.
     """
 
-    def __init__(self, name: str, parent: Dispatcher):
+    def __init__(self, name: str, parent: Dispatcher) -> None:
         self.name = name
         self.parent = parent
         self.callbacks: list[CoroFunc] = []
@@ -56,7 +56,7 @@ class Event:
 
     # setters/decorators
 
-    def set_proto(self, proto_func: Func[t.Any], *, parent: bool = False):
+    def set_proto(self, proto_func: Func[t.Any], *, parent: bool = False) -> None:
         """Sets the prototype for this event.
 
         Args:
@@ -81,7 +81,7 @@ class Event:
 
     def proto(
         self, func: t.Optional[Func[t.Any]] = None, *, parent: bool = False
-    ) -> t.Union["Event", Callable[[Func[t.Any]], "Event"]]:
+    ) -> t.Union[Event, Callable[[Func[t.Any]], Event]]:
         """A decorator to set the prototype of this event.
 
         Args:
@@ -101,7 +101,7 @@ class Event:
             return wrapper(func)
         return wrapper
 
-    def set_error_handler(self, func: CoroFunc):
+    def set_error_handler(self, func: CoroFunc) -> None:
         """Overrides the error handler of this event.
 
         Args:
@@ -121,7 +121,7 @@ class Event:
         self._error_handler = func
         _log.debug("Registered new error handler under event %s", self.name)
 
-    def error_handler(self) -> Callable[[Func[t.Any]], "Event"]:
+    def error_handler(self) -> Callable[[Func[t.Any]], Event]:
         """A decorator to override the error handler of this event.
 
         Returns:
@@ -134,7 +134,7 @@ class Event:
 
         return wrapper
 
-    def add_callback(self, func: CoroFunc, *, one_shot: bool = False, parent: bool = False):
+    def add_callback(self, func: CoroFunc, *, one_shot: bool = False, parent: bool = False) -> None:
         """Adds a new callback to this event.
 
         Args:
@@ -171,7 +171,7 @@ class Event:
 
         _log.debug("Registered new event callback under event %s", self.name)
 
-    def remove_callback(self, index: int):
+    def remove_callback(self, index: int) -> None:
         """Removes a callback located at a certain index.
 
         Args:
@@ -185,7 +185,7 @@ class Event:
 
     def callback(
         self, func: t.Optional[CoroFunc] = None, *, one_shot: bool = False, parent: bool = False
-    ) -> t.Union["Event", Callable[[Func[t.Any]], "Event"]]:
+    ) -> t.Union[Event, Callable[[Func[t.Any]], Event]]:
         """A decorator to add a callback to this event.
 
         Args:
@@ -208,7 +208,7 @@ class Event:
 
     # dispatch
 
-    async def _run(self, coro: CoroFunc, *args: t.Any, **kwargs: t.Any):
+    async def _run(self, coro: CoroFunc, *args: t.Any, **kwargs: t.Any) -> None:
         try:
             await coro(*args, **kwargs)
         except asyncio.CancelledError:
@@ -225,7 +225,7 @@ class Event:
         index: t.Optional[int],
         *args: t.Any,
         **kwargs: t.Any,
-    ):
+    ) -> asyncio.Task[t.Any]:
         task_name = f"DisCatCore Event:{self.name}"
         if index:
             task_name += f" Index:{index}"
@@ -234,7 +234,7 @@ class Event:
         wrapped = self._run(coro, *args, **kwargs)
         return asyncio.create_task(wrapped, name=task_name)
 
-    def dispatch(self, *args: t.Any, **kwargs: t.Any):
+    def dispatch(self, *args: t.Any, **kwargs: t.Any) -> None:
         """Runs all event callbacks with arguments.
 
         Args:
