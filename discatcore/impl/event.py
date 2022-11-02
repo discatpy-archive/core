@@ -47,8 +47,8 @@ class Event:
     """
 
     def __init__(self, name: str, parent: Dispatcher) -> None:
-        self.name = name
-        self.parent = parent
+        self.name: str = name
+        self.parent: Dispatcher = parent
         self.callbacks: list[CoroFunc] = []
         self.metadata: dict[CoroFunc, _EventCallbackMetadata] = {}
         self._proto: t.Optional[inspect.Signature] = None
@@ -56,12 +56,14 @@ class Event:
 
     # setters/decorators
 
-    def set_proto(self, proto_func: Func[t.Any], *, parent: bool = False) -> None:
+    def set_proto(
+        self, proto_func: t.Union[Func[t.Any], staticmethod[t.Any]], *, force_parent: bool = False
+    ) -> None:
         """Sets the prototype for this event.
 
         Args:
             proto_func (Callable[..., t.Any]): The prototype for this event.
-            parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
+            force_parent (bool): Whether or not this callback contains a self parameter. Defaults to ``False``.
         """
         is_static = isinstance(proto_func, staticmethod)
         if is_static:
@@ -69,7 +71,7 @@ class Event:
 
         if not self._proto:
             sig = inspect.signature(proto_func)
-            if parent and not is_static:
+            if force_parent and not is_static:
                 new_params = list(sig.parameters.values())
                 new_params.pop(0)
                 sig = sig.replace(parameters=new_params)
@@ -80,13 +82,16 @@ class Event:
             raise ValueError(f"Event prototype for event {self.name} has already been set!")
 
     def proto(
-        self, func: t.Optional[Func[t.Any]] = None, *, parent: bool = False
+        self,
+        func: t.Optional[t.Union[Func[t.Any], staticmethod[t.Any]]] = None,
+        *,
+        force_parent: bool = False,
     ) -> t.Union[Event, Callable[[Func[t.Any]], Event]]:
         """A decorator to set the prototype of this event.
 
         Args:
-            func (t.Optional[Callable[..., t.Any]]): The prototype to pass into this decorator. Defaults to None.
-            parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
+            func (t.Optional[Callable[..., t.Any]]): The prototype to pass into this decorator. Defaults to ``None``.
+            force_parent (bool): Whether or not this callback contains a self parameter. Defaults to ``False``.
 
         Returns:
             Either this event object or a wrapper function that acts as the actual decorator.
@@ -94,7 +99,7 @@ class Event:
         """
 
         def wrapper(func: Func[t.Any]):
-            self.set_proto(func, parent=parent)
+            self.set_proto(func, force_parent=force_parent)
             return self
 
         if func:
@@ -134,16 +139,18 @@ class Event:
 
         return wrapper
 
-    def add_callback(self, func: CoroFunc, *, one_shot: bool = False, parent: bool = False) -> None:
+    def add_callback(
+        self, func: CoroFunc, *, one_shot: bool = False, force_parent: bool = False
+    ) -> None:
         """Adds a new callback to this event.
 
         Args:
             func (Callable[..., Coroutine[t.Any, t.Any, t.Any]]): The callback to add to this event.
             one_shot (bool): Whether or not the callback should be a one shot (which means the callback will be removed after running). Defaults to False.
-            parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
+            force_parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
         """
         if not self._proto:
-            self.set_proto(func, parent=parent)
+            self.set_proto(func, force_parent=force_parent)
             # this is to prevent static type checkers from inferring that self._proto is
             # still None after setting it indirectly via a different function
             # (it should never go here tho because exceptions stop the flow of this code
@@ -155,7 +162,7 @@ class Event:
             raise TypeError("Callback provided is not a coroutine.")
 
         callback_sig = inspect.signature(func)
-        if parent:
+        if force_parent:
             new_params = list(callback_sig.parameters.values())
             new_params.pop(0)
             callback_sig = callback_sig.replace(parameters=new_params)
@@ -184,14 +191,18 @@ class Event:
         _log.debug("Removed event callback with index %d under event %s", index, self.name)
 
     def callback(
-        self, func: t.Optional[CoroFunc] = None, *, one_shot: bool = False, parent: bool = False
+        self,
+        func: t.Optional[CoroFunc] = None,
+        *,
+        one_shot: bool = False,
+        force_parent: bool = False,
     ) -> t.Union[Event, Callable[[Func[t.Any]], Event]]:
         """A decorator to add a callback to this event.
 
         Args:
             func (t.Optional[Callable[..., Coroutine[t.Any, t.Any, t.Any]]]): The function to pass into this decorator. Defaults to None.
             one_shot (bool): Whether or not the callback should be a one shot (which means the callback will be removed after running). Defaults to False.
-            parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
+            force_parent (bool): Whether or not this callback contains a self parameter. Defaults to False.
 
         Returns:
             Either this event object or a wrapper function that acts as the actual decorator.
@@ -199,7 +210,7 @@ class Event:
         """
 
         def wrapper(func: CoroFunc):
-            self.add_callback(func, one_shot=one_shot, parent=parent)
+            self.add_callback(func, one_shot=one_shot, force_parent=force_parent)
             return self
 
         if func:

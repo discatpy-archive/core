@@ -89,7 +89,7 @@ class Dispatcher:
         return name in self.events
 
     def callback_for(
-        self, event: str, *, one_shot: bool = False, parent: bool = False
+        self, event: str, *, one_shot: bool = False, force_parent: bool = False
     ) -> Callable[[CoroFunc], Event]:
         """A shortcut decorator to add a callback to an event.
         If the event does not exist already, then a new one will be created.
@@ -97,7 +97,7 @@ class Dispatcher:
         Args:
             event: The name of the event to get or create.
             one_shot: Whether or not the callback should be a one shot (which means the callback will be removed after running). Defaults to False.
-            parent: Whether or not this callback contains a self parameter. Defaults to False.
+            force_parent: Whether or not this callback contains a self parameter. Defaults to False.
 
         Returns:
             A wrapper function that acts as the actual decorator.
@@ -109,7 +109,7 @@ class Dispatcher:
             else:
                 event_cls = self.events[event]
 
-            event_cls.add_callback(coro, one_shot=one_shot, parent=parent)
+            event_cls.add_callback(coro, one_shot=one_shot, force_parent=force_parent)
             return event_cls
 
         return wrapper
