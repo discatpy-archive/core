@@ -155,12 +155,6 @@ class GatewayClient:
         self._last_heartbeat_ack: t.Optional[datetime.datetime] = None
         self.heartbeat_timeout: float = heartbeat_timeout
 
-    # Events
-
-    async def handle_ready(self, data: dt.ReadyData) -> None:
-        self.session_id = data["session_id"]
-        self.resume_url = data["resume_gateway_url"]
-
     # Internal functions
 
     def _decompress_msg(self, msg: bytes) -> str:
@@ -240,7 +234,7 @@ class GatewayClient:
         self._ws = await self._http.ws_connect(url)
 
         res = await self.receive()
-        if res and self.recent_payload is not None and self.recent_payload["op"] == 10:
+        if res and self.recent_payload is not None and self.recent_payload["op"] == HELLO:
             self.heartbeat_interval = self.recent_payload["d"]["heartbeat_interval"] / 1000
         else:
             # I guess Discord is having issues today if we get here
@@ -276,7 +270,7 @@ class GatewayClient:
             ):
                 _log.debug("Zombified connection detected. Closing connection with code 1008.")
                 await self.close(code=1008)
-                break
+                return
 
             res = await self.receive()
 
@@ -287,22 +281,29 @@ class GatewayClient:
                     data = self.recent_payload.get("d")
 
                     if event_name == "ready":
-                        await self.handle_ready(t.cast(dt.ReadyData, data))
+                        ready_data = t.cast(dt.ReadyData, data)
+                        self.session_id = ready_data["session_id"]
+                        self.resume_url = ready_data["resume_gateway_url"]
 
-                    self._dispatcher.dispatch(event_name, data)
+                    args = (data,)
+                    if data is None:
+                        args = ()
+                    self._dispatcher.dispatch(event_name, *args)
 
                 # these should be rare, but it's better to be safe than sorry
                 elif op == HEARTBEAT:
                     await self.heartbeat()
 
                 elif op == RECONNECT:
+                    self._dispatcher.dispatch("reconnect")
                     await self.close(code=1012)
-                    break
+                    return
 
                 elif op == INVALID_SESSION:
                     self.can_resume = bool(self.recent_payload.get("d"))
+                    self._dispatcher.dispatch("invalid_session", self.can_resume)
                     await self.close(code=1012)
-                    break
+                    return
 
                 elif op == HEARTBEAT_ACK:
                     self._last_heartbeat_ack = datetime.datetime.now()
@@ -332,6 +333,7 @@ class GatewayClient:
 
         # if we need to reconnect, set the event
         if reconnect:
+            self._last_heartbeat_ack = None
             raise GatewayReconnect(self.resume_url, self.can_resume)
 
     # Payloads
