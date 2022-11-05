@@ -5,18 +5,18 @@ import pytest
 from discatcore import utils
 
 
-class TestSnowflakeUtils:
+class TestSnowflake:
     @pytest.mark.parametrize(
         ["expected", "snowflake"],
         [
             (utils.DISCORD_EPOCH, 0),
-            (1553400385989, 559226493553737740),
-            (1600376556284, 756258832526868541),
-            (1517155232186, 407203299977068544),
+            (1553400385.989, 559226493553737740),
+            (1600376556.284, 756258832526868541),
+            (1517155232.186, 407203299977068544),
         ],
     )
     def test_snowflake_timestamp(self, expected: int, snowflake: int):
-        assert utils.SnowflakeUtils.snowflake_timestamp(snowflake) == expected
+        assert utils.Snowflake(snowflake).raw_timestamp == expected
 
     @pytest.mark.parametrize(
         ["expected", "snowflake"],
@@ -29,7 +29,7 @@ class TestSnowflakeUtils:
         ],
     )
     def test_snowflake_iwid(self, expected: int, snowflake: int):
-        assert utils.SnowflakeUtils.snowflake_iwid(snowflake) == expected
+        assert utils.Snowflake(snowflake).iwid == expected
 
     @pytest.mark.parametrize(
         ["expected", "snowflake"],
@@ -42,7 +42,7 @@ class TestSnowflakeUtils:
         ],
     )
     def test_snowflake_ipid(self, expected: int, snowflake: int):
-        assert utils.SnowflakeUtils.snowflake_ipid(snowflake) == expected
+        assert utils.Snowflake(snowflake).ipid == expected
 
     @pytest.mark.parametrize(
         ["expected", "snowflake"],
@@ -55,7 +55,7 @@ class TestSnowflakeUtils:
         ],
     )
     def test_snowflake_increment(self, expected: int, snowflake: int):
-        assert utils.SnowflakeUtils.snowflake_increment(snowflake) == expected
+        assert utils.Snowflake(snowflake).increment == expected
 
 
 def test_dumps():
