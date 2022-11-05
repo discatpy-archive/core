@@ -1,8 +1,7 @@
 # SPDX-License-Identifier: MIT
 
 import typing as t
-
-import discord_typings as dt
+from datetime import datetime
 
 has_orjson: bool = False
 try:
@@ -14,7 +13,7 @@ except ImportError:
 
 __all__ = (
     "DISCORD_EPOCH",
-    "SnowflakeUtils",
+    "Snowflake",
     "dumps",
     "loads",
 )
@@ -23,44 +22,29 @@ __all__ = (
 DISCORD_EPOCH: t.Final[int] = 1420070400000
 
 
-class SnowflakeUtils:
-    """Utilities for handling Snowflakes."""
+class Snowflake(int):
+    @property
+    def raw_timestamp(self) -> float:
+        return ((self >> 22) + DISCORD_EPOCH) / 1000
 
-    @staticmethod
-    def snowflake_timestamp(id: dt.Snowflake) -> int:
-        """The timestamp of the provided Snowflake.
+    @property
+    def timestamp(self) -> datetime:
+        return datetime.fromtimestamp(self.raw_timestamp)
 
-        Args:
-            id (Snowflake): The snowflake to extract from.
-        """
-        return (int(id) >> 22) + DISCORD_EPOCH
+    @property
+    def internal_worker_id(self) -> int:
+        return (self & 0x3E0000) >> 17
 
-    @staticmethod
-    def snowflake_iwid(id: dt.Snowflake) -> int:
-        """The internal worker ID of the provided Snowflake.
+    @property
+    def internal_process_id(self) -> int:
+        return (self & 0x1F000) >> 12
 
-        Args:
-            id (Snowflake): The snowflake to extract from.
-        """
-        return (int(id) & 0x3E0000) >> 17
+    iwid = internal_worker_id
+    ipid = internal_process_id
 
-    @staticmethod
-    def snowflake_ipid(id: dt.Snowflake) -> int:
-        """The internal process ID of the provided Snowflake.
-
-        Args:
-            id (Snowflake): The snowflake to extract from.
-        """
-        return (int(id) & 0x1F000) >> 12
-
-    @staticmethod
-    def snowflake_increment(id: dt.Snowflake) -> int:
-        """The increment of the provided Snowflake.
-
-        Args:
-            id (Snowflake): The snowflake to extract from.
-        """
-        return int(id) & 0xFFF
+    @property
+    def increment(self) -> int:
+        return self & 0xFFF
 
 
 def dumps(obj: t.Any) -> str:
