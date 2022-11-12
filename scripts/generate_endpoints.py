@@ -3,6 +3,7 @@ import builtins
 import contextlib
 import json
 import pathlib
+import sys
 import types
 import typing as t
 from enum import Enum, auto
@@ -59,6 +60,16 @@ class UnsetType(Enum):
 
 Unset: t.Literal[UnsetType.Unset] = UnsetType.Unset
 UnsetOr = t.Union[T, UnsetType]
+
+
+if sys.version_info >= (3, 10):
+    from types import EllipsisType
+else:
+    if t.TYPE_CHECKING:
+        EllipsisType = ellipsis
+    else:
+        EllipsisType = type(...)
+
 
 #
 #  Function Creator
@@ -148,7 +159,7 @@ class FunctionCreator:
         self.func_name: str = name
         self.func_async: bool = is_async
         self.func_args: list[FunctionArg] = []
-        self.func_return_anno: t.Union[str, types.EllipsisType] = ...
+        self.func_return_anno: t.Union[str, EllipsisType] = ...
         self.func_decorators: t.Optional[list[str]] = decorators
         self.func_body: list[str] = []
         self.func_indent_level: int = 1
