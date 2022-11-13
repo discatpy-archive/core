@@ -130,6 +130,9 @@ class GatewayClient:
         heartbeat_timeout: float = 30.0,
         intents: int = 0,
     ) -> None:
+        if heartbeat_timeout <= 0.0:
+            raise ValueError(f"heartbeat_timeout parameter cannot be negative or 0!")
+
         # Internal attribs
         self._ws: t.Optional[aiohttp.ClientWebSocketResponse] = None
         self._inflator = zlib.decompressobj()
