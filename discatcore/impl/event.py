@@ -98,7 +98,7 @@ class Event:
             This depends on if the ``func`` arg was passed in.
         """
 
-        def wrapper(func: Func[t.Any]):
+        def wrapper(func: t.Union[Func[t.Any], staticmethod[t.Any]]):
             self.set_proto(func, force_parent=force_parent)
             return self
 
