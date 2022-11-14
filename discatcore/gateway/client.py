@@ -46,18 +46,18 @@ class HeartbeatHandler:
         self.parent: GatewayClient = parent
         self._first_heartbeat: bool = True
 
-    async def loop(self) -> None:
-        while not self.parent.is_closed:
-            try:
-                delta = self.parent.heartbeat_interval
-                if self._first_heartbeat:
-                    delta *= random.uniform(0.0, 1.0)
-                    self._first_heartbeat = False
+    def _get_delta(self) -> float:
+        delta = self.parent.heartbeat_interval
+        if self._first_heartbeat:
+            delta *= random.uniform(0.0, 1.0)
+            self._first_heartbeat = False
 
-                await self.parent.heartbeat()
-                await asyncio.sleep(delta)
-            except asyncio.CancelledError:
-                break
+        return delta
+
+    async def loop(self) -> None:
+        await self.parent.heartbeat()
+        loop = asyncio.get_running_loop()
+        loop.call_later(self._get_delta(), self.start)
 
     def start(self) -> None:
         self._task = asyncio.create_task(self.loop())
@@ -130,6 +130,9 @@ class GatewayClient:
         heartbeat_timeout: float = 30.0,
         intents: int = 0,
     ) -> None:
+        if heartbeat_timeout <= 0.0:
+            raise ValueError(f"heartbeat_timeout parameter cannot be negative or 0!")
+
         # Internal attribs
         self._ws: t.Optional[aiohttp.ClientWebSocketResponse] = None
         self._inflator = zlib.decompressobj()
