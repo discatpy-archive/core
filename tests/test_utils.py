@@ -9,13 +9,13 @@ class TestSnowflake:
     @pytest.mark.parametrize(
         ["expected", "snowflake"],
         [
-            (utils.DISCORD_EPOCH, 0),
+            ((utils.DISCORD_EPOCH / 1000), 0),
             (1553400385.989, 559226493553737740),
             (1600376556.284, 756258832526868541),
             (1517155232.186, 407203299977068544),
         ],
     )
-    def test_snowflake_timestamp(self, expected: int, snowflake: int):
+    def test_snowflake_timestamp(self, expected: float, snowflake: int):
         assert utils.Snowflake(snowflake).raw_timestamp == expected
 
     @pytest.mark.parametrize(
