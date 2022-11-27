@@ -289,8 +289,8 @@ def _generate_func_args_json_query(
         elif (
             isinstance(param, list) and len(param) == 2  # pyright: ignore[reportUnnecessaryIsInstance]
         ):
-        # fmt: on
             anno, default = param
+        # fmt: on
         else:
             raise TypeError(f"Invalid type {_type_repr(param)} for JSON/Query parameter values")
 
