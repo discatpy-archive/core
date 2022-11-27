@@ -81,6 +81,16 @@ class Event:
         else:
             raise ValueError(f"Event prototype for event {self.name} has already been set!")
 
+    @t.overload
+    def proto(self, func: CoroFunc, *, force_parent: bool = ...) -> Event:
+        pass
+
+    @t.overload
+    def proto(
+        self, func: None = ..., *, force_parent: bool = ...
+    ) -> Callable[[Func[t.Any]], Event]:
+        pass
+
     def proto(
         self,
         func: t.Optional[t.Union[Func[t.Any], staticmethod[t.Any]]] = None,
@@ -189,6 +199,16 @@ class Event:
 
         del self.callbacks[index]
         _log.debug("Removed event callback with index %d under event %s", index, self.name)
+
+    @t.overload
+    def callback(self, func: CoroFunc, *, one_shot: bool = ..., force_parent: bool = ...) -> Event:
+        pass
+
+    @t.overload
+    def callback(
+        self, func: None = ..., *, one_shot: bool = ..., force_parent: bool = ...
+    ) -> Callable[[Func[t.Any]], Event]:
+        pass
 
     def callback(
         self,
