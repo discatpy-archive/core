@@ -150,7 +150,11 @@ class Ratelimiter:
         """
         self.url_to_discord_hash[url] = discord_hash
 
-        cur_bucket = self.url_buckets[url]
+        cur_bucket = self.url_buckets.get(url)
+
+        if not cur_bucket:
+            raise BucketMigrated(discord_hash)
+
         self.discord_buckets[discord_hash] = cur_bucket
         del self.url_buckets[url]
 
