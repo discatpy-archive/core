@@ -15,7 +15,7 @@ from .. import __version__
 from ..errors import BucketMigrated, HTTPException, UnsupportedAPIVersionWarning
 from ..file import BasicFile
 from ..types import Unset, UnsetOr
-from ..utils import dumps, loads
+from ..utils.json import dumps, loads
 from .endpoints import (
     ApplicationCommandEndpoints,
     AuditLogEndpoints,

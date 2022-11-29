@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from aiohttp import ClientResponse
 
 from ..errors import BucketMigrated
-from ..impl.ratelimit import BurstRatelimiter, ManualRatelimiter
+from ..utils.ratelimit import BurstRatelimiter, ManualRatelimiter
 
 _log = logging.getLogger(__name__)
 

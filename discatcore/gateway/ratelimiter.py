@@ -6,7 +6,7 @@ import asyncio
 import logging
 import typing as t
 
-from ..impl.ratelimit import BaseRatelimiter
+from ..utils.ratelimit import BaseRatelimiter
 
 if t.TYPE_CHECKING:
     from .client import GatewayClient

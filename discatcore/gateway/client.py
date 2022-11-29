@@ -16,8 +16,8 @@ import discord_typings as dt
 
 from ..errors import GatewayReconnect
 from ..http import HTTPClient
-from ..impl.dispatcher import Dispatcher
-from ..utils import dumps, loads
+from ..utils.dispatcher import Dispatcher
+from ..utils.json import dumps, loads
 from .ratelimiter import Ratelimiter
 from .types import BaseTypedWSMessage, is_binary, is_text
 

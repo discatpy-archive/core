@@ -10,7 +10,6 @@ from typing import Literal, NamedTuple
 from . import gateway, http, types, utils
 from .errors import *
 from .file import *
-from .impl import *
 
 
 class VersionInfo(NamedTuple):
@@ -35,4 +34,3 @@ __all__ = (
 )
 __all__ += errors.__all__
 __all__ += file.__all__
-__all__ += impl.__all__

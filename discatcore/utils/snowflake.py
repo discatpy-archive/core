@@ -3,20 +3,7 @@
 import typing as t
 from datetime import datetime
 
-has_orjson: bool = False
-try:
-    import orjson
-
-    has_orjson = True
-except ImportError:
-    import json
-
-__all__ = (
-    "DISCORD_EPOCH",
-    "Snowflake",
-    "dumps",
-    "loads",
-)
+__all__ = ("DISCORD_EPOCH", "Snowflake")
 
 
 DISCORD_EPOCH: t.Final[int] = 1420070400000
@@ -45,15 +32,3 @@ class Snowflake(int):
     @property
     def increment(self) -> int:
         return self & 0xFFF
-
-
-def dumps(obj: t.Any) -> str:
-    if has_orjson:
-        return orjson.dumps(obj).decode("utf-8")
-    return json.dumps(obj)
-
-
-def loads(obj: str) -> t.Any:
-    if has_orjson:
-        return orjson.loads(obj)
-    return json.loads(obj)
