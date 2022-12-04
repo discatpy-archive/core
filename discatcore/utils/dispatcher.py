@@ -9,8 +9,8 @@ import sys
 import traceback
 import typing as t
 from collections import defaultdict
+from dataclasses import dataclass
 
-import attr
 from typing_extensions import Self, TypeGuard
 
 from .event import Event, EventT, ExceptionEvent
@@ -40,10 +40,10 @@ ListenerCallbackT = t.TypeVar("ListenerCallbackT", bound="ListenerCallback[Event
 Coro = t.Coroutine[T, t.Any, t.Any]
 
 ListenerCallback = t.Callable[[EventT], Coro[None]]
-ConsumerCallback = t.Callable[[DispatcherT, GatewayClient, JSONObject], Coro[None]]
+ConsumerCallback = t.Callable[[DispatcherT, "GatewayClient", JSONObject], Coro[None]]
 
 
-@attr.define
+@dataclass
 class Consumer(t.Generic[DispatcherT]):
     """Represents a dispatcher consumer. A consumer consumes a raw event and performs actions based on the raw event."""
 
@@ -173,7 +173,7 @@ class Dispatcher:
             else:
 
                 def event_check(arg: t.Any) -> None:
-                    if not isinstance(arg, type) or not issubclass(arg, Event):
+                    if not isinstance(arg, type) and not issubclass(arg, Event):
                         raise TypeError(f"Expected an event, got {arg!r}.")
 
                 if t.get_origin(event_arg_anno) in _union_types:
