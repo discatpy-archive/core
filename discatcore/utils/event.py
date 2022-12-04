@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import typing as t
-from dataclasses import dataclass
 
+import attr
 from typing_extensions import Self
 
 if t.TYPE_CHECKING:
@@ -46,7 +46,7 @@ class Event:
         return cls.__dispatches
 
 
-@dataclass(kw_only=True)
+@attr.define(kw_only=True)
 class ExceptionEvent(Event, t.Generic[EventT]):
     """An event that is dispatched whenever a dispatched event raises an exception."""
 

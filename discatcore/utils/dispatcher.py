@@ -9,8 +9,8 @@ import sys
 import traceback
 import typing as t
 from collections import defaultdict
-from dataclasses import dataclass
 
+import attr
 from typing_extensions import Self, TypeGuard
 
 from .event import Event, EventT, ExceptionEvent
@@ -43,7 +43,7 @@ ListenerCallback = t.Callable[[EventT], Coro[None]]
 ConsumerCallback = t.Callable[[DispatcherT, "GatewayClient", JSONObject], Coro[None]]
 
 
-@dataclass
+@attr.define
 class Consumer(t.Generic[DispatcherT]):
     """Represents a dispatcher consumer. A consumer consumes a raw event and performs actions based on the raw event."""
 
