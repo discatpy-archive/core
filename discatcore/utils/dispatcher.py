@@ -9,6 +9,7 @@ import sys
 import traceback
 import typing as t
 from collections import defaultdict
+from importlib import reload
 
 import attr
 from typing_extensions import Self, TypeGuard
@@ -41,6 +42,25 @@ Coro = t.Coroutine[T, t.Any, t.Any]
 
 ListenerCallback = t.Callable[[EventT], Coro[None]]
 ConsumerCallback = t.Callable[[DispatcherT, "GatewayClient", JSONObject], Coro[None]]
+
+
+# ported from discatpy
+def _get_globals(x: object) -> dict[str, t.Any]:
+    module = inspect.getmodule(x)
+
+    if module:
+        try:
+            t.TYPE_CHECKING = True
+            reload(module)
+        except ModuleNotFoundError:
+            # incomplete __main__ module
+            # this does mean that anything defined in TYPE_CHECKING will not be extracted
+            # TODO: find an alternative solution for __main__ module that extracts items from TYPE_CHECKING statements
+            pass
+        finally:
+            t.TYPE_CHECKING = False
+
+    return module.__dict__
 
 
 @attr.define
@@ -207,6 +227,8 @@ class Dispatcher:
                         "No event type was provided! Please provide it as an argument or a type hint."
                     )
             else:
+                if isinstance(event_arg_anno, str):
+                    event_arg_anno = eval(event_arg_anno, _get_globals(func))
 
                 def event_check(arg: t.Any) -> None:
                     if not isinstance(arg, type) and not issubclass(arg, Event):
