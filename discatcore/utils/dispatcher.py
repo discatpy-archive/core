@@ -156,8 +156,44 @@ class Dispatcher:
         if not listeners:
             del self._listeners[event]
 
-    def listen_to(self, *events: type[Event]) -> t.Callable[[ListenerCallbackT], ListenerCallbackT]:
-        def wrapper(func: ListenerCallbackT) -> ListenerCallbackT:
+    @t.overload
+    def listen_to(
+        self, func: ListenerCallback[EventT], *, events: None = ...
+    ) -> ListenerCallback[EventT]:
+        pass
+
+    @t.overload
+    def listen_to(
+        self, func: ListenerCallback[EventT], *, events: list[type[EventT]]
+    ) -> t.NoReturn:
+        pass
+
+    @t.overload
+    def listen_to(
+        self, func: None = ..., *, events: list[type[EventT]]
+    ) -> t.Callable[[ListenerCallback[EventT]], ListenerCallback[EventT]]:
+        pass
+
+    @t.overload
+    def listen_to(
+        self, func: None = ..., *, events: None = ...
+    ) -> t.Callable[[ListenerCallback[EventT]], ListenerCallback[EventT]]:
+        pass
+
+    def listen_to(
+        self,
+        func: t.Optional[ListenerCallback[EventT]] = None,
+        *,
+        events: t.Optional[list[type[EventT]]] = None,
+    ) -> t.Union[
+        t.Callable[[ListenerCallback[EventT]], ListenerCallback[EventT]],
+        ListenerCallback[EventT],
+        t.NoReturn,
+    ]:
+        if func and events is not None:
+            raise ValueError(f"func and events parameters cannot both be set!")
+
+        def wrapper(func: ListenerCallback[EventT]) -> ListenerCallback[EventT]:
             func_sig = inspect.signature(func)
             event_arg = next(iter(func_sig.parameters.values()))
             event_arg_anno = event_arg.annotation
@@ -188,10 +224,12 @@ class Dispatcher:
                     resolved_events = {t.cast(type[Event], event_arg_anno)}
 
             for event in resolved_events:
-                self.subscribe(event, func)
+                self.subscribe(event, func)  # pyright: ignore
 
             return func
 
+        if func:
+            return wrapper(func)
         return wrapper
 
     def dispatch(self, event: Event) -> asyncio.Future[t.Any]:
