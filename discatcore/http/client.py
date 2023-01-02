@@ -12,7 +12,7 @@ import aiohttp
 import discord_typings as dt
 
 from .. import __version__
-from ..errors import BucketMigrated, HTTPException, UnsupportedAPIVersionWarning
+from ..errors import HTTPException, UnsupportedAPIVersionWarning
 from ..file import BasicFile
 from ..types import Unset, UnsetOr
 from ..utils.json import dumps, loads
@@ -226,7 +226,7 @@ class HTTPClient(
                 (like Create Guild Sticker).
 
         Returns:
-            If this route returns t.Any content, it will be processed and returned.
+            If this route returns any content, it will be processed and returned.
         """
         self._request_id += 1
         rid = self._request_id
@@ -236,6 +236,7 @@ class HTTPClient(
         query_params = _filter_dict_for_unset(query_params or {})
         max_tries = 5
         headers: dict[str, str] = self.default_headers
+        bucket_hash: t.Optional[str] = None
 
         if reason:
             headers["X-Audit-Log-Reason"] = _urlquote(reason, safe="/ ")
@@ -249,12 +250,13 @@ class HTTPClient(
         if data.multipart_content is not Unset:
             kwargs["data"] = data.multipart_content
 
-        bucket = self._ratelimiter.get_bucket(route.bucket)
+        for try_ in range(max_tries):
+            bucket = self._ratelimiter.get_bucket((route.bucket, bucket_hash))
 
-        for tries in range(max_tries):
             async with self._ratelimiter.global_bucket:
+                _log.debug("REQUEST:%d The global ratelimit bucket has been acquired!", rid)
                 async with bucket:
-                    _log.debug("REQUEST:%d All ratelimit buckets have been acquired!", rid)
+                    _log.debug("REQUEST:%d The route ratelimit bucket has been acquired!", rid)
 
                     response = await self._session.request(
                         route.method,
@@ -264,24 +266,28 @@ class HTTPClient(
                         **kwargs,
                     )
                     _log.debug(
-                        "REQUEST:%d Made request to %s with method %s.",
+                        "REQUEST:%d Made request to %s with method %s and got status code %d.",
                         rid,
                         f"{self._api_url}{url}",
                         route.method,
+                        response.status,
                     )
 
-                    URL_BUCKET = bucket.bucket is None
-                    bucket.update_info(response)
-                    await bucket.acquire()
-
-                    if URL_BUCKET and bucket.bucket is not None:
-                        try:
-                            self._ratelimiter.migrate_bucket(route.bucket, bucket.bucket)
-                        except BucketMigrated:
-                            bucket = self._ratelimiter.get_bucket(route.bucket)
+                    bucket_hash = response.headers.get("X-RateLimit-Bucket")
+                    if bucket_hash is not None:
+                        _log.debug(
+                            "REQUEST:%d Migrating from bucket (%s, %s) to bucket (%s, %s).",
+                            rid,
+                            route.bucket,
+                            bucket.bucket,
+                            route.bucket,
+                            bucket_hash,
+                        )
+                        bucket = self._ratelimiter.get_bucket((route.bucket, bucket_hash))
 
                     # Everything is ok
                     if 200 <= response.status < 300:
+                        bucket.update_info(response)
                         return await self._text_or_json(response)
 
                     # Ratelimited
@@ -302,13 +308,23 @@ class HTTPClient(
                             )
                             self._ratelimiter.global_bucket.lock_for(retry_after)
                             await self._ratelimiter.global_bucket.acquire()
+                        else:
+                            _log.info(
+                                "REQUEST:%d All requests with bucket (%s, %s) have hit a ratelimit! Retrying in %f.",
+                                rid,
+                                route.bucket,
+                                bucket.bucket,
+                                retry_after,
+                            )
+                            bucket.lock_for(retry_after)
+                            await bucket.acquire()
 
                         _log.info("REQUEST:%d Ratelimit is over. Continuing with the request.", rid)
                         continue
 
                     # Specific Server Errors, retry after some time
                     if response.status in {500, 502, 504}:
-                        wait_time = 1 + tries * 2
+                        wait_time = 1 + try_ * 2
                         _log.info("REQUEST:%d Got a server error! Retrying in %d.", rid, wait_time)
                         await asyncio.sleep(wait_time)
                         continue
@@ -317,9 +333,14 @@ class HTTPClient(
                     if response.status >= 400:
                         raise HTTPException(response, await self._text_or_json(response))
 
-        raise RuntimeError(
-            f'REQUEST:{rid} Tried sending request to "{url}" with method {route.method} {max_tries} times.'
+        _log.error(
+            'REQUEST:%d Tried sending request to "%s" with method %s %d times.',
+            rid,
+            url,
+            route.method,
+            max_tries,
         )
+        return Unset
 
     async def get_gateway_bot(self) -> dt.GetGatewayBotData:
         """Fetches the gateway information from the Discord API.
