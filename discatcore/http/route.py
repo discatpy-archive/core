@@ -55,7 +55,7 @@ class Route:
 
     @property
     def bucket(self) -> str:
-        """The pseudo-bucket that represents this route. This is generated via the method, raw url and top level parameters."""
+        """The pseudo-bucket that represents this route. This is generated with the method and top level parameters filled into the raw url."""
         top_level_params = {
             k: getattr(self, k)
             for k in ("guild_id", "channel_id", "webhook_id", "webhook_token")

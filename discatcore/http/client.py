@@ -226,7 +226,8 @@ class HTTPClient(
                 (like Create Guild Sticker).
 
         Returns:
-            If this route returns any content, it will be processed and returned.
+            If this route returns any content, it will be processed and returned. If the request fails after 5 tries,
+            Unset will be returned instead.
         """
         self._request_id += 1
         rid = self._request_id
