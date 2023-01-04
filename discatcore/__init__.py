@@ -20,12 +20,19 @@ class VersionInfo(t.NamedTuple):
 
 
 def parse_version_string(string: str) -> VersionInfo:
-    args: list[t.Any] = string.split(".")
+    major, minor, patch = string.split(".")
 
     if "-" in string:
-        args.append(string.partition("-"))
+        release_level = string.partition("-")[2]
+    else:
+        release_level = "final"
 
-    return VersionInfo(*args)
+    return VersionInfo(
+        major=int(major),
+        minor=int(minor),
+        patch=int(patch),
+        release_level=release_level,  # pyright: ignore
+    )
 
 
 version_info: VersionInfo = parse_version_string(__version__)
