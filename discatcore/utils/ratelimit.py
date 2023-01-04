@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT
 
 import asyncio
+import logging
 import typing as t
 
 __all__ = (
@@ -8,6 +9,8 @@ __all__ = (
     "ManualRatelimiter",
     "BurstRatelimiter",
 )
+
+_log = logging.getLogger(__name__)
 
 
 class BaseRatelimiter:
@@ -35,7 +38,7 @@ class BaseRatelimiter:
 
 
 class ManualRatelimiter(BaseRatelimiter):
-    """A simple ratelimiter that simply locks at the command of t.Anything."""
+    """A simple ratelimiter that simply locks at the command of anything."""
 
     async def _unlock(self, delay: float) -> None:
         await asyncio.sleep(delay)
@@ -74,6 +77,7 @@ class BurstRatelimiter(ManualRatelimiter):
 
     async def acquire(self) -> None:
         if self.reset_after is not None and self.remaining == 0 and not self.is_locked():
+            _log.info("Auto-locking for %f seconds.", self.reset_after)
             self.lock_for(self.reset_after)
 
         return await super().acquire()

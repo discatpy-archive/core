@@ -8,7 +8,6 @@ from aiohttp import ClientResponse
 __all__ = (
     "DisCatCoreException",
     "HTTPException",
-    "BucketMigrated",
     "UnsupportedAPIVersionWarning",
     "GatewayReconnect",
 )
@@ -79,13 +78,6 @@ class HTTPException(DisCatCoreException):
 
         # more shitty aiohttp typing
         super().__init__(format.format(response.status, response.reason, self.code, self.text))  # type: ignore
-
-
-class BucketMigrated(DisCatCoreException):
-    """Represents an internal exception for when a bucket migrates."""
-
-    def __init__(self, discord_hash: str) -> None:
-        super().__init__(f"This bucket has been migrated to a bucket located at {discord_hash}")
 
 
 class UnsupportedAPIVersionWarning(Warning):

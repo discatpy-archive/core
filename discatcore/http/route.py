@@ -36,24 +36,31 @@ class Route:
         self.url: str = url
 
         # top-level resource parameters
-        self.guild_id: t.Optional[dt.Snowflake] = params.get("guild_id")
-        self.channel_id: t.Optional[dt.Snowflake] = params.get("channel_id")
-        self.webhook_id: t.Optional[dt.Snowflake] = params.get("webhook_id")
-        self.webhook_token: t.Optional[str] = params.get("webhook_token")
+        self.guild_id: t.Optional[dt.Snowflake] = params.pop("guild_id", None)
+        self.channel_id: t.Optional[dt.Snowflake] = params.pop("channel_id", None)
+        self.webhook_id: t.Optional[dt.Snowflake] = params.pop("webhook_id", None)
+        self.webhook_token: t.Optional[str] = params.pop("webhook_token", None)
 
     @property
     def endpoint(self) -> str:
         """The formatted url for this route."""
-        return self.url.format_map({k: _urlquote(str(v)) for k, v in self.params.items()})
-
-    @property
-    def bucket(self) -> str:
-        """The pseudo-bucket that represents this route. This is generated via the method, raw url and top level parameters."""
         top_level_params = {
             k: getattr(self, k)
             for k in ("guild_id", "channel_id", "webhook_id", "webhook_token")
             if getattr(self, k) is not None
         }
-        other_params = {k: None for k in self.params.keys() if k not in top_level_params.keys()}
+        other_params = {k: _urlquote(str(v)) for k, v in self.params.items()}
+
+        return self.url.format_map({**top_level_params, **other_params})
+
+    @property
+    def bucket(self) -> str:
+        """The pseudo-bucket that represents this route. This is generated with the method and top level parameters filled into the raw url."""
+        top_level_params = {
+            k: getattr(self, k)
+            for k in ("guild_id", "channel_id", "webhook_id", "webhook_token")
+            if getattr(self, k) is not None
+        }
+        other_params = {k: None for k in self.params.keys()}
 
         return f"{self.method}:{self.url.format_map({**top_level_params, **other_params})}"
