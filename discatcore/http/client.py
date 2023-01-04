@@ -275,7 +275,7 @@ class HTTPClient(
                     )
 
                     bucket_hash = response.headers.get("X-RateLimit-Bucket")
-                    if bucket_hash is not None:
+                    if bucket_hash is not None and bucket_hash != bucket.bucket:
                         _log.debug(
                             "REQUEST:%d Migrating from bucket (%s, %s) to bucket (%s, %s).",
                             rid,
