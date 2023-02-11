@@ -16,9 +16,9 @@ import discord_typings as dt
 
 from ..errors import GatewayReconnect
 from ..http import HTTPClient
+from ..utils import json
 from ..utils.dispatcher import Dispatcher
-from ..utils.json import dumps, loads
-from .events import InvalidSessionEvent, ReconnectEvent, name_to_class
+from . import events
 from .ratelimiter import Ratelimiter
 from .types import BaseTypedWSMessage, is_binary, is_text
 
@@ -184,7 +184,7 @@ class GatewayClient:
             return
 
         await self.ratelimiter.acquire()
-        await self._ws.send_json(data, dumps=dumps)
+        await self._ws.send_json(data, dumps=json.dumps)
         _log.debug("Sent JSON payload %s to the Gateway.", data)
 
     async def receive(self) -> t.Optional[bool]:
@@ -215,7 +215,7 @@ class GatewayClient:
             else:
                 received_msg = t.cast(str, typed_msg.data)
 
-            self.recent_payload = t.cast(dt.GatewayEvent, loads(received_msg))
+            self.recent_payload = t.cast(dt.GatewayEvent, json.loads(received_msg))
             _log.debug("Received payload from the Gateway: %s", self.recent_payload)
             self.sequence = self.recent_payload.get("s")
             return True
@@ -280,30 +280,33 @@ class GatewayClient:
 
             if res and self.recent_payload is not None:
                 op = int(self.recent_payload["op"])
-                if op == DISPATCH and self.recent_payload.get("t") is not None:
-                    event_name = str(self.recent_payload.get("t")).lower()
-                    data = self.recent_payload.get("d")
+                if op == DISPATCH and (event_name := self.recent_payload.get("t")) is not None:
+                    data = t.cast(json.JSONObject, self.recent_payload.get("d"))
 
-                    if event_name == "ready":
+                    self._dispatcher.consume(event_name, self, data)
+                    await self._dispatcher.dispatch(
+                        events.DispatchEvent(t.cast(t.Mapping[str, t.Any], data))
+                    )
+
+                    if event_name == "READY":
                         ready_data = t.cast(dt.ReadyData, data)
                         self.session_id = ready_data["session_id"]
                         self.resume_url = ready_data["resume_gateway_url"]
 
-                    event = name_to_class[event_name](data)
-                    await self._dispatcher.dispatch(event)
+                        await self._dispatcher.dispatch(events.ReadyEvent(ready_data))
 
                 # these should be rare, but it's better to be safe than sorry
                 elif op == HEARTBEAT:
                     await self.heartbeat()
 
                 elif op == RECONNECT:
-                    await self._dispatcher.dispatch(ReconnectEvent())
+                    await self._dispatcher.dispatch(events.ReconnectEvent())
                     await self.close(code=1012)
                     return
 
                 elif op == INVALID_SESSION:
                     self.can_resume = bool(self.recent_payload.get("d"))
-                    await self._dispatcher.dispatch(InvalidSessionEvent(self.can_resume))
+                    await self._dispatcher.dispatch(events.InvalidSessionEvent(self.can_resume))
                     await self.close(code=1012)
                     return
 
