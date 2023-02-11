@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 import typing as t
-from dataclasses import dataclass
 
+import attr
 import discord_typings as dt
 
 from ..utils.event import Event
@@ -18,31 +18,31 @@ __all__ = (
 )
 
 
-@dataclass
+@attr.define
 class GatewayEvent(Event):
     pass
 
 
-@dataclass
+@attr.define
 class DispatchEvent(GatewayEvent):
     data: t.Mapping[str, t.Any]
 
 
-@dataclass
+@attr.define
 class ReadyEvent(GatewayEvent):
     data: dt.ReadyData
 
 
-@dataclass
+@attr.define
 class ResumedEvent(GatewayEvent):
     pass
 
 
-@dataclass
+@attr.define
 class ReconnectEvent(GatewayEvent):
     pass
 
 
-@dataclass
+@attr.define
 class InvalidSessionEvent(GatewayEvent):
     resumable: bool
