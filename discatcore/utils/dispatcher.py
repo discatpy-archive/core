@@ -68,16 +68,14 @@ class Consumer(t.Generic[DispatcherT]):
     """Represents a dispatcher consumer. A consumer consumes a raw event and performs actions based on the raw event."""
 
     callback: ConsumerCallback[DispatcherT]
-    events: tuple[type[Event], ...]
+    events: tuple[str, ...]
 
 
 def consumer_for(
-    *event_types: type[Event],
+    *events: str,
 ) -> t.Callable[[ConsumerCallback[DispatcherT]], Consumer[DispatcherT]]:
-    event_types = tuple({event for event_type in event_types for event in event_type.dispatches})
-
     def wrapper(func: ConsumerCallback[DispatcherT]) -> Consumer[DispatcherT]:
-        return Consumer(func, event_types)
+        return Consumer(func, events)
 
     return wrapper
 
@@ -102,6 +100,9 @@ class Dispatcher:
                 continue
 
             self._consumers[name.lower()] = value
+
+            for event_name in value.events:
+                self._consumers[event_name.lower()] = value
 
     async def _run_listener(self, event: EventT, listener: ListenerCallback[EventT]) -> None:
         try:
