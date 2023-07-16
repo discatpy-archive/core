@@ -5,11 +5,9 @@ from __future__ import annotations
 import asyncio
 import inspect
 import logging
-import sys
 import traceback
 import typing as t
 from collections import defaultdict
-from importlib import reload
 
 import attr
 from typing_extensions import Self, TypeGuard
@@ -19,13 +17,6 @@ from .json import JSONObject
 
 if t.TYPE_CHECKING:
     from ..gateway import GatewayClient
-
-if sys.version_info >= (3, 10):
-    from types import UnionType
-
-    _union_types = {t.Union, UnionType}
-else:
-    _union_types = {t.Union}
 
 _log = logging.getLogger(__name__)
 
@@ -42,25 +33,6 @@ Coro = t.Coroutine[T, t.Any, t.Any]
 
 ListenerCallback = t.Callable[[EventT], Coro[None]]
 ConsumerCallback = t.Callable[[DispatcherT, "GatewayClient", JSONObject], Coro[None]]
-
-
-# ported from discatpy
-def _get_globals(x: object) -> dict[str, t.Any]:
-    module = inspect.getmodule(x)
-
-    if module:
-        try:
-            t.TYPE_CHECKING = True
-            reload(module)
-        except ModuleNotFoundError:
-            # incomplete __main__ module
-            # this does mean that anything defined in TYPE_CHECKING will not be extracted
-            # TODO: find an alternative solution for __main__ module that extracts items from TYPE_CHECKING statements
-            pass
-        finally:
-            t.TYPE_CHECKING = False
-
-    return module.__dict__
 
 
 @attr.define
@@ -91,7 +63,7 @@ class Dispatcher:
 
     def __init__(self) -> None:
         self._listeners: defaultdict[type[Event], list[ListenerCallback[Event]]] = defaultdict(
-            lambda: []
+            list
         )
         self._consumers: dict[str, Consumer[Self]] = {}
 
@@ -177,82 +149,17 @@ class Dispatcher:
         if not listeners:
             del self._listeners[event]
 
-    @t.overload
-    def listen_to(
-        self, func: ListenerCallback[EventT], *, events: None = ...
-    ) -> ListenerCallback[EventT]:
-        pass
-
-    @t.overload
-    def listen_to(
-        self, func: ListenerCallback[EventT], *, events: list[type[EventT]]
-    ) -> t.NoReturn:
-        pass
-
-    @t.overload
-    def listen_to(
-        self, func: None = ..., *, events: list[type[EventT]]
-    ) -> t.Callable[[ListenerCallback[EventT]], ListenerCallback[EventT]]:
-        pass
-
-    @t.overload
-    def listen_to(
-        self, func: None = ..., *, events: None = ...
-    ) -> t.Callable[[ListenerCallback[EventT]], ListenerCallback[EventT]]:
-        pass
-
     def listen_to(
         self,
-        func: t.Optional[ListenerCallback[EventT]] = None,
         *,
-        events: t.Optional[list[type[EventT]]] = None,
-    ) -> t.Union[
-        t.Callable[[ListenerCallback[EventT]], ListenerCallback[EventT]],
-        ListenerCallback[EventT],
-        t.NoReturn,
-    ]:
-        if func and events is not None:
-            raise ValueError(f"func and events parameters cannot both be set!")
-
+        events: list[type[EventT]]
+    ) -> t.Callable[[ListenerCallback[EventT]], ListenerCallback[EventT]]:
         def wrapper(func: ListenerCallback[EventT]) -> ListenerCallback[EventT]:
-            func_sig = inspect.signature(func)
-            event_arg = next(iter(func_sig.parameters.values()))
-            event_arg_anno = event_arg.annotation
-
-            resolved_events: set[type[Event]]
-            if event_arg_anno is inspect.Parameter.empty:
-                if events:
-                    resolved_events = set(events)
-                else:
-                    raise TypeError(
-                        "No event type was provided! Please provide it as an argument or a type hint."
-                    )
-            else:
-                if isinstance(event_arg_anno, str):
-                    event_arg_anno = eval(event_arg_anno, _get_globals(func))
-
-                def event_check(arg: t.Any) -> None:
-                    if not isinstance(arg, type) and not issubclass(arg, Event):
-                        raise TypeError(f"Expected an event, got {arg!r}.")
-
-                if t.get_origin(event_arg_anno) in _union_types:
-                    union_args = t.get_args(event_arg_anno)
-
-                    for arg in union_args:
-                        event_check(arg)
-
-                    resolved_events = t.cast(set[type[Event]], set(union_args))
-                else:
-                    event_check(event_arg_anno)
-                    resolved_events = {t.cast(type[Event], event_arg_anno)}
-
-            for event in resolved_events:
-                self.subscribe(event, func)  # pyright: ignore
+            for event in events:
+                self.subscribe(event, func)
 
             return func
 
-        if func:
-            return wrapper(func)
         return wrapper
 
     def dispatch(self, event: Event) -> asyncio.Future[t.Any]:

@@ -36,9 +36,8 @@ dispatcher = discatcore.Dispatcher()
 intents = 3243773
 gateway = discatcore.GatewayClient(http, dispatcher, intents=intents.value)
 
-# alternatively, you can provide the event type in the decorator
-@dispatcher.listen_to()
-async def ready(event: discatcore.gateway.ReadyEvent):
+@dispatcher.listen_to(discatcore.gateway.ReadyEvent)
+async def ready(event):
     print(event.data)
 
 async def main():
