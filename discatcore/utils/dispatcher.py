@@ -62,9 +62,7 @@ class Dispatcher:
     __slots__ = ("_listeners", "_consumers")
 
     def __init__(self) -> None:
-        self._listeners: defaultdict[type[Event], list[ListenerCallback[Event]]] = defaultdict(
-            list
-        )
+        self._listeners: defaultdict[type[Event], list[ListenerCallback[Event]]] = defaultdict(list)
         self._consumers: dict[str, Consumer[Self]] = {}
 
         for name, value in inspect.getmembers(self):
@@ -150,9 +148,7 @@ class Dispatcher:
             del self._listeners[event]
 
     def listen_to(
-        self,
-        *,
-        events: list[type[EventT]]
+        self, *, events: list[type[EventT]]
     ) -> t.Callable[[ListenerCallback[EventT]], ListenerCallback[EventT]]:
         def wrapper(func: ListenerCallback[EventT]) -> ListenerCallback[EventT]:
             for event in events:
