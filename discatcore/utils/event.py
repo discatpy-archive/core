@@ -57,7 +57,7 @@ class Event:
     # setters/decorators
 
     def set_proto(
-        self, proto_func: t.Union[Func[t.Any], staticmethod[t.Any]], *, force_parent: bool = False
+        self, proto_func: t.Union[Func[t.Any], staticmethod[..., t.Any]], *, force_parent: bool = False
     ) -> None:
         """Sets the prototype for this event.
 
@@ -93,7 +93,7 @@ class Event:
 
     def proto(
         self,
-        func: t.Optional[t.Union[Func[t.Any], staticmethod[t.Any]]] = None,
+        func: t.Optional[t.Union[Func[t.Any], staticmethod[..., t.Any]]] = None,
         *,
         force_parent: bool = False,
     ) -> t.Union[Event, Callable[[Func[t.Any]], Event]]:
@@ -108,7 +108,7 @@ class Event:
             This depends on if the ``func`` arg was passed in.
         """
 
-        def wrapper(func: t.Union[Func[t.Any], staticmethod[t.Any]]):
+        def wrapper(func: t.Union[Func[t.Any], staticmethod[..., t.Any]]):
             self.set_proto(func, force_parent=force_parent)
             return self
 
