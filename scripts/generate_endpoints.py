@@ -273,7 +273,9 @@ def _dict_type_check(
     elif val is ...:
         return Unset
 
-    if isinstance(val, expected_type):
+    origin = t.get_origin(expected_type)
+
+    if isinstance(val, origin or expected_type):
         return val
     raise TypeError(f"the value at key {key} is not of type {_type_repr(expected_type)}!")
 
@@ -407,8 +409,8 @@ def parse_endpoint_func(name: str, func: dict[str, t.Any]) -> tuple[str, list[st
 def parse_json_file(file: dict[str, t.Any]) -> str:
     funcs: list[str] = []
     name = _dict_type_check(file, "name", str)
-    methods: dict[str, t.Any] = _dict_type_check(file, "methods", dict)
-    requires: UnsetOr[list[str]] = _dict_type_check(file, "requires", list, is_required=False)
+    methods: dict[str, t.Any] = _dict_type_check(file, "methods", dict[str, t.Any])
+    requires: UnsetOr[list[str]] = _dict_type_check(file, "requires", list[str], is_required=False)
 
     imports = ""
     used_imports: list[str] = []
