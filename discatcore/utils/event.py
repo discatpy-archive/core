@@ -57,7 +57,10 @@ class Event:
     # setters/decorators
 
     def set_proto(
-        self, proto_func: t.Union[Func[t.Any], staticmethod[..., t.Any]], *, force_parent: bool = False
+        self,
+        proto_func: t.Union[Func[t.Any], staticmethod[..., t.Any]],
+        *,
+        force_parent: bool = False,
     ) -> None:
         """Sets the prototype for this event.
 
