@@ -171,6 +171,9 @@ class HTTPClient(
             pd.json = _filter_dict_for_unset(json) if isinstance(json, dict) else json
 
         if json is not Unset and files is not Unset:
+            if t.TYPE_CHECKING:
+                files = t.cast(list[BasicFile], files)
+
             form_dat = aiohttp.FormData()
             form_dat.add_field(
                 "payload_json",
