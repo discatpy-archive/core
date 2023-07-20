@@ -39,6 +39,7 @@ jobs:
           version: ${{ env.PYRIGHT_VERSION }}
           python-version: ${{ matrix.python-version }}
           python-platform: Linux
+          working-directory: discatcore
           # only add comments for 3.9
           no-comments: ${{ matrix.python-version != '3.9' }}
           warnings: true
