@@ -27,9 +27,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          ls
-          pdm info
-          pdm sync -G speedup -d lint
+          pdm fix
+          pdm sync -G speedup
 
       - name: Get pyright version
         run: echo "PYRIGHT_VERSION=$(python -c 'import pyright; print(pyright.__pyright_version__)')" >> $GITHUB_ENV
