@@ -29,4 +29,5 @@ jobs:
         run: |
           pdm use -f ${{ matrix.python-version }}
           pdm install -dG lint
+          pdm install -G speedup
           pdm run pyright discatcore
