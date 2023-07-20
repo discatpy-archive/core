@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pdm sync -G speedup
+          pdm install -G speedup
           pdm install -dG lint
 
       - name: Get pyright version
