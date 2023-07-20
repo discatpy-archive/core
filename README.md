@@ -1,5 +1,7 @@
 # DisCatCore
 
+## This repo has been deprecated by the monorepo located at https://github.com/discatpy-dev/library
+
 A lower level Discord API wrapper that functions as the core layer of DisCatPy.
 
 ## Examples
